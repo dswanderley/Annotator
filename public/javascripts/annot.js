@@ -1,15 +1,6 @@
-// JavaScript source code
-
+// Global variables
 var urlBase = "";
-var galleryList = [];
-var galleryData = [];
-var hasQuality = false;
 // Images src
-var img_orig = "";
-var img_qual = "";
-var img_dr = "";
-var img_idref = 'g_img_';
-var galleryURL = 'gallery/';
 var currentSrc = "";
 var current_idx = "";
 // Canvas
@@ -32,6 +23,10 @@ function loadScreenDrApp() {
     $('#res-field-map').css('visibility', 'hidden');
     setScreenSize();
     addEvents();
+
+    currentSrc = 'screen/20170317_0001.png'
+    setMainImage();
+    
     //loadGallery();
 }
 
@@ -40,11 +35,12 @@ function setScreenSize() {
      *  Size of all other elements are predefined.
      */
 
-    max_height = $(window).height() - $('#footer').height() - $('#header').height();;
-    $('#app-row').height(max_height);
-
-    setCanvasSize();
+    max_img_height = $(window).height() - $('#footer').height() - $('#header').height();
+    max_img_width = $('#col-diag-center').width();
     
+    $('#app-row').height(max_img_height);
+
+    setCanvasSize();    
 }
 
 function refreshScreenSize() {
@@ -81,127 +77,16 @@ function pageMouseUp(evt) {
 
 
 /*
- * Ajax calls
- */
-
-function loadGallery() {
-    /** @description Load Gallery of images
-     */
-    $('.loader').show();
-    // Load Gallery Div
-    var gallery = $('#gallery');
-    // Create gallery ul - unordered list
-    var el_ul = jQuery('<ul/>', {
-        class: 'galery-ul'
-    });
-    // Gallery URL
-    url_g = urlBase + '/gallery';
-
-    // Ajax call
-    $.ajax(
-        {
-            type: 'GET',
-            url: url_g,
-            data: { id: '0' },
-            dataType: 'json',
-            cache: false,
-            async: true,
-            success: function (data) {
-                // reset List of images in gallery
-                galleryList = [];
-                galleryData = data.gallery_list;
-                i = 0;
-                // Read images in gallery folder
-                data.file_list.forEach(file => {
-                    // Define image ID
-                    im_id = img_idref + i;
-                    // Create each image element - list item
-                    el_ul.append(getGalleryEl(im_id, file));
-                    // Add filename to gallery list
-                    galleryList.push(file);
-                    i += 1;
-                });
-                // Add list to gallery
-                gallery.append(el_ul);
-                // Set orginal image block with the first image on gallery
-                idx = Math.floor(Math.random() * galleryData.length);
-                currentSrc = url_g + '/' + galleryList[idx];
-                img_orig = currentSrc;
-                current_idx = idx;
-                // Load Example
-                setImgEg(idx);
-
-                // Set full image size
-                setCanvasParameters(galleryData[idx].width, galleryData[idx].height);
-
-                // Pre Load an image
-                var img = new Image();
-                img.onload = function () {
-                    setMainImage();
-                    $('.loader').hide();
-                }
-                img.src = currentSrc;
-            }
-        });
-}
-
-
-/*
  * Set Image
  */
 
-function getGalleryEl(id, img) {
-    /** @description Get image element for the gallery
-      * @param {string} g_img id
-      * @param {string} image name
-      * @return {jQuery} list item
-     */
-
-    // Create list item
-    el_li = jQuery("<li/>", {
-        class: "gallery-img",
-        onclick: "selectGalleryImage(" + id + ")"
-    });
-    // Create image element
-    el_img = jQuery("<img/>", {
-        class: "gallery-thumb",
-        id: id,
-        height: "64px",
-        src: galleryURL + img
-    });
-    // Add image to list item
-    el_li.append(el_img);
-
-    return el_li;
-}
-
-function selectGalleryImage(imgid) {
-    /** @description Change large image after click on image gallery
-      * @param {string} image Image Element Id
-     */
-    resetimages();
-    resetLbl();
-    hasQuality = false;
-    setEvalBtn();
-    // Get image index in JS
-    id_str = imgid.id;
-    id = id_str.substr(img_idref.length, id_str.length - 1);
-    id = parseInt(id);
-    current_idx = id;
-    // Set main image
-    img_orig = imgid.src;
-    currentSrc = img_orig;
-    setMainImage();
-    // Set example
-    setImgEg(id);
-}
 
 function setMainImage() {
     /** @description Set original image src
      */
     redraw(true);
-    w = galleryData[current_idx].width;
-    h = galleryData[current_idx].height;
+    w = 864;//galleryData[current_idx].width;
+    h = 768;//galleryData[current_idx].height;
     // Set Canvas parameters
     setCanvasParameters(w, h);
     // Update image
@@ -469,4 +354,62 @@ function trackTransforms(ctx) {
         pt.x = x; pt.y = y;
         return pt.matrixTransform(xform.inverse());
     }
+}
+
+
+/*
+ * * Canvas Size
+ */
+ 
+function CanvasSizes(x, y, w, h, cX, cY, cW, cH) {
+    /// <summary>Classe para guardar posições do canvas</summary>
+    /// <param name="x" type="Object"></param>
+    /// <param name="y" type="Object"></param>
+    /// <param name="w" type="Object"></param>
+    /// <param name="h" type="Object"></param>
+    /// <param name="cX" type="Object"></param>
+    /// <param name="cY" type="Object"></param>
+    /// <param name="cW" type="Object"></param>
+    /// <param name="cH" type="Object"></param>
+    
+    // posição inicial x
+    if (x != null && x != undefined)
+        this.canvasX = x;
+    else
+        this.canvasX = 0;
+    // posição inicial y
+    if (y != null && y != undefined)
+        this.canvasY = y;
+    else
+        this.canvasY = 0;
+    // altura canvas - h
+    if (h != null && h != undefined)
+        this.canvasH = h;
+    else
+        this.canvasH = 100;
+    // largura canvas - w
+    if (w != null && w != undefined)
+        this.canvasW = w;
+    else
+        this.canvasW = 100;
+    // inicio corte - x
+    if (cX != null && cX != undefined)
+        this.cropX = cX;
+    else
+        this.cropX = 0;
+    // inicio corte - y
+    if (cY != null && cY != undefined)
+        this.cropY = cY;
+    else
+        this.cropY = 0;
+    // altura corte
+    if (cH != null && cH != undefined)
+        this.cropH = cH;
+    else
+        this.cropH = 100;
+    // largura corte
+    if (cW != null && cW != undefined)
+        this.cropW = cW;
+    else
+        this.cropW = 100;
 }
