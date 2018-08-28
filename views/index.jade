@@ -4,57 +4,31 @@ block content
 
 	.main-content
 
-		h4 Image Analysis and Machine Learning Platform for Innovation in Diabetic Retinopathy Screening
+		h4 Segmentation of Gynecological Structures from Ultrasound Images
 
-		img(src="/images/screendr-dark_logo.png", style='width:350px; padding:20px 0px;') 
+		img(src="/images/ovary_seg.png", style='width:350px; padding:20px 0px;') 
 
 
 		p
-			| ARSN is implementing a mass screening for 
-			| diabetic retinopathy (DR), with the goal of 
-			| making eye exam of about 75% of identified 
-			| diabetics. 
+			| Diseases of the female reproductive system affect millions of women every year, representing more than 16% of all the cancers 
+			| diagnosed in women worldwide and affecting annually 31,000 Brazilians. Due to the difficulty to distinguish between benign and
+			| malignant tumors in ultrasound images - the imaging modality most widely used in gynecology - 70% of the ovaries removed in 
+			| surgical procedures are false positives. Moreover, the complexity to detect small cysts during the ultrasonography and the 
+			| rapid growth of the tumors leads to late diagnosis, resulting in a 66% mortality rate for ovarian cancer in Brazil.
+			| Fibroids and myomas affect 20-50% of women in the age group from 30 to 50 years, being the main kind of tumors located in the 
+			| uterus. Also, endometriosis is another common pathology in uterus and can cause unbearable pain and abnormal bleeding thus 
+			| reducing the quality of life. 
 
-		p	 
-			| The vision of the consortium SCREEN-DR is to 
-			| create a distributed and automatic screening 
-			| platform for DR, based on advanced PACS* 
-			| management, Machine Learning and Image Analysis, 
-			| enabling immediate response from health carers, 
-			| allowing accurate follow-up strategies, and 
-			| fostering technological innovation. As main 
-			| objectives we have the automatic image quality 
-			| assessment, the automatic detection and grading 
-			| of diabetic retinopathy including the mild 
-			| non-proliferative, moderate/severe non-proliferative 
-			| and proliferative grades.
+		p
+			| Despite the high mortality rate worldwide - around 46% - of cancers of the uterus and the ovaries, there has been a limited 
+			| research effort on the development of Computer-Aided Diagnosis systems for these pathologies, when compared to other areas of 
+			| human health. 
 
-		img(src="/images/workflow.png", style='padding:20px 0px;') 
-
-		h5(style='padding:10px 150px; text-align:left;')  Main Task Goals:
-
-		h6(style='padding:5px 0px 0px 180px; text-align:left;')  Image Quality Assessment
-		p(style='padding:0px 100px 0px 180px;') 
-			| To automatically reject low quality images that are not suitable 
-			| further analysis.
-						
-		h6(style='padding:10px 0px 0px 180px; text-align:left;')  Detection of Normal Images
-		p(style='padding:0px 100px 0px 180px;') 
-			| To automatically discriminate DR fundus images (regardless of DR type and 
-			| stage) from 'Normal' ones.
-
-
-
-		h6(style='padding:20px 0px 0px 180px; text-align:left;')  DR Grading
-		p(style='padding:0px 100px 0px 180px;') 
-			| To grade fundus images into three levels of severity: mild, moderate/severe 
-			| and proliferative. These levels are characterized by the presence of several 
-			|lesions, as microaneurisms, exudates, neovascularization, vessel tortuosity, 
-			| hemorrhages, and venous beading.
-
-		h6(style='padding:10px 0px 0px 180px; text-align:left;')  Image Web Service
-		p(style='padding:0px 100px 0px 180px;') 
-			| To provide a remote access to all the image analysis functionalities, 
-			| namely for image quality evaluation, detection of image normality and 
-			| DR grading.
-			
+		p
+			| This project has as main objective the development of methodologies for segmentation and characterization of the different 
+			| tissues present in ultrasound images of ovaries and uterus. Such methods aim at supporting the medical diagnosis, aiding the
+			| detection of suspicious masses and the calculation of biomarkers for these specific diseases. The information extracted from the
+			| ultrasound data by the methods to be developed aim at the early diagnosis of malignant tumors in order to guide the patients for 
+			| less aggressive and more efficient treatments. In addition, the correct classification of suspicious masses would allow the 
+			| reduction of surgeries to remove false positives, improving the quality of life of women and thus reducing the government 
+			| spending on women's health.
