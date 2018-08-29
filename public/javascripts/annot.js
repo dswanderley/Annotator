@@ -127,7 +127,17 @@ function refreshCanvas() {
     this.ctx.clearRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
     // Draw image
     this.ctx.drawImage(img, csizes.cropX, csizes.cropY, csizes.cropW, csizes.cropH, csizes.canvasX, csizes.canvasY, csizes.canvasW, csizes.canvasH);
-    
+    // Draw objects
+    redraw();
+}
+
+function redraw() {
+
+    if (smoothpiecewises.length > 0) {
+        for (i = 0; i < smoothpiecewises.length; i++) {
+            drawSmooth(smoothpiecewises[i].interpolatedPoints);
+        }
+    }
 }
 
 function CanvasSizes(x, y, w, h, cX, cY, cW, cH) {

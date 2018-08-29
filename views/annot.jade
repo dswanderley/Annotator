@@ -19,7 +19,7 @@ block content
 				
 				.row.justify-content-center
 					.image-container.col-auto
-						canvas.img-disp#main-canvas
+						canvas.img-disp#main-canvas(oncontextmenu="return false;")
 
 				//.row.justify-content-md-center
 				//	.gallery-container
@@ -33,7 +33,8 @@ block content
 					.h6.breadcrumb-item Data Informations
 
 
-
+	script(src="/javascripts/interpolation.js")
+	script(src="/javascripts/drawing.js")
 	script(src="/javascripts/annot.js")
 	script.
 		$(window).on("load", function(){
