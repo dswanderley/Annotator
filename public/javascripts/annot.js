@@ -2,7 +2,6 @@
 var urlBase = "";
 // Images src
 var currentSrc = "";
-var current_idx = "";
 // Canvas
 var main_img = new Image();
 var ctx;
@@ -119,12 +118,24 @@ function initCanvas(src) {
 function refreshCanvas() {
     /** @description Refresh canvas routine
     */
-
     // Get new coord
     var p1 = ctx.transformedPoint(0, 0);
     var p2 = ctx.transformedPoint(canvas.width, canvas.height);
     // Crop canvas
     this.ctx.clearRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
+    // Draw image
+    this.ctx.drawImage(img, csizes.cropX, csizes.cropY, csizes.cropW, csizes.cropH, csizes.canvasX, csizes.canvasY, csizes.canvasW, csizes.canvasH);
+    // Draw objects
+    redraw();
+}
+
+function resetCanvas() {
+    /** @description Reset canvas image to original size
+    */
+    // Clear transformations
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     // Draw image
     this.ctx.drawImage(img, csizes.cropX, csizes.cropY, csizes.cropW, csizes.cropH, csizes.canvasX, csizes.canvasY, csizes.canvasW, csizes.canvasH);
     // Draw objects
@@ -206,14 +217,14 @@ function canvasZoom(clicks, mouseX, mouseY) {
     var c_status = ctx.getTransform();
     // Zoom factor
     var factor = Math.pow(scaleFactor, clicks);
-    console.log(factor);
     // New zoom transformation factor
     var tfactor = c_status.a * factor;
     // Apply conditions
     if (tfactor < 1) {
-        refreshCanvas();// redraw(true);
+        // Reset Canvas to original size
+        resetCanvas();
     }
-    else if (tfactor < 10 * 1 / canvasScale) {
+    else if (tfactor < 10 / canvasScale) {
         // Current location
         var pt = ctx.transformedPoint(lastX, lastY);
         // Translate
@@ -223,7 +234,7 @@ function canvasZoom(clicks, mouseX, mouseY) {
         // Translate back with new coord
         ctx.translate(-pt.x, -pt.y);
         // Redraw image
-        refreshCanvas();//redraw(false);
+        refreshCanvas();
     }
 }
 
