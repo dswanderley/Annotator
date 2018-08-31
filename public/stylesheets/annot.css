@@ -96,25 +96,53 @@
 
 
 /*
- *   Table
+ *   Left Col.
  */
 
-.btn-list {
-    padding: 2px 8px;
-    min-height: 20px;
-    min-width: 15px;
+#col-diag-left {
+    max-width: 400px;
+}
+
+
+/*
+ *   Right Col.
+ */
+
+#col-diag-right {
+    max-width: 380px;
+}
+
+.btn-class-annot {
+    width: 75px;
+}
+
+.list-annot {
+    color: white;
+}
+
+.i-tab {
+    max-height: 15px;
+    padding-bottom: 4px;
+}
+
+.btn-annot {
+    padding: 0px 10px 0px 10px;
+    max-height: 25px;
+    min-width: 30px;
 }
 
 .td-btn-annot {
-    padding-top: 5px !important;
-    padding-bottom: 5px !important;
+    padding-top: 1px !important;
+    padding-bottom: 2px !important;
 }
 
 .td-text-annot {
     padding-top: 0px !important;
     padding-bottom: 0px !important;
     vertical-align: middle !important;
+    width: 80px;
 }
+
 
 
 
