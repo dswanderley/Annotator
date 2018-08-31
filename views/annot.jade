@@ -6,7 +6,7 @@ block content
 			
 			.col#col-diag-left
 
-				.breadcrumb.navbar-success.bg-green
+				.breadcrumb.navbar-success.bg-light
 					.h6.breadcrumb-item Gallery
 
 				.row.justify-content-center
@@ -29,13 +29,24 @@ block content
 
 			.col#col-diag-right
 
-				.breadcrumb.navbar-success.bg-green
+				.breadcrumb.navbar-success.bg-light
 					.h6.breadcrumb-item Data Informations
+					
+
+
+				.btn-gtoup(role="group", arial-label="Basic example")
+					button.btn.btn-info(type="button") Follicle
+					button.btn.btn-info(type="button") Ovary
+					button.btn.btn-info(type="button") Mass
+
+				.table#list-annot
+
 
 
 	script(src="/javascripts/interpolation.js")
 	script(src="/javascripts/drawing.js")
 	script(src="/javascripts/annot.js")
+	script(src="/javascripts/annot_list.js")
 	script.
 		$(window).on("load", function(){
 			loadScreenDrApp();
