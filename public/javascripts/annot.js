@@ -250,8 +250,7 @@ function canvasMouseUp(evt) {
     // Current transformations applied to context
     if (dragging) {
         var c_status = ctx.getTransform();
-        if (c_status.a > 1) {
-            //  dragStart = null;
+        if ((canvas.width / csizes.canvasW > 1) || (canvas.height / csizes.height > 1) || (c_status.a > 1)) {
             dragging = false;
         }
     }
@@ -276,7 +275,7 @@ function canvasMouseDown(evt) {
     // Current transformations applied to context
     var c_status = ctx.getTransform();
     // Check if has zoom 
-    if (c_status.a > 1) {
+    if ((canvas.width / csizes.canvasW > 1) || (canvas.height / csizes.height > 1) || (c_status.a > 1)) {
         document.body.style.mozUserSelect = document.body.style.webkitUserSelect = document.body.style.userSelect = 'none';
 
         lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
@@ -313,7 +312,7 @@ function canvasMouseMove(evt) {
             if (((!moveUp) && (dy < 0)) || ((!moveDown) && (dy > 0))) { dy = 0; }
             // Move image
             ctx.translate(dx, dy);
-            refreshCanvas();//redraw(false);
+            refreshCanvas();
         }
     }
 }
