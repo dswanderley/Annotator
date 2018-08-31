@@ -2,20 +2,26 @@
 var ovary_list = [];
 var ovary_eg = ['O', 500, 100];
 ovary_list.push(ovary_eg);
+ovary_list.push(ovary_eg);
+var body = document.getElementById("list-annot");
+body.innerHTML = "";
 
-function listOvary() {
-    ///<summary>Preenche a tabela de Distâncias</summary>
-    ///<param name="body">Elemento onde será adicionada a tabela.</param>
-    var body = document.getElementById("list-annot");
-    body.innerHTML = "";
-    if (ovary_list.length > 0) {
+function listTable(body, el_str, el_list) {
+    /** @description Fill data table with anotations reference
+      * @param {Window} body A HTML element table
+      * @param {Str} el_str Name of the class
+      * @param {Array} el_list List with elements of the same class
+     */
+    //Check if there is any element
+    if (el_list.length > 0) {
         // Table of content
         var table = document.createElement("table");
-        table.setAttribute("id", "table-ovary"); table.setAttribute("class", "table-dark");
+        table.setAttribute("id", "table-" + el_str.toLowerCase());
+        table.setAttribute("class", "table-dark");
         // Header elements
         var header = document.createElement("tr");
         var th1 = document.createElement("th");
-        th1.appendChild(document.createTextNode("Ovary"));
+        th1.appendChild(document.createTextNode(el_str));
         header.appendChild(th1);
         var th2 = document.createElement("th");
         th2.appendChild(document.createTextNode("Major axis"));
@@ -39,13 +45,16 @@ function listOvary() {
             // Row elements
             var row = document.createElement("tr");
             // Text Elements
-            var td1 = document.createElement("td"); td1.setAttribute("class", "td-text-annot");
+            var td1 = document.createElement("td");
+            td1.setAttribute("class", "td-text-annot");
             td1.appendChild(document.createTextNode(el[0] + " #" + idx));
             row.appendChild(td1);
-            var td2 = document.createElement("td"); td2.setAttribute("class", "td-text-annot");
+            var td2 = document.createElement("td");
+            td2.setAttribute("class", "td-text-annot");
             td2.appendChild(document.createTextNode(el[1] + "px"));
             row.appendChild(td2);
-            var td3 = document.createElement("td"); td3.setAttribute("class", "td-text-annot");
+            var td3 = document.createElement("td");
+            td3.setAttribute("class", "td-text-annot");
             td3.appendChild(document.createTextNode(el[2] + "px"));
             row.appendChild(td3);
             // Edit Button
