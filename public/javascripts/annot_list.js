@@ -17,7 +17,7 @@ function listTable(body, el_str, el_list) {
         // Table of content
         var table = document.createElement("table");
         table.setAttribute("id", "table-" + el_str.toLowerCase());
-        table.setAttribute("class", "table table-striped");
+        table.setAttribute("class", "table table-striped table-dark");
         // Header elements
         var header = document.createElement("tr");
         var th1 = document.createElement("th");
