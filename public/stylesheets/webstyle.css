@@ -93,8 +93,8 @@ p {
     width: 100%;
 }
 
-.sdr-logo {
-    max-height: 60px;
+.proj-logo {
+    max-height: 40px;
 }
 
 .navbar-brand {
@@ -116,7 +116,7 @@ footer {
     bottom: 0;
     margin: 0px auto;
     border-top: 1px dotted #ccc;
-    padding-top: 5px;
+    padding: 0px;
     text-align: center;
     position: fixed;
     width: 100%;

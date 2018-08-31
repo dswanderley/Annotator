@@ -31,7 +31,7 @@ function setScreenSize() {
      *  Size of all other elements are predefined.
      */
     
-    max_img_height = $(window).height() - $('#footer').height() - $('#header').height();
+    max_img_height = $(window).height() - $('#footer').height() - $('#header').height() - 15;
     max_img_width = $('#col-diag-center').width();
     // Set background of canvas 
     $('#app-row').height(max_img_height);
@@ -86,32 +86,26 @@ function initCanvas(src) {
     var img_width = 864;
     var img_height = 768;
 
-    // Canvas size
-    canvas_width = max_img_width;
-    canvas_height = max_img_height;
     // load canvas
     canvas = document.getElementById("main-canvas");
     // set canvas dimensions
-    canvas.width = Math.floor(canvas_width);
-    canvas.height = Math.floor(canvas_height - 30);
-    // CSS content 
-    canvas.style.width = canvas.width.toString() + "px";
-    canvas.style.height = canvas.height.toString() + "px";
+    canvas.width = Math.floor(max_img_width);
+    canvas.height = Math.floor(max_img_height);
     // Load context
     ctx = canvas.getContext("2d");
     trackTransforms(ctx);
     // Calculate scale with canvas size
     this.canvasScale = Math.min(canvas.height / img_height, canvas.width / img_width);
     // Calculate start postions
-    x = Math.round((canvas.width - img_width)/2);
-    y = Math.round((canvas.height - img_height)/2);
+    cx = Math.round((canvas.width - img_width) / 2);
+    cy = Math.round((canvas.height - img_height) / 2);
     // Image on canvas dimensions
-    csizes = new CanvasSizes(x, y, img_width, img_height, 0, 0, img_width, img_height);
+    csizes = new CanvasSizes(cx, cy, img_width, img_height, 0, 0, img_width, img_height);
     ctx.drawImage(img, csizes.cropX, csizes.cropY, csizes.cropW, csizes.cropH, csizes.canvasX, csizes.canvasY, csizes.canvasW, csizes.canvasH);
     img.onload = function () {
         ctx.drawImage(img, csizes.cropX, csizes.cropY, csizes.cropW, csizes.cropH, csizes.canvasX, csizes.canvasY, csizes.canvasW, csizes.canvasH);
     }
-
+    // Load Image
     img.src = src;
 }
 
