@@ -24,6 +24,11 @@ function loadScreenDrApp() {
     currentSrc = 'screen/20170317_0001.png'
     initCanvas(currentSrc);
     addEvents();
+
+
+
+    
+    listOvary();
 }
 
 function setScreenSize() {
