@@ -9,7 +9,6 @@ var smoothConfig = {
     cubicTension: Smooth.CUBIC_TENSION_CATMULL_ROM
 };
 
-
 function Point(x, y) {
     /** @description Class Point
       * @param {int} x Coordinate x
@@ -27,35 +26,6 @@ function Line(pi, pf) {
     this.pi = new Point(pi.X, pi.Y); //ponto inicial da linha
     this.pf = new Point(pf.X, pf.Y); //ponto final
 }
-
-
-function drawLine(line, color, width) {
-    /** @description Draw a line on canvas
-      * @param {Line}   line  Line
-      * @param {string} color Color of the line
-      * @param {int}    y Line width
-     */
-    if (!color) {
-        color = "#0000FF";
-    }
-    if (!width) {
-        width = this.measureThick;
-    }
-    this.ctx.beginPath();
-    this.ctx.strokeStyle = color;
-    this.ctx.lineWidth = width;
-    this.ctx.moveTo(this.canvasScale * line.pi.X, this.canvasScale * line.pi.Y);
-    this.ctx.lineTo(this.canvasScale * line.pf.X, this.canvasScale * line.pf.Y);
-    this.ctx.stroke();
-}
-
-
-
-
-
-
-
-
 
 
 
@@ -79,7 +49,11 @@ function storeSmoothPoints(ev) {
       * @param {event}   ev  Event
      */
     if (!ev) { ev = window.event; }
-    var p = new Point(ev.layerX / canvasScale, ev.layerY / canvasScale);
+
+    var c_status = ctx.getTransform();
+
+    var pt = ctx.transformedPoint(ev.layerX, ev.layerY);
+    var p = new Point(pt.x / canvasScale, pt.y / canvasScale);
     if (ev.button === 0) {
         // Enable draw
         if (points.length === 0) {
@@ -104,7 +78,8 @@ function drawingSmooth(ev) {
       * @param {event}   ev  Event
      */
     if (!ev) { ev = window.event; }
-    var p = new Point(ev.layerX / canvasScale, ev.layerY / canvasScale);
+    var pt = ctx.transformedPoint(ev.layerX, ev.layerY);
+    var p = new Point(pt.x / canvasScale, pt.y / canvasScale);
     smooth_temp.originalPoints = points;
 
     refreshCanvas();
