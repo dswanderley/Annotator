@@ -3,8 +3,62 @@ var ovary_list = [];
 var ovary_eg = ['O', 500, 100];
 ovary_list.push(ovary_eg);
 ovary_list.push(ovary_eg);
+
+// Body of list with annotations
 var body = document.getElementById("list-annot");
 body.innerHTML = "";
+
+// Profile with data to draw lines
+var draw_profile = new DrawProfile();
+/** @description Classes enumeration  */
+var ClassEnum = {
+    OVARIAN_FOLLICLE: 0,
+    OVARIAN_STROMA: 1,
+    OVARIAN_CYST: 2,
+    properties: {
+        0: { name: "ovarian follicle", value: 0, code: "OVARIAN_FOLLICLE" },
+        1: { name: "ovarian stroma", value: 1, code: "OVARIAN_STROMA" },
+        2: { name: "ovarian cyst", value: 2, code: "OVARIAN_CYST" }
+    }
+};
+// Number of Classes
+var N_CLASSES = Object.keys(ClassEnum).length - 1;
+// Array with classes draws
+var class_list = new Array(N_CLASSES);
+
+/* CLASSES */
+
+function DrawProfile(id, class_name, color, thick) {
+    /** @description Classe with canvas dimensions
+      * @param {int} x Class id
+      * @param {string} class_name Name of the class
+      * @param {string} color Color of the class
+      * @param {int} thick Line thickness
+     */
+
+    // id
+    if (id != null && id != undefined)
+        this.id = id;
+    else
+        this.id = 0;
+    // class
+    if (class_name != null && class_name != undefined)
+        this.class_name = class_name;
+    else
+        this.class_name = '';
+    // color
+    if (color != null && color != undefined)
+        this.color = color;
+    else
+        this.color = '#FFFFFF';
+    // thickness
+    if (thick != null && thick != undefined)
+        this.thick = thick;
+    else
+        this.thick = 1;
+}
+
+/* TABLE Functions */
 
 function listTable(body, el_str, el_list) {
     /** @description Fill data table with anotations reference
@@ -82,4 +136,20 @@ function listTable(body, el_str, el_list) {
         table.appendChild(tbody);
         body.appendChild(table);
     }    
+}
+
+/* Draw Managing */
+
+function drawFollicle() {
+    /** @description Active follicle draw  
+     */
+
+    this.draw_profile = new DrawProfile(ClassEnum.OVARIAN_FOLLICLE, ClassEnum.properties[0].name, '#DCFFD2', 3);
+    
+    //color = "#0000FF";
+    //color = "#0032B4";
+    //color = "#DCFFD2";
+    //color = "#FF6468";
+    
+    activeSmooth();
 }

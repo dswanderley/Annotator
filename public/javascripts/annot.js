@@ -213,6 +213,7 @@ function canvasZoom(clicks, mouseX, mouseY) {
     var factor = Math.pow(scaleFactor, clicks);
     // New zoom transformation factor
     var tfactor = c_status.a * factor;
+    //canvasScale = tfactor;
     // Apply conditions
     if (tfactor < 1) {
         // Reset Canvas to original size

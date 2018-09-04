@@ -28,6 +28,30 @@ function Line(pi, pf) {
 }
 
 
+function drawLine(line, color, width) {
+    /** @description Draw a line on canvas
+      * @param {Line}   line  Line
+      * @param {string} color Color of the line
+      * @param {int}    y Line width
+     */
+    if (!color) {
+        color = draw_profile.color;
+    }
+    if (!width) {
+        width = draw_profile.thick;
+    }
+    this.ctx.beginPath();
+    this.ctx.strokeStyle = color;
+    this.ctx.lineWidth = width;
+    this.ctx.moveTo(this.canvasScale * line.pi.X, this.canvasScale * line.pi.Y);
+    this.ctx.lineTo(this.canvasScale * line.pf.X, this.canvasScale * line.pf.Y);
+    this.ctx.stroke();
+}
+
+
+
+
+
 
 
 
@@ -49,9 +73,7 @@ function storeSmoothPoints(ev) {
       * @param {event}   ev  Event
      */
     if (!ev) { ev = window.event; }
-
-    var c_status = ctx.getTransform();
-
+    // Convert point position using scale
     var pt = ctx.transformedPoint(ev.layerX, ev.layerY);
     var p = new Point(pt.x / canvasScale, pt.y / canvasScale);
     if (ev.button === 0) {
@@ -123,10 +145,12 @@ function getSmoothPoints(smooth, pts) {
     var deltaX1 = Math.abs(pts[1][0] - pts[0][0]);
     var deltaY1 = Math.abs(pts[1][1] - pts[0][1]);
     var stp1 = 1 / Math.max(deltaX1, deltaY1);
+    stp1 = stp1 / 100;
 
     var deltaX2 = Math.abs(pts[1][0] - pts[2][0]);
     var deltaY2 = Math.abs(pts[1][1] - pts[2][1]);
     var stp2 = 1 / Math.max(deltaX2, deltaY2);
+    stp2 = stp2 / 100;
 
     var v1 = new Array();
     for (i = 0; i < 1; i += stp1) {
@@ -155,6 +179,16 @@ function saveSmooth(sp) {
     refreshSmoothTemp(p);
     drawSmooth(sp.interpolatedPoints);
     // Store
+
+    // Get list with same element
+    el_list = class_list[draw_profile.id];
+    if (el_list == null || el_list == undefined) {
+        el_list = [];
+    }
+    el_list.push(smooth_temp)
+    // return list with elements
+    class_list[draw_profile.id] = el_list;
+
     smoothpiecewises.push(smooth_temp);
     // Clear temps
     points = [];
