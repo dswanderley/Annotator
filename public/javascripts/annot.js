@@ -145,14 +145,12 @@ function redraw() {
         // Get each class
         var smoth_data = class_list[c];
         // Check if has annotation for each class
-        if (smoth_data != null && smoth_data != undefined) {
-            
+        if (smoth_data != null && smoth_data != undefined) {            
             // Draw all segments of each element
             for (i = 0; i < smoth_data.length; i++) {
                 drawSmooth(smoth_data[i].interpolatedPoints, smoth_data[i].profile.color, smoth_data[i].profile.thick);
             }
             
-            listAnnot()
         }
     }
 }

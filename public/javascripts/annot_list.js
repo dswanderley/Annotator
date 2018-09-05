@@ -1,13 +1,3 @@
-
-var ovary_list = [];
-var ovary_eg = ['O', 500, 100];
-ovary_list.push(ovary_eg);
-ovary_list.push(ovary_eg);
-
-// Body of list with annotations
-var body = document.getElementById("list-annot");
-body.innerHTML = "";
-
 // Profile with data to draw lines
 var draw_profile = new DrawProfile();
 
@@ -98,11 +88,11 @@ function fillTable(body, el_str, el_list) {
         // Start body
         var tbody = document.createElement("tbody");
         // Read all list of elements
-        for (i = 0; i < ovary_list.length; i++) {
+        for (i = 0; i < el_list.length; i++) {
             // Element id to be listed
             idx = i + 1;
             // Get element
-            el = ovary_list[i];
+            el = el_list[i];
             // Row elements
             var row = document.createElement("tr");
             // Text Elements
@@ -142,9 +132,28 @@ function fillTable(body, el_str, el_list) {
 
 function listAnnot() {
 
-    axes = calculateAxes();
+    // Body of list with annotations
+    var body = document.getElementById("list-annot");
+    body.innerHTML = "";
 
-//    fillTable(body, el_str, el_list)
+    // List with annotations
+    for (c = 0; c < class_list.length; c++) {
+        // Get each class
+        var ldata = class_list[c];
+        var el_list = [];
+        // Check if has annotation for each class
+        if (ldata != null && ldata != undefined) {
+            // Draw all segments of each element
+            for (i = 0; i < ldata.length; i++) {
+
+                el = ['O', 500, 100];
+
+                el_list.push(el);
+            }
+            fillTable(body, ldata[0].profile.class_name, el_list);
+        }
+    }
+           
 }
 
 /* Draw Managing */

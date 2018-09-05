@@ -186,11 +186,12 @@ function saveSmooth(sp) {
     el_list.push(smooth_temp)
     // return list with elements
     class_list[draw_profile.id] = el_list;
-
     smoothpiecewises.push(smooth_temp);
     // Clear temps
     points = [];
     smooth_temp = [];
+    // List annotations on table
+    listAnnot();
 }
 
 
