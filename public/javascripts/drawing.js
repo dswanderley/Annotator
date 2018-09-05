@@ -9,6 +9,10 @@ var smoothConfig = {
     cubicTension: Smooth.CUBIC_TENSION_CATMULL_ROM
 };
 
+/*
+ * Line and Point
+ */
+
 function Point(x, y) {
     /** @description Class Point
       * @param {int} x Coordinate x
@@ -27,18 +31,18 @@ function Line(pi, pf) {
     this.pf = new Point(pf.X, pf.Y); //ponto final
 }
 
-
 function drawLine(line, color, width) {
     /** @description Draw a line on canvas
       * @param {Line}   line  Line
       * @param {string} color Color of the line
       * @param {int}    y Line width
      */
-    if (!color) {
+
+    if (color == null || color == undefined) {
         color = draw_profile.color;
     }
-    if (!width) {
-        width = draw_profile.thick;
+    if (width == null || width == undefined) {
+        width = 3;//draw_profile.thick;
     }
     this.ctx.beginPath();
     this.ctx.strokeStyle = color;
@@ -49,17 +53,17 @@ function drawLine(line, color, width) {
 }
 
 
+/*
+ * Smooth Element
+ */
 
-
-
-
-
-
+/* Class and activation */
 function SmoothPiecewise() {
     /** @description Picewise of smooth object (small lines)
      */
     this.originalPoints = new Array();
     this.interpolatedPoints = new Array();
+    this.profile = new DrawProfile();
 }
 
 function activeSmooth() {
@@ -68,32 +72,8 @@ function activeSmooth() {
     canvas.addEventListener("mousedown", storeSmoothPoints, false);
 }
 
-function storeSmoothPoints(ev) {
-    /** @description Store reference points to draw smooth piecewise.
-      * @param {event}   ev  Event
-     */
-    if (!ev) { ev = window.event; }
-    // Convert point position using scale
-    var pt = ctx.transformedPoint(ev.layerX, ev.layerY);
-    var p = new Point(pt.x / canvasScale, pt.y / canvasScale);
-    if (ev.button === 0) {
-        // Enable draw
-        if (points.length === 0) {
-            points.push(p);
-            smooth_temp = new SmoothPiecewise();
-            canvas.addEventListener("mousemove", drawingSmooth, false);
-        }
-        else {
-            points.push(p);
-        }
-    }
-    if (ev.button === 2 && points.length > 2) {
-        // Close draw tool
-        saveSmooth(smooth_temp);
-        canvas.removeEventListener("mousemove", drawingSmooth, false);
-        refreshCanvas();
-    }
-}
+
+/* Draw Events */
 
 function drawingSmooth(ev) {
     /** @description Function to draw the smoothpiecewise during mouse move.
@@ -137,38 +117,56 @@ function refreshSmoothTemp(p) {
     smooth_temp.interpolatedPoints[points.length - 1] = p_ints[1];
 }
 
-function getSmoothPoints(smooth, pts) {
-    /** @description Function to get the interpolated points of the SmoothPiecewise object.
-      * @param {Smooth} smooth Smooth object
-      * @param {array}  pts    Reference points
+function drawSmooth(ipts, color, width) {
+    /** @description Function to draw SmoothPiecewise.
+      * @param {Point[]} ipts List of Interpolated Points
      */
-    var deltaX1 = Math.abs(pts[1][0] - pts[0][0]);
-    var deltaY1 = Math.abs(pts[1][1] - pts[0][1]);
-    var stp1 = 1 / Math.max(deltaX1, deltaY1);
-    stp1 = stp1 / 100;
 
-    var deltaX2 = Math.abs(pts[1][0] - pts[2][0]);
-    var deltaY2 = Math.abs(pts[1][1] - pts[2][1]);
-    var stp2 = 1 / Math.max(deltaX2, deltaY2);
-    stp2 = stp2 / 100;
-
-    var v1 = new Array();
-    for (i = 0; i < 1; i += stp1) {
-        v1.push(smooth(i));
+    if (color == null || color == undefined) {
+        color = draw_profile.color;
     }
-    v1.push(pts[1]);
-
-    var v2 = new Array();
-    for (i = 1; i < 2; i += stp2) {
-        v2.push(smooth(i));
+    if (width != null && width != undefined) {
+        width = draw_profile.thick;;
     }
-    v2.push(pts[2]);
 
-    var v = new Array();
-    v.push(v1);
-    v.push(v2);
+    if (!ipts) return
+    for (var j = 0; j < ipts.length; j++) {
+        var curve = ipts[j];
+        for (var i = 0; i < curve.length - 2; i++) {
+            drawLine(new Line(curve[i], curve[i + 1]), color, width);
+        }
+    }
+}
 
-    return v;
+
+/* Storage */
+
+function storeSmoothPoints(ev) {
+    /** @description Store reference points to draw smooth piecewise.
+      * @param {event}   ev  Event
+     */
+    if (!ev) { ev = window.event; }
+    // Convert point position using scale
+    var pt = ctx.transformedPoint(ev.layerX, ev.layerY);
+    var p = new Point(pt.x / canvasScale, pt.y / canvasScale);
+    if (ev.button === 0) {
+        // Enable draw
+        if (points.length === 0) {
+            points.push(p);
+            smooth_temp = new SmoothPiecewise();
+            smooth_temp.profile = draw_profile;
+            canvas.addEventListener("mousemove", drawingSmooth, false);
+        }
+        else {
+            points.push(p);
+        }
+    }
+    if (ev.button === 2 && points.length > 2) {
+        // Close draw tool
+        saveSmooth(smooth_temp);
+        canvas.removeEventListener("mousemove", drawingSmooth, false);
+        refreshCanvas();
+    }
 }
 
 function saveSmooth(sp) {
@@ -195,18 +193,8 @@ function saveSmooth(sp) {
     smooth_temp = [];
 }
 
-function drawSmooth(ipts) {
-    /** @description Function to draw SmoothPiecewise.
-      * @param {Point[]} ipts List of Interpolated Points
-     */
-    if (!ipts) return
-    for (var j = 0; j < ipts.length; j++) {
-        var curve = ipts[j];
-        for (var i = 0; i < curve.length - 2; i++) {
-            drawLine(new Line(curve[i], curve[i + 1]));
-        }
-    }
-}
+
+/* Edition */
 
 function deleteSmooth(d, h) {
     /** @description Delete smoothpiecewise
@@ -264,33 +252,6 @@ function updatesmooth(el, idx, offset) {
 
     refreshCanvas();
     drawSmooth(smooth_temp.interpolatedPoints);
-}
-
-
-function getSmoothPiecewises(arr) {
-    /** @description Get SmoothPicewise
-      * @param {Point[]} arr Original Points
-     */
-    var v;
-    var interp_pts = [];
-    var arr2 = arr;
-    arr2.push(arr[0]);
-    arr2[-1] = arr[arr.length - 2];
-
-    for (var i = 0; i < arr.length - 1; i++) {
-
-        var pts = [
-            arr2[i - 1],
-            arr2[i],
-            arr2[i + 1]
-        ];
-        v = Smooth(pts, smoothConfig);
-        var arr_ints = getSmoothPoints(v, pts);
-        var p_ints = new Array(2);
-        interp_pts.push(array2point(arr_ints[1]));
-    }
-
-    return interp_pts;
 }
 
 function addNewSmoothPoint(ev) {
@@ -372,11 +333,67 @@ function makeHandle(x, y, idx, offset) {
 };
 
 
+/* Auxiliary */
 
+function getSmoothPoints(smooth, pts) {
+    /** @description Function to get the interpolated points of the SmoothPiecewise object.
+      * @param {Smooth} smooth Smooth object
+      * @param {array}  pts    Reference points
+     */
+    var deltaX1 = Math.abs(pts[1][0] - pts[0][0]);
+    var deltaY1 = Math.abs(pts[1][1] - pts[0][1]);
+    var stp1 = 1 / Math.max(deltaX1, deltaY1);
+    stp1 = stp1 / 10;
 
+    var deltaX2 = Math.abs(pts[1][0] - pts[2][0]);
+    var deltaY2 = Math.abs(pts[1][1] - pts[2][1]);
+    var stp2 = 1 / Math.max(deltaX2, deltaY2);
+    stp2 = stp2 / 10;
 
+    var v1 = new Array();
+    for (i = 0; i < 1; i += stp1) {
+        v1.push(smooth(i));
+    }
+    v1.push(pts[1]);
 
+    var v2 = new Array();
+    for (i = 1; i < 2; i += stp2) {
+        v2.push(smooth(i));
+    }
+    v2.push(pts[2]);
 
+    var v = new Array();
+    v.push(v1);
+    v.push(v2);
+
+    return v;
+}
+
+function getSmoothPiecewises(arr) {
+    /** @description Get SmoothPicewise
+      * @param {Point[]} arr Original Points
+     */
+    var v;
+    var interp_pts = [];
+    var arr2 = arr;
+    arr2.push(arr[0]);
+    arr2[-1] = arr[arr.length - 2];
+
+    for (var i = 0; i < arr.length - 1; i++) {
+
+        var pts = [
+            arr2[i - 1],
+            arr2[i],
+            arr2[i + 1]
+        ];
+        v = Smooth(pts, smoothConfig);
+        var arr_ints = getSmoothPoints(v, pts);
+        var p_ints = new Array(2);
+        interp_pts.push(array2point(arr_ints[1]));
+    }
+
+    return interp_pts;
+}
 
 function array2point(arr) {
     /** @descriptio Convert an array of coordinates to an array of Points

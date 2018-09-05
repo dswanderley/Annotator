@@ -10,15 +10,17 @@ body.innerHTML = "";
 
 // Profile with data to draw lines
 var draw_profile = new DrawProfile();
+
 /** @description Classes enumeration  */
 var ClassEnum = {
-    OVARIAN_FOLLICLE: 0,
-    OVARIAN_STROMA: 1,
+    OVARIAN_STROMA: 0,
+    OVARIAN_FOLLICLE: 1,
     OVARIAN_CYST: 2,
     properties: {
-        0: { name: "ovarian follicle", value: 0, code: "OVARIAN_FOLLICLE" },
-        1: { name: "ovarian stroma", value: 1, code: "OVARIAN_STROMA" },
-        2: { name: "ovarian cyst", value: 2, code: "OVARIAN_CYST" }
+        0: { name: "ovarian stroma", value: 0, code: "OVARIAN_STROMA", color: "#FF6468" },
+        1: { name: "ovarian follicle", value: 1, code: "OVARIAN_FOLLICLE", color: "#DCFFD2" },        
+        2: { name: "ovarian cyst", value: 2, code: "OVARIAN_CYST", color: "#0032B4" }
+        //color = "#0000FF";
     }
 };
 // Number of Classes
@@ -60,7 +62,7 @@ function DrawProfile(id, class_name, color, thick) {
 
 /* TABLE Functions */
 
-function listTable(body, el_str, el_list) {
+function fillTable(body, el_str, el_list) {
     /** @description Fill data table with anotations reference
       * @param {Window} body A HTML element table
       * @param {Str} el_str Name of the class
@@ -138,18 +140,36 @@ function listTable(body, el_str, el_list) {
     }    
 }
 
+function listAnnot() {
+
+    axes = calculateAxes();
+
+//    fillTable(body, el_str, el_list)
+}
+
 /* Draw Managing */
 
-function drawFollicle() {
+function drawElement(cId) {
     /** @description Active follicle draw  
      */
+    if (cId >= 0 && cId < N_CLASSES) {
+        // Set profile
+        this.draw_profile = new DrawProfile(cId,
+                                            ClassEnum.properties[cId].name,
+                                            ClassEnum.properties[cId].color,
+                                            3);
+        // Active draw
+        activeSmooth();
+    }       
+}
 
-    this.draw_profile = new DrawProfile(ClassEnum.OVARIAN_FOLLICLE, ClassEnum.properties[0].name, '#DCFFD2', 3);
-    
-    //color = "#0000FF";
-    //color = "#0032B4";
-    //color = "#DCFFD2";
-    //color = "#FF6468";
-    
-    activeSmooth();
+
+/* Calculate Parameters */
+
+function calculateAxes() {
+
+    var majorAxis = 100;
+    var minorAxis = 50;
+
+    return { major: majorAxis, minor: minorAxis };
 }

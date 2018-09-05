@@ -137,16 +137,22 @@ function resetCanvas() {
 }
 
 function redraw() {
+    /** @description Draw storaged annotations
+    */
 
+    // List with annotations
     for (c = 0; c < class_list.length; c++) {
-
-        smoth_data = class_list[c];
-
+        // Get each class
+        var smoth_data = class_list[c];
+        // Check if has annotation for each class
         if (smoth_data != null && smoth_data != undefined) {
-
+            
+            // Draw all segments of each element
             for (i = 0; i < smoth_data.length; i++) {
-                drawSmooth(smoth_data[i].interpolatedPoints);
+                drawSmooth(smoth_data[i].interpolatedPoints, smoth_data[i].profile.color, smoth_data[i].profile.thick);
             }
+            
+            listAnnot()
         }
     }
 }
@@ -163,42 +169,42 @@ function CanvasSizes(x, y, w, h, cX, cY, cW, cH) {
       * @param {int} cH The height of the clipped image
      */
 
-    // posição inicial x
+    // x initial position
     if (x != null && x != undefined)
         this.canvasX = x;
     else
         this.canvasX = 0;
-    // posição inicial y
+    // y initial position
     if (y != null && y != undefined)
         this.canvasY = y;
     else
         this.canvasY = 0;
-    // altura canvas - h
+    // canvas height - h
     if (h != null && h != undefined)
         this.canvasH = h;
     else
         this.canvasH = 100;
-    // largura canvas - w
+    // canvas width - w
     if (w != null && w != undefined)
         this.canvasW = w;
     else
         this.canvasW = 100;
-    // inicio corte - x
+    // intial crop postion - x
     if (cX != null && cX != undefined)
         this.cropX = cX;
     else
         this.cropX = 0;
-    // inicio corte - y
+    // initial crop postion - y
     if (cY != null && cY != undefined)
         this.cropY = cY;
     else
         this.cropY = 0;
-    // altura corte
+    // crop height
     if (cH != null && cH != undefined)
         this.cropH = cH;
     else
         this.cropH = 100;
-    // largura corte
+    // crop width
     if (cW != null && cW != undefined)
         this.cropW = cW;
     else
