@@ -138,9 +138,15 @@ function resetCanvas() {
 
 function redraw() {
 
-    if (smoothpiecewises.length > 0) {
-        for (i = 0; i < smoothpiecewises.length; i++) {
-            drawSmooth(smoothpiecewises[i].interpolatedPoints);
+    for (c = 0; c < class_list.length; c++) {
+
+        smoth_data = class_list[c];
+
+        if (smoth_data != null && smoth_data != undefined) {
+
+            for (i = 0; i < smoth_data.length; i++) {
+                drawSmooth(smoth_data[i].interpolatedPoints);
+            }
         }
     }
 }
