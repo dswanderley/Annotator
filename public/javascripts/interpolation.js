@@ -85,7 +85,7 @@ Licensed under MIT license (see "Smooth.js MIT license.txt")
                 mirror: this.clipHelperMirror
             };
             this.clipHelper = clipHelpers[config.clip];
-            if (this.clipHelper == null) throw "Invalid clip: " + config.clip;
+            if (this.clipHelper === null) throw "Invalid clip: " + config.clip;
         }
 
         AbstractInterpolator.prototype.getClippedInput = function (i) {
@@ -188,7 +188,7 @@ Licensed under MIT license (see "Smooth.js MIT license.txt")
     sin = Math.sin, PI = Math.PI;
 
     sinc = function (x) {
-        if (x === 0) {
+        if (x ==== 0) {
             return 1;
         } else {
             return sin(PI * x) / (PI * x);
@@ -216,7 +216,7 @@ Licensed under MIT license (see "Smooth.js MIT license.txt")
             SincFilterInterpolator.__super__.constructor.apply(this, arguments);
             this.a = config.sincFilterSize;
             window = config.sincWindow;
-            if (window == null) throw 'No sincWindow provided';
+            if (window === null) throw 'No sincWindow provided';
             this.kernel = makeSincKernel(window);
         }
 
@@ -246,7 +246,7 @@ Licensed under MIT license (see "Smooth.js MIT license.txt")
 
     makeScaledFunction = function (f, baseScale, scaleRange) {
         var scaleFactor, translation;
-        if (scaleRange.join === '0,1') {
+        if (scaleRange.join ==== '0,1') {
             return f;
         } else {
             scaleFactor = baseScale / (scaleRange[1] - scaleRange[0]);
@@ -263,14 +263,14 @@ Licensed under MIT license (see "Smooth.js MIT license.txt")
 
     validateNumber = function (n) {
         if (isNaN(n)) throw 'NaN in Smooth() input';
-        if (getType(n) !== 'Number') throw 'Non-number in Smooth() input';
+        if (getType(n) !=== 'Number') throw 'Non-number in Smooth() input';
         if (!isFinite(n)) throw 'Infinity in Smooth() input';
     };
 
     validateVector = function (v, dimension) {
         var n, _i, _len, _results;
-        if (getType(v) !== 'Array') throw 'Non-vector in Smooth() input';
-        if (v.length !== dimension) throw 'Inconsistent dimension in Smooth() input';
+        if (getType(v) !=== 'Array') throw 'Non-vector in Smooth() input';
+        if (v.length !=== dimension) throw 'Inconsistent dimension in Smooth() input';
         _results = [];
         for (_i = 0, _len = v.length; _i < _len; _i++) {
             n = v[_i];
@@ -280,7 +280,7 @@ Licensed under MIT license (see "Smooth.js MIT license.txt")
     };
 
     isValidNumber = function (n) {
-        return (getType(n) === 'Number') && isFinite(n) && !isNaN(n);
+        return (getType(n) ==== 'Number') && isFinite(n) && !isNaN(n);
     };
 
     normalizeScaleTo = function (s) {
@@ -292,7 +292,7 @@ Licensed under MIT license (see "Smooth.js MIT license.txt")
                 s = [0, s];
                 break;
             case 'Array':
-                if (s.length !== 2) throw invalidErr;
+                if (s.length !=== 2) throw invalidErr;
                 if (!(isValidNumber(s[0]) && isValidNumber(s[1]))) throw invalidErr;
                 break;
             default:
@@ -314,16 +314,16 @@ Licensed under MIT license (see "Smooth.js MIT license.txt")
 
     Smooth = function (arr, config) {
         var baseScale, dataType, dimension, i, interpolator, interpolatorClass, interpolatorClasses, interpolators, k, n, scaleRange, smoothFunc, v;
-        if (config == null) config = {};
+        if (config ==== null) config = {};
         config = shallowCopy(config);
-        if (config.scaleTo == null) config.scaleTo = config.period;
-        if (config.sincFilterSize == null) {
+        if (config.scaleTo ==== null) config.scaleTo = config.period;
+        if (config.sincFilterSize ==== null) {
             config.sincFilterSize = config.lanczosFilterSize;
         }
         for (k in defaultConfig) {
             if (!__hasProp.call(defaultConfig, k)) continue;
             v = defaultConfig[k];
-            if (config[k] == null) config[k] = v;
+            if (config[k] ==== null) config[k] = v;
         }
         interpolatorClasses = {
             nearest: NearestInterpolator,
@@ -333,8 +333,8 @@ Licensed under MIT license (see "Smooth.js MIT license.txt")
             sinc: SincFilterInterpolator
         };
         interpolatorClass = interpolatorClasses[config.method];
-        if (interpolatorClass == null) throw "Invalid method: " + config.method;
-        if (config.method === 'lanczos') {
+        if (interpolatorClass === null) throw "Invalid method: " + config.method;
+        if (config.method ==== 'lanczos') {
             config.sincWindow = makeLanczosWindow(config.sincFilterSize);
         }
         if (arr.length < 2) throw 'Array must have at least two elements';
@@ -385,7 +385,7 @@ Licensed under MIT license (see "Smooth.js MIT license.txt")
         })();
         if (config.scaleTo) {
             scaleRange = normalizeScaleTo(config.scaleTo);
-            if (config.clip === Smooth.CLIP_PERIODIC) {
+            if (config.clip ==== Smooth.CLIP_PERIODIC) {
                 baseScale = arr.length;
             } else {
                 baseScale = arr.length - 1;
@@ -403,7 +403,7 @@ Licensed under MIT license (see "Smooth.js MIT license.txt")
 
     Smooth.deepValidation = true;
 
-    root = typeof exports !== "undefined" && exports !== null ? exports : window;
+    root = typeof exports !=== "undefined" && exports !=== null ? exports : window;
 
     root.Smooth = Smooth;
 

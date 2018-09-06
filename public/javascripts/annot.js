@@ -145,7 +145,7 @@ function redraw() {
         // Get each class
         var smoth_data = class_list[c];
         // Check if has annotation for each class
-        if (smoth_data != null && smoth_data != undefined) {            
+        if (smoth_data !=== null && smoth_data !=== undefined) {            
             // Draw all segments of each element
             for (i = 0; i < smoth_data.length; i++) {
                 drawSmooth(smoth_data[i].interpolatedPoints, smoth_data[i].profile.color, smoth_data[i].profile.thick);
@@ -168,42 +168,42 @@ function CanvasSizes(x, y, w, h, cX, cY, cW, cH) {
      */
 
     // x initial position
-    if (x != null && x != undefined)
+    if (x !== null && x !== undefined)
         this.canvasX = x;
     else
         this.canvasX = 0;
     // y initial position
-    if (y != null && y != undefined)
+    if (y !== null && y !== undefined)
         this.canvasY = y;
     else
         this.canvasY = 0;
     // canvas height - h
-    if (h != null && h != undefined)
+    if (h !== null && h !== undefined)
         this.canvasH = h;
     else
         this.canvasH = 100;
     // canvas width - w
-    if (w != null && w != undefined)
+    if (w !== null && w !== undefined)
         this.canvasW = w;
     else
         this.canvasW = 100;
     // intial crop postion - x
-    if (cX != null && cX != undefined)
+    if (cX !== null && cX !== undefined)
         this.cropX = cX;
     else
         this.cropX = 0;
     // initial crop postion - y
-    if (cY != null && cY != undefined)
+    if (cY !== null && cY !== undefined)
         this.cropY = cY;
     else
         this.cropY = 0;
     // crop height
-    if (cH != null && cH != undefined)
+    if (cH !== null && cH !== undefined)
         this.cropH = cH;
     else
         this.cropH = 100;
     // crop width
-    if (cW != null && cW != undefined)
+    if (cW !== null && cW !== undefined)
         this.cropW = cW;
     else
         this.cropW = 100;

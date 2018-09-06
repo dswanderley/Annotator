@@ -38,10 +38,10 @@ function drawLine(line, color, width) {
       * @param {int}    y Line width
      */
 
-    if (color == null || color == undefined) {
+    if (color === null || color === undefined) {
         color = draw_profile.color;
     }
-    if (width == null || width == undefined) {
+    if (width === null || width === undefined) {
         width = 3;//draw_profile.thick;
     }
     this.ctx.beginPath();
@@ -122,10 +122,10 @@ function drawSmooth(ipts, color, width) {
       * @param {Point[]} ipts List of Interpolated Points
      */
 
-    if (color == null || color == undefined) {
+    if (color === null || color === undefined) {
         color = draw_profile.color;
     }
-    if (width != null && width != undefined) {
+    if (width !== null && width !== undefined) {
         width = draw_profile.thick;;
     }
 
@@ -180,7 +180,7 @@ function saveSmooth(sp) {
 
     // Get list with same element
     el_list = class_list[draw_profile.id];
-    if (el_list == null || el_list == undefined) {
+    if (el_list === null || el_list === undefined) {
         el_list = [];
     }
     el_list.push(smooth_temp)

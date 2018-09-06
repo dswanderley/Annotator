@@ -29,22 +29,22 @@ function DrawProfile(id, class_name, color, thick) {
      */
 
     // id
-    if (id != null && id != undefined)
+    if (id !==null && id !==undefined)
         this.id = id;
     else
         this.id = 0;
     // class
-    if (class_name != null && class_name != undefined)
+    if (class_name !==null && class_name !==undefined)
         this.class_name = class_name;
     else
         this.class_name = '';
     // color
-    if (color != null && color != undefined)
+    if (color !== null && color !== undefined)
         this.color = color;
     else
         this.color = '#FFFFFF';
     // thickness
-    if (thick != null && thick != undefined)
+    if (thick !==null && thick !==undefined)
         this.thick = thick;
     else
         this.thick = 1;
@@ -142,7 +142,7 @@ function listAnnot() {
         var ldata = class_list[c];
         var el_list = [];
         // Check if has annotation for each class
-        if (ldata != null && ldata != undefined) {
+        if (ldata !== null && ldata !== undefined) {
             // Draw all segments of each element
             for (i = 0; i < ldata.length; i++) {
 
