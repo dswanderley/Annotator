@@ -21,7 +21,7 @@ function loadScreenDrApp() {
      */
     $('#res-field-map').css('visibility', 'hidden');
     setScreenSize();
-    currentSrc = 'screen/20170317_0001.png'
+    currentSrc = 'screen/20170317_0001.png';
     initCanvas(currentSrc);
     addEvents();
 }
@@ -104,7 +104,7 @@ function initCanvas(src) {
     ctx.drawImage(img, csizes.cropX, csizes.cropY, csizes.cropW, csizes.cropH, csizes.canvasX, csizes.canvasY, csizes.canvasW, csizes.canvasH);
     img.onload = function () {
         ctx.drawImage(img, csizes.cropX, csizes.cropY, csizes.cropW, csizes.cropH, csizes.canvasX, csizes.canvasY, csizes.canvasW, csizes.canvasH);
-    }
+    };
     // Load Image
     img.src = src;
 }
@@ -145,7 +145,7 @@ function redraw() {
         // Get each class
         var smoth_data = class_list[c];
         // Check if has annotation for each class
-        if (smoth_data !=== null && smoth_data !=== undefined) {            
+        if (smoth_data !== null && smoth_data !== undefined) {            
             // Draw all segments of each element
             for (i = 0; i < smoth_data.length; i++) {
                 drawSmooth(smoth_data[i].interpolatedPoints, smoth_data[i].profile.color, smoth_data[i].profile.thick);
@@ -261,7 +261,7 @@ function canvasMouseUp(evt) {
     // Current transformations applied to context
     if (dragging) {
         var c_status = ctx.getTransform();
-        if ((canvas.width / csizes.canvasW > 1) || (canvas.height / csizes.height > 1) || (c_status.a > 1)) {
+        if (canvas.width / csizes.canvasW > 1 || canvas.height / csizes.height > 1 || c_status.a > 1) {
             dragging = false;
         }
     }
@@ -286,11 +286,11 @@ function canvasMouseDown(evt) {
     // Current transformations applied to context
     var c_status = ctx.getTransform();
     // Check if has zoom 
-    if ((canvas.width / csizes.canvasW > 1) || (canvas.height / csizes.height > 1) || (c_status.a > 1)) {
+    if (canvas.width / csizes.canvasW > 1 || canvas.height / csizes.height > 1 || c_status.a > 1) {
         document.body.style.mozUserSelect = document.body.style.webkitUserSelect = document.body.style.userSelect = 'none';
 
-        lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
-        lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
+        lastX = evt.offsetX || evt.pageX - canvas.offsetLeft;
+        lastY = evt.offsetY || evt.pageY - canvas.offsetTop;
         dragStart = ctx.transformedPoint(lastX, lastY);
         dragging = true;
     }
@@ -303,24 +303,24 @@ function canvasMouseMove(evt) {
      */
     if (dragging) {
         // Store mouse position
-        lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
-        lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
+        lastX = evt.offsetX || evt.pageX - canvas.offsetLeft;
+        lastY = evt.offsetY || evt.pageY - canvas.offsetTop;
         var pt = ctx.transformedPoint(lastX, lastY);
         if (dragStart) {
             // Load  context current transformations
             var c_status = ctx.getTransform();
             // Define direction restrictions
             var moveLeft = false, moveRight = false, moveUp = false, moveDown = false;
-            if ((c_status.e > (- canvas.width * c_status.a) + canvas.width / 1.2) && (lastX < canvas.width)) { moveLeft = true; }
-            if ((c_status.e < canvas.width / c_status.a / 2) && (lastX > 0)) { moveRight = true; }
-            if ((c_status.f > - (canvas.height * c_status.a) + canvas.height / 1.2) && (lastY < canvas.height)) { moveUp = true; }
-            if ((c_status.f < canvas.height / c_status.a / 2) && (lastY > 0)) { moveDown = true; }
+            if (c_status.e > - canvas.width * c_status.a + canvas.width / 1.2 && lastX < canvas.width) { moveLeft = true; }
+            if (c_status.e < canvas.width / c_status.a / 2 && lastX > 0) { moveRight = true; }
+            if (c_status.f > - canvas.height * c_status.a + canvas.height / 1.2 && lastY < canvas.height) { moveUp = true; }
+            if (c_status.f < canvas.height / c_status.a / 2 && lastY > 0) { moveDown = true; }
             // Moviment direction
             var dx = pt.x - dragStart.x;
             var dy = pt.y - dragStart.y;
             // Check conditions
-            if (((!moveLeft) && (dx < 0)) || ((!moveRight) && (dx > 0))) { dx = 0; }
-            if (((!moveUp) && (dy < 0)) || ((!moveDown) && (dy > 0))) { dy = 0; }
+            if (!moveLeft && dx < 0 || !moveRight && dx > 0) { dx = 0; }
+            if (!moveUp && dy < 0 || !moveDown && dy > 0) { dy = 0; }
             // Move image
             ctx.translate(dx, dy);
             refreshCanvas();
@@ -389,5 +389,5 @@ function trackTransforms(ctx) {
     ctx.transformedPoint = function (x, y) {
         pt.x = x; pt.y = y;
         return pt.matrixTransform(xform.inverse());
-    }
+    };
 }

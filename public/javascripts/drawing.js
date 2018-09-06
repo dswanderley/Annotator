@@ -109,7 +109,7 @@ function refreshSmoothTemp(p) {
     var v = Smooth(pts, smoothConfig);
     // Calculate each point of the interpolation
     var arr_ints = getSmoothPoints(v, pts);
-    var p_ints = new Array(2)
+    var p_ints = new Array(2);
     p_ints[0] = array2point(arr_ints[0]);
     p_ints[1] = array2point(arr_ints[1]);
     // Update smooth temp
@@ -126,10 +126,10 @@ function drawSmooth(ipts, color, width) {
         color = draw_profile.color;
     }
     if (width !== null && width !== undefined) {
-        width = draw_profile.thick;;
+        width = draw_profile.thick;
     }
 
-    if (!ipts) return
+    if (!ipts) return;
     for (var j = 0; j < ipts.length; j++) {
         var curve = ipts[j];
         for (var i = 0; i < curve.length - 2; i++) {
@@ -183,7 +183,7 @@ function saveSmooth(sp) {
     if (el_list === null || el_list === undefined) {
         el_list = [];
     }
-    el_list.push(smooth_temp)
+    el_list.push(smooth_temp);
     // return list with elements
     class_list[draw_profile.id] = el_list;
     smoothpiecewises.push(smooth_temp);
@@ -229,7 +229,7 @@ function createHandleSmooth() {
         var x = pts[i].X;
         var y = pts[i].Y;
 
-        var offset = 6
+        var offset = 6;
         makeHandle(x, y, i, offset);
     }
 }
@@ -262,7 +262,7 @@ function addNewSmoothPoint(ev) {
     if (!ev) { ev = window.event; }
     var p = new Point(ev.layerX / canvasScale, ev.layerY / canvasScale);
 
-    var len = smooth_temp.originalPoints.length
+    var len = smooth_temp.originalPoints.length;
     var new_pts = smooth_temp.originalPoints.slice(0);
     var pts = smooth_temp.originalPoints.slice(0);
     pts[-1] = smooth_temp.originalPoints[len - 1];
@@ -282,7 +282,7 @@ function addNewSmoothPoint(ev) {
         }
     }
     // Update array
-    new_pts.splice(idx + 1, 0, p)
+    new_pts.splice(idx + 1, 0, p);
     var arr = point2array(new_pts);
     var new_interp_pts = getSmoothPiecewises(arr);
     // Update temp smooth
@@ -331,7 +331,7 @@ function makeHandle(x, y, idx, offset) {
         position: 'absolute'
     });
     return handle;
-};
+}
 
 
 /* Auxiliary */
