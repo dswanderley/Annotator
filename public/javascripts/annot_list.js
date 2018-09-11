@@ -112,17 +112,17 @@ function fillTable(body, el_str, el_list) {
             var td4 = document.createElement("td");
             td4.setAttribute("class", "td-btn-annot");
             td4.innerHTML = '<button type="button" class="btn btn-light btn-annot">' +
-                '<i class="far fa-edit i-tab" ></i >' + '</button>'
+                '<i class="far fa-edit i-tab" ></i >' + '</button>';
             row.appendChild(td4);
             // Delete Button 
             var td5 = document.createElement("td");
             td5.setAttribute("class", "td-btn-annot");
             td5.innerHTML = '<button type="button" class="btn btn-primary btn-annot">' +
-                '<i class="far fa-trash-alt i-tab" ></i >' + '</button>'
+                '<i class="far fa-trash-alt i-tab" ></i >' + '</button>';
             row.appendChild(td5);
 
             // Append Row to table
-            tbody.appendChild(row)
+            tbody.appendChild(row);
         }
         // Append table to body
         table.appendChild(tbody);
