@@ -69,7 +69,7 @@ function loadGallery() {
                 img.onload = function () {
                     setMainImage();
                     $('.loader').hide();
-                }
+                };
                 img.src = currentSrc;
             }
         });

@@ -15,7 +15,7 @@ router.get('/annot', function (req, res) {
     // Render page Pilot
     res.render('./annot', {
         title: 'Annotations'
-    })
+    });
 });
 
 // Gallery - GET
