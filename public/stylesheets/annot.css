@@ -39,11 +39,14 @@
  */
 
 /* List of elements in gallery */
-#gallery ul {
+#gallery-ul {
     list-style-type: none;
-}
+    padding: 1px;
+    height: 30px;
+    width: 350px;
+ }
 
-#gallery li {
+#gallery-li {
     display: inline;
     cursor: pointer;
 }
@@ -54,24 +57,36 @@
     width: auto;
     height: 86px;
     max-width: 800px;
+    
 }
 
 /* Define gallery properties */
-.gallery {
+#gallery {
     white-space: nowrap;
+    overflow-y: scroll;
     overflow-x: scroll;
-    overflow-y: hidden;
-    width: 800px;
-    height: 86px;
-    padding: 0px;
+    width: 370px;
+    height: auto;
+    padding: 5px;
     border: 5px;
+    background-color:#f8f9fa;
+    max-height: 730px;
+    
 }
 
 /* Define gallery images properties */
 .gallery-img {
-    padding: 1px;
-    height: 64px;
-    width: auto;
+    font-size: 0.90rem;
+    display: block;
+    overflow: auto;
+    padding-bottom: 4px;
+}
+
+.gallery-thumb{
+    float: left;
+    height: 80px;
+    font-size:10px 
+  
 }
 
 /*
@@ -89,9 +104,22 @@
     display: inline;
 }
 
-.img-disp {
+
+/* Point handle */
+.handlePoint {
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	border-radius: 10px;
+	background-color: rgba(255, 0, 0, 0.945);
+	border: 1px solid #333;
+	opacity: 1;
 }
 
+[draggable] {
+    cursor: pointer;
+    cursor: move;
+}
 
 
 /*
@@ -137,8 +165,21 @@
     vertical-align: middle !important;
     width: 80px;
 }
+.btn-save{
+    padding: 3% 34%;
+    text-align: center!important;
+    font-size: 20px;
+    position: relative;
+    border-radius: 8px;
+    color: whitesmoke;
+    border: 2px rgb(34, 90, 212);
+    background: rgb(34, 90, 212);
+}
 
-
+.btn-save:hover{
+        background-color: rgb(0, 28, 186);
+        color: white;
+}
 
 
 

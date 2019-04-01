@@ -1,5 +1,6 @@
 // Profile with data to draw lines
 var draw_profile = new DrawProfile();
+var flagsave=-1;
 
 /** @description Classes enumeration  */
 var ClassEnum = {
@@ -52,12 +53,13 @@ function DrawProfile(id, class_name, color, thick) {
 
 /* TABLE Functions */
 
-function fillTable(body, el_str, el_list) {
+function fillTable(body, ldata, el_list) {
     /** @description Fill data table with anotations reference
       * @param {Window} body A HTML element table
-      * @param {Str} el_str Name of the class
       * @param {Array} el_list List with elements of the same class
+      * @param {Array} ldata list of all the SmoothPieceWise, aka, segementations
      */
+    el_str=ldata[0].profile.class_name;
     //Check if there is any element
     if (el_list.length > 0) {
         // Table of content
@@ -111,16 +113,18 @@ function fillTable(body, el_str, el_list) {
             // Edit Button
             var td4 = document.createElement("td");
             td4.setAttribute("class", "td-btn-annot");
-            td4.innerHTML = '<button type="button" class="btn btn-light btn-annot">' +
+            td4.innerHTML = '<button type="button" class="btn btn-light btn-annot" onClick="editSmooth(' + ldata[i].profile.id  +' , '+ ldata[i].idSegment + ', 0);">' +
                 '<i class="far fa-edit i-tab" ></i >' + '</button>';
             row.appendChild(td4);
             // Delete Button 
             var td5 = document.createElement("td");
             td5.setAttribute("class", "td-btn-annot");
-            td5.innerHTML = '<button type="button" class="btn btn-primary btn-annot">' +
+            td5.innerHTML = '<button type="button" class="btn btn-primary btn-annot" onClick="deleteSmooth(' + ldata[i].profile.id  +' , '+ ldata[i].idSegment + ',1);">' +
                 '<i class="far fa-trash-alt i-tab" ></i >' + '</button>';
+            
             row.appendChild(td5);
-
+            
+            //console.log(JSON.stringify(idx) ); //Ana
             // Append Row to table
             tbody.appendChild(row);
         }
@@ -147,13 +151,20 @@ function listAnnot() {
             for (i = 0; i < ldata.length; i++) {
 
                 el = ['O', 500, 100];
-
+                ldata[i].idSegment=i+1; //actualiza o id do segmento
                 el_list.push(el);
+                
             }
-            fillTable(body, ldata[0].profile.class_name, el_list);
+            fillTable(body, ldata, el_list); //Alterei
         }
     }
-           
+    if (class_list[0] !== undefined || class_list[1] !== undefined || class_list[2] !== undefined) {
+        if (flagsave === -1) {
+            flagsave = 1;
+
+        }
+
+    }
 }
 
 /* Draw Managing */
@@ -161,15 +172,49 @@ function listAnnot() {
 function drawElement(cId) {
     /** @description Active follicle draw  
      */
-    if (cId >= 0 && cId < N_CLASSES) {
+
+    flagMouseEvent=1;
+    refreshCanvas();
+    if (cId >= 0 && cId < N_CLASSES) {  
+        
         // Set profile
         this.draw_profile = new DrawProfile(cId,
                                             ClassEnum.properties[cId].name,
                                             ClassEnum.properties[cId].color,
-                                            3);
+                                            1);
         // Active draw
         activeSmooth();
+ 
     }       
+}
+function drawSave(){
+    //var x = document.createElement("DIV"); 
+    //x.style.backgroundPosition="left bottom";
+    
+    var btn = document.createElement("BUTTON");
+        
+        btn.setAttribute("id", "SaveButton");
+        btn.setAttribute("type", "button");
+        btn.setAttribute("class", "btn-save");
+        btn.style.backgroundPosition="left bottom";
+       document.getElementById("col-diag-right").append(btn);
+        var t=document.createTextNode("Save");
+        btn.appendChild(t);
+        //x.appendChild(btn);
+        btn.onclick=function(){
+            var json_path= "/annot";
+            var list=JSON.stringify(class_list);
+            $.ajax({
+                type: 'POST',
+                url: json_path,//url of receiver file on server
+                data: 'li mesg', //your data
+                success: function (msg) {
+                    console.log("Guardei");
+            
+                }, //callback when ajax request finishes
+              });
+        };
+        
 }
 
 

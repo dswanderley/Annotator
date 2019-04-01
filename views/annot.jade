@@ -11,6 +11,8 @@ block content
 
 				.row.justify-content-center
 
+					table.list-group.list-files#gallery 
+
 						
 
 			.col#col-diag-center
@@ -21,7 +23,7 @@ block content
 					.image-container.col-auto
 						#plot-box
 							canvas.img-disp#main-canvas(oncontextmenu="return false;")
-	
+
 
 			.col#col-diag-right
 
@@ -29,9 +31,9 @@ block content
 					.h6.breadcrumb-item Data Informations
 					
 				.btn-gtoup(role="group", arial-label="Basic example")
-					button.btn.btn-info.btn-class-annot(type="button" onClick="drawElement(0);") Ovary
-					button.btn.btn-info.btn-class-annot(type="button" onClick="drawElement(1);") Follicle
-					button.btn.btn-info.btn-class-annot(type="button" onClick="drawElement(2);") Cyst
+					button.btn.btn-info.btn-class-annot(type="button" onClick="drawElement(0);" value=false) Ovary
+					button.btn.btn-info.btn-class-annot(type="button" onClick="drawElement(1);" value=false) Follicle
+					button.btn.btn-info.btn-class-annot(type="button" onClick="drawElement(2);" value=false) Cyst
 
 				.table-dark#list-annot
 
@@ -41,6 +43,7 @@ block content
 	script(src="/javascripts/drawing.js")
 	script(src="/javascripts/annot.js")
 	script(src="/javascripts/annot_list.js")
+	script(src="/javascripts/gallery.js")
 	script.
 		$(window).on("load", function(){
 			loadScreenDrApp();

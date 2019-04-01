@@ -11,7 +11,10 @@ var max_img_height = 256;
 var max_img_width = 256;
 var canvasScale = 1.0;
 var img_width, img_height, img_dwidth, img_dheight, canvas_dx, canvas_dy, canvas_cx, canvas_cy;
+var flagMouseEvent = 0;
+var newPoint= new Point();
 
+var idnearpoint=-1; //faz sentido ser variavel global?
 /*
  * Load Page functions
  */
@@ -21,7 +24,10 @@ function loadScreenDrApp() {
      */
     $('#res-field-map').css('visibility', 'hidden');
     setScreenSize();
-    currentSrc = 'screen/20170317_0001.png';
+    
+    //currentSrc = '20170317_0001.png';
+    
+    loadGallery();
     initCanvas(currentSrc);
     addEvents();
 }
@@ -30,7 +36,7 @@ function setScreenSize() {
     /** @description Defines max image heigh according other page elements
      *  Size of all other elements are predefined.
      */
-    
+
     max_img_height = $(window).height() - $('#footer').height() - $('#header').height() - 15;
     max_img_width = $('#col-diag-center').width();
     // Set background of canvas 
@@ -48,16 +54,17 @@ function refreshScreenSize() {
 
 function addEvents() {
     /** @description Add Events listener
-     */    
+     */
+
     canvas.addEventListener('mousedown', canvasMouseDown, false);
     canvas.addEventListener('mousemove', canvasMouseMove, false);
     canvas.addEventListener('mouseup', canvasMouseUp, false);
+    //canvas.addEventListener('dblclick',canvasdblclick,false);
     // IE9, Chrome, Safari, Opera
     canvas.addEventListener("mousewheel", canvasScrollWheel, false);
     // Firefox
     canvas.addEventListener("DOMMouseScroll", canvasScrollWheel, false);
     document.addEventListener('mouseup', pageMouseUp, false);
-
 }
 
 function pageMouseUp(evt) {
@@ -80,12 +87,16 @@ function initCanvas(src) {
     /** @description Initialize canvas
       * @param {sting} src 
      */
-
+    flagMouseEvent = 1;
     // Load image on canvas
     img = new Image();
     var img_width = 864;
     var img_height = 768;
-
+    if (src===""){
+        src='wellcome.png';
+    }
+    //var img_width = galleryList[current_idx].width;
+    //var img_height = galleryList[current_idx].height;
     // load canvas
     canvas = document.getElementById("main-canvas");
     // set canvas dimensions
@@ -100,6 +111,7 @@ function initCanvas(src) {
     cx = Math.round((canvas.width - img_width) / 2);
     cy = Math.round((canvas.height - img_height) / 2);
     // Image on canvas dimensions
+    //Image original dimension
     csizes = new CanvasSizes(cx, cy, img_width, img_height, 0, 0, img_width, img_height);
     ctx.drawImage(img, csizes.cropX, csizes.cropY, csizes.cropW, csizes.cropH, csizes.canvasX, csizes.canvasY, csizes.canvasW, csizes.canvasH);
     img.onload = function () {
@@ -107,6 +119,7 @@ function initCanvas(src) {
     };
     // Load Image
     img.src = src;
+    
 }
 
 function refreshCanvas() {
@@ -129,7 +142,7 @@ function resetCanvas() {
     // Clear transformations
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height); //limpa o que esta por cima da imagem, neste caso as segmentaçoes/linhas
     // Draw image
     this.ctx.drawImage(img, csizes.cropX, csizes.cropY, csizes.cropW, csizes.cropH, csizes.canvasX, csizes.canvasY, csizes.canvasW, csizes.canvasH);
     // Draw objects
@@ -145,14 +158,21 @@ function redraw() {
         // Get each class
         var smoth_data = class_list[c];
         // Check if has annotation for each class
-        if (smoth_data !== null && smoth_data !== undefined) {            
+        if (smoth_data !== null && smoth_data !== undefined) {
             // Draw all segments of each element
             for (i = 0; i < smoth_data.length; i++) {
                 drawSmooth(smoth_data[i].interpolatedPoints, smoth_data[i].profile.color, smoth_data[i].profile.thick);
             }
-            
+
         }
     }
+    if (flagMouseEvent===0){
+        createHandleSmooth();
+    }
+    if(flagsave===1){
+            drawSave();
+            flagsave=0;
+        }   
 }
 
 function CanvasSizes(x, y, w, h, cX, cY, cW, cH) {
@@ -245,6 +265,17 @@ function canvasZoom(clicks, mouseX, mouseY) {
 
 
 /*
+ * Reset anotation
+ */
+
+function resetAnotation(){
+    var draw_profile = new DrawProfile();
+    var class_listAUX = new Array(N_CLASSES);
+    class_list = class_listAUX;
+    listAnnot();
+}
+
+/*
  * Event Handler
  */
 
@@ -253,18 +284,34 @@ var lastX, lastY;
 var dragStart = null;
 var dragging = false;
 
+
 function canvasMouseUp(evt) {
     /** @description Canvas Mouse Up event
       * @param {event} evt event
      */
-
-    // Current transformations applied to context
-    if (dragging) {
-        var c_status = ctx.getTransform();
-        if (canvas.width / csizes.canvasW > 1 || canvas.height / csizes.height > 1 || c_status.a > 1) {
-            dragging = false;
+    if (flagMouseEvent === 1) {
+        // Current transformations applied to context
+        if (dragging) {
+            var c_status = ctx.getTransform();
+            if (canvas.width / csizes.canvasW > 1 || canvas.height / csizes.height > 1 || c_status.a > 1) {
+                dragging = false;
+            }
         }
+    } else if (flagMouseEvent === 0) {
+        // Current transformations applied to context
+        if (dragging) {
+            var c_status = ctx.getTransform();
+            if (canvas.width / csizes.canvasW > 1 || canvas.height / csizes.height > 1 || c_status.a > 1) {
+                dragging = false;
+                //flagMouseEvent =1;
+                document.body.style.cursor = 'default';
+                
+            }
+        }
+
     }
+    idnearpoint=-1;
+
 }
 
 function canvasScrollWheel(evt) {
@@ -282,17 +329,32 @@ function canvasMouseDown(evt) {
     /** @description Canvas Mouse Down event
       * @param {event} evt Button down event
      */
+    if (flagMouseEvent === 1) { //canvas editar pontos
+        // Current transformations applied to context
+        var c_status = ctx.getTransform();
+        // Check if has zoom 
+        if (canvas.width / csizes.canvasW > 1 || canvas.height / csizes.height > 1 || c_status.a > 1) {
+            document.body.style.mozUserSelect = document.body.style.webkitUserSelect = document.body.style.userSelect = 'none';
 
-    // Current transformations applied to context
-    var c_status = ctx.getTransform();
-    // Check if has zoom 
-    if (canvas.width / csizes.canvasW > 1 || canvas.height / csizes.height > 1 || c_status.a > 1) {
-        document.body.style.mozUserSelect = document.body.style.webkitUserSelect = document.body.style.userSelect = 'none';
-
-        lastX = evt.offsetX || evt.pageX - canvas.offsetLeft;
-        lastY = evt.offsetY || evt.pageY - canvas.offsetTop;
-        dragStart = ctx.transformedPoint(lastX, lastY);
-        dragging = true;
+            lastX = evt.offsetX || evt.pageX - canvas.offsetLeft;
+            lastY = evt.offsetY || evt.pageY - canvas.offsetTop;
+            dragStart = ctx.transformedPoint(lastX, lastY);
+            dragging = false; //não permite o rato mover a imagem 
+        }
+    }
+    else if (flagMouseEvent === 0){ 
+        if(evt.button ===0 ){//se quiser mudar a posição do point original
+            idnearpoint=handlePointEdit();
+            var oldPoint=smooth_temp.originalPoints[idnearpoint];
+            dragging = true;
+        }
+        if(evt.button===2){ //se quiser apagar um point original
+            var ptnew = ctx.transformedPoint(evt.layerX, evt.layerY); //newpoint
+            ptnew.x = ptnew.x / canvasScale;
+             ptnew.y = ptnew.y / canvasScale;
+            [mindistAB, idnearpoint] = getNearPoint(ptnew); 
+            deletePoint(idnearpoint);
+        }
     }
 
 }
@@ -301,30 +363,49 @@ function canvasMouseMove(evt) {
     /** @description Canvas Mouse Move event
       * @param {event} evt event
      */
-    if (dragging) {
-        // Store mouse position
-        lastX = evt.offsetX || evt.pageX - canvas.offsetLeft;
-        lastY = evt.offsetY || evt.pageY - canvas.offsetTop;
-        var pt = ctx.transformedPoint(lastX, lastY);
-        if (dragStart) {
-            // Load  context current transformations
-            var c_status = ctx.getTransform();
-            // Define direction restrictions
-            var moveLeft = false, moveRight = false, moveUp = false, moveDown = false;
-            if (c_status.e > - canvas.width * c_status.a + canvas.width / 1.2 && lastX < canvas.width) { moveLeft = true; }
-            if (c_status.e < canvas.width / c_status.a / 2 && lastX > 0) { moveRight = true; }
-            if (c_status.f > - canvas.height * c_status.a + canvas.height / 1.2 && lastY < canvas.height) { moveUp = true; }
-            if (c_status.f < canvas.height / c_status.a / 2 && lastY > 0) { moveDown = true; }
-            // Moviment direction
-            var dx = pt.x - dragStart.x;
-            var dy = pt.y - dragStart.y;
-            // Check conditions
-            if (!moveLeft && dx < 0 || !moveRight && dx > 0) { dx = 0; }
-            if (!moveUp && dy < 0 || !moveDown && dy > 0) { dy = 0; }
-            // Move image
-            ctx.translate(dx, dy);
-            refreshCanvas();
+    if (flagMouseEvent === 1) {
+        if (dragging) {
+            // Store mouse position
+            lastX = evt.offsetX || evt.pageX - canvas.offsetLeft;
+            lastY = evt.offsetY || evt.pageY - canvas.offsetTop;
+            var pt = ctx.transformedPoint(lastX, lastY);
+            if (dragStart) {
+                // Load  context current transformations
+                var c_status = ctx.getTransform();
+                // Define direction restrictions
+                var moveLeft = false, moveRight = false, moveUp = false, moveDown = false;
+                if (c_status.e > - canvas.width * c_status.a + canvas.width / 1.2 && lastX < canvas.width) { moveLeft = true; }
+                if (c_status.e < canvas.width / c_status.a / 2 && lastX > 0) { moveRight = true; }
+                if (c_status.f > - canvas.height * c_status.a + canvas.height / 1.2 && lastY < canvas.height) { moveUp = true; }
+                if (c_status.f < canvas.height / c_status.a / 2 && lastY > 0) { moveDown = true; }
+                // Moviment direction
+                var dx = pt.x - dragStart.x;
+                var dy = pt.y - dragStart.y;
+                // Check conditions
+                if (!moveLeft && dx < 0 || !moveRight && dx > 0) { dx = 0; }
+                if (!moveUp && dy < 0 || !moveDown && dy > 0) { dy = 0; }
+                // Move image
+                ctx.translate(dx, dy);
+                refreshCanvas();
+            }
         }
+    }
+    if (flagMouseEvent === 0) {
+        if (dragging) {
+            // Store mouse position
+            lastX = evt.offsetX || evt.pageX - canvas.offsetLeft;
+            lastY = evt.offsetY || evt.pageY - canvas.offsetTop;
+            newPoint = ctx.transformedPoint(lastX, lastY);
+            if (dragStart) {
+                handlePointEditMoving(newPoint, idnearpoint);
+                document.body.style.cursor = 'grabbing';
+            }
+        }
+    }
+}
+function canvasdblclick(evt){
+    if (flagMouseEvent === 0) {
+       // addNewSmoothPoint();
     }
 }
 

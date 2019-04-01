@@ -36,10 +36,11 @@ Licensed under MIT license (see "Smooth.js MIT license.txt")
         CUBIC_TENSION_CATMULL_ROM: 0
     };
 
+    //ANA: To change the smmoth of the line. 
     defaultConfig = {
         method: Enum.METHOD_CUBIC,
-        cubicTension: Enum.CUBIC_TENSION_DEFAULT,
-        clip: Enum.CLIP_CLAMP,
+        cubicTension: Enum.CLIP_MIRROR,
+        cubicTension: Enum.CUBIC_TENSION_CATMULL_ROM,
         scaleTo: 0,
         sincFilterSize: 2,
         sincWindow: void 0

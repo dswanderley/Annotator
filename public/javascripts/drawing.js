@@ -5,7 +5,7 @@ var smoothpiecewises = [];
 var smooth_temp = [];
 var smoothConfig = {
     method: Smooth.METHOD_CUBIC,
-    clip: Smooth.CLIP_MIRROR, //CLIP_PERIODIC
+    clip: Smooth.CLIP_CLAMP, //CLIP_PERIODIC
     cubicTension: Smooth.CUBIC_TENSION_CATMULL_ROM
 };
 
@@ -20,6 +20,7 @@ function Point(x, y) {
      */
     this.X = x;
     this.Y = y;
+    //makeHandle(x, y, 0, 6);
 }
 
 function Line(pi, pf) {
@@ -29,6 +30,7 @@ function Line(pi, pf) {
      */
     this.pi = new Point(pi.X, pi.Y); //ponto inicial da linha
     this.pf = new Point(pf.X, pf.Y); //ponto final
+    
 }
 
 function drawLine(line, color, width) {
@@ -42,7 +44,7 @@ function drawLine(line, color, width) {
         color = draw_profile.color;
     }
     if (width === null || width === undefined) {
-        width = 3;//draw_profile.thick;
+        width = 1;//draw_profile.thick;
     }
     this.ctx.beginPath();
     this.ctx.strokeStyle = color;
@@ -64,12 +66,17 @@ function SmoothPiecewise() {
     this.originalPoints = new Array();
     this.interpolatedPoints = new Array();
     this.profile = new DrawProfile();
+    this.idSegment=0;
 }
 
 function activeSmooth() {
     /** @description Active functions to draw the smooth picewise object.
      */
-    canvas.addEventListener("mousedown", storeSmoothPoints, false);
+    if (flagMouseEvent===1){
+        canvas.addEventListener("mousedown", storeSmoothPoints, false);
+
+    }
+   
 }
 
 
@@ -83,7 +90,7 @@ function drawingSmooth(ev) {
     var pt = ctx.transformedPoint(ev.layerX, ev.layerY);
     var p = new Point(pt.x / canvasScale, pt.y / canvasScale);
     smooth_temp.originalPoints = points;
-
+    smooth_temp.idSegment= 0;
     refreshCanvas();
     // Check the number of points 
     if (points.length >= 2) {
@@ -97,7 +104,7 @@ function drawingSmooth(ev) {
 }
 
 function refreshSmoothTemp(p) {
-    /** @description Update the smooth line and inser a new line to the temp piecewise object.
+    /** @description Update the smooth line and insert a new line to the temp piecewise object.
       * @param {Point}   P  Current point
      */
     var pts = [
@@ -121,7 +128,6 @@ function drawSmooth(ipts, color, width) {
     /** @description Function to draw SmoothPiecewise.
       * @param {Point[]} ipts List of Interpolated Points
      */
-
     if (color === null || color === undefined) {
         color = draw_profile.color;
     }
@@ -145,48 +151,58 @@ function storeSmoothPoints(ev) {
     /** @description Store reference points to draw smooth piecewise.
       * @param {event}   ev  Event
      */
-    if (!ev) { ev = window.event; }
-    // Convert point position using scale
-    var pt = ctx.transformedPoint(ev.layerX, ev.layerY);
-    var p = new Point(pt.x / canvasScale, pt.y / canvasScale);
-    if (ev.button === 0) {
-        // Enable draw
-        if (points.length === 0) {
-            points.push(p);
-            smooth_temp = new SmoothPiecewise();
-            smooth_temp.profile = draw_profile;
-            canvas.addEventListener("mousemove", drawingSmooth, false);
+    if (flagMouseEvent === 1) {
+        if (!ev) { ev = window.event; }
+        // Convert point position using scale
+        var pt = ctx.transformedPoint(ev.layerX, ev.layerY);
+        var p = new Point(pt.x / canvasScale, pt.y / canvasScale);
+        if (ev.button === 0) {
+            // Enable draw
+            if (points.length === 0) {
+                points.push(p);
+                smooth_temp = new SmoothPiecewise();
+                smooth_temp.profile = draw_profile;
+                canvas.addEventListener("mousemove", drawingSmooth, false);
+            }
+            else {
+                points.push(p);
+            }
         }
-        else {
-            points.push(p);
+        if (ev.button === 2 && points.length > 2) {//responsabel por fechar a segmentação
+            // Close draw tool
+            saveSmooth(smooth_temp);
+            canvas.removeEventListener("mousemove", drawingSmooth, false); 
+            refreshCanvas();
         }
     }
-    if (ev.button === 2 && points.length > 2) {
-        // Close draw tool
-        saveSmooth(smooth_temp);
-        canvas.removeEventListener("mousemove", drawingSmooth, false);
-        refreshCanvas();
-    }
+
 }
 
 function saveSmooth(sp) {
     /** @description Function to save the SmoothPiecewise object on smooth_temp.
       * @param {SmoothPiecewise} sp SmoothPiecewise object
      */
+    var tam=0;   
     var p = sp.originalPoints[0];
     refreshSmoothTemp(p);
     drawSmooth(sp.interpolatedPoints);
     // Store
-
     // Get list with same element
     el_list = class_list[draw_profile.id];
     if (el_list === null || el_list === undefined) {
         el_list = [];
     }
     el_list.push(smooth_temp);
-    // return list with elements
     class_list[draw_profile.id] = el_list;
+    tam=el_list.length;
+    if (tam!==0){
+        smooth_temp.idSegment=tam;
+    }
+    var arr = point2array(smooth_temp.originalPoints);
+    smooth_temp.interpolatedPoints = getSmoothPiecewises(arr);
     smoothpiecewises.push(smooth_temp);
+    refreshCanvas();
+    //drawSmooth(smooth_temp.interpolatedPoints);
     // Clear temps
     points = [];
     smooth_temp = [];
@@ -197,55 +213,188 @@ function saveSmooth(sp) {
 
 /* Edition */
 
-function deleteSmooth(d, h) {
-    /** @description Delete smoothpiecewise
-      * @param {string} d Object position in Array
-      * @param {string} h Number of objects to erase
+/************** ANA **************/
+function deleteSmooth(spType, idSeg, h) {
+    /** @description Function to delete the SmoothPiecewise object.
+      * @param {SmoothPiecewise} ds SmoothPiecewise object
      */
-    smoothpiecewises.splice(d, h);
+    var st = [];
+    var st1 = [];
+    var class_listAUX = new Array(N_CLASSES);
+    smooth_temp = [];
+    class_list[spType].splice(idSeg - 1, 1); //delete the segmentation 
+    if (class_list.length <= 0) { //if there is no segmentation
+        
+        class_list = class_listAUX;
+        
+       
+    }if (class_list[0] !== undefined && class_list[0].length === 0) { //if ov vector is empty or not defined but fol and/or cys could exist
+        if (class_list[1] !== undefined) {
+            class_listAUX[1] = class_list[1];
+        }
+        if (class_list[2] !== undefined) {
+            class_listAUX[2] = class_list[2];
+        }
+        class_list = class_listAUX;
+        removeSaveButton();
+    }
+    if (class_list[1] !== undefined && class_list[1].length === 0) { //if Fol vector is empty or not defined but ov and/or cys could exist
+        if (class_list[0] !== undefined) {
+            class_listAUX[0] = class_list[0];
+        }
+        if (class_list[2] !== undefined) {
+            class_listAUX[2] = class_list[2];
+        }
+        class_list = class_listAUX;
+    }
+    if (class_list[2] !== undefined && class_list[2].length === 0) { //if cyst vector is empty or not defined but ov and/or fol could exist
+        if (class_list[0] !== undefined) {
+            class_listAUX[0] = class_list[0];
+        }
+        if (class_list[1] !== undefined) {
+            class_listAUX[1] = class_list[1];
+        }
+        class_list = class_listAUX;
+    }
+    flagMouseEvent = 1;
+    listAnnot();
+    refreshCanvas();  
+}
+function removeSaveButton(){
+    var element = document.getElementById("SaveButton");
+    element.remove();
+    flagsave=-1;
+}
+
+/************** ANA **************/
+function deletePoint(idnearpoint) {
+     /** @description delete an original point
+      * @param {int} idnearpoint Position of the orginal point in the array smooth.originalPoint.
+     */ 
+    canvas.removeEventListener('mouseup', canvasMouseUp, false);
+    if (smooth_temp.originalPoints.length > 3) {
+        smooth_temp.originalPoints.splice(idnearpoint, 1);
+        var arr = point2array(smooth_temp.originalPoints);
+        smooth_temp.interpolatedPoints = getSmoothPiecewises(arr);
+        idnearpoint = -1;
+        refreshCanvas();
+    } else if (smooth_temp.originalPoints.length <= 3) {
+        alert('Ira Apagar a segmentação. Não permitido\n Caso queira apanhar toda a segmentação botao "delete" ');
+        refreshCanvas();
+    }
+}
+
+/************** ANA **************/
+function editSmooth(idtype, idSeg, flag) {
+    /** @description Edit Segmentation
+      * @param {int} idtype Id in smoothpicewises array.
+     */
+     
+    smooth_temp=getSegmentation(idtype, idSeg);
+     refreshCanvas();
+    flagMouseEvent=flag;
+       if (flagMouseEvent===0){
+        canvas.removeEventListener("mousedown", storeSmoothPoints, false);
+
+        canvas.addEventListener("dblclick", addNewSmoothPoint, false);
+        
+        createHandleSmooth();
+     } 
+}
+
+function handlePointEditMoving(newPoint, idOldPt) {
+    if (!event) { event = window.event; }
+    // Convert point position using scale
+    //var pts = ctx.transformedPoint(event.layerX, event.layerY);
+    var pt = newPoint;
+    pt.x = pt.x / canvasScale;
+    pt.y = pt.y / canvasScale;
+    document.body.style.cursor = 'pointer';
+    updatePoint(pt, idOldPt);
+ }
+
+function getSegmentation(idtype, idSeg){
+    var segmbytype = [];
+    var segm =[];
+    segmbytype=class_list[idtype];
+    segm=segmbytype[idSeg-1];
+    return segm;
+}
+
+function handlePointEdit(event) {
+    if (!event) { event = window.event; }
+    // Convert point position using scale
+    var ptsnew = ctx.transformedPoint(event.layerX, event.layerY); //newpoint
+    ptsnew.x = ptsnew.x / canvasScale;
+    ptsnew.y = ptsnew.y / canvasScale;
+    [mindistAB, idnearpoint] = getNearPoint(ptsnew); //mindistAB,idnearpoint
+    if (mindistAB < 5) {
+        document.body.style.cursor = 'pointer';
+        updatePoint(ptsnew, idnearpoint);
+    }
+    return [idnearpoint];
+}
+
+function getNearPoint(pt){
+    //pt é o ponto onde foi o click
+    var i;
+    var mindistAB=10000;
+    var distAB,idnearpoint;
+    var ptNew=new Point(pt.x,pt.y)
+    
+    for ( i =0; i<smooth_temp.originalPoints.length;i++){
+        distAB=distance(ptNew, smooth_temp.originalPoints[i])
+        if(distAB<mindistAB){
+            mindistAB=distAB;
+            idnearpoint=i;
+        }
+    }
+    return [mindistAB,idnearpoint];
+}
+
+function distance(pointA, pointB){
+    var dx= pointA.X-pointB.X //delta x
+    var dy= pointA.Y-pointB.Y //delta y
+    var distAB=Math.sqrt(dx * dx + dy * dy); // distance
+    return distAB;
+}
+function updatePoint(point, idx) {
+    var x = point.x;
+    var y = point.y;
+    smooth_temp.originalPoints[idx] = new Point(x, y);
+    var arr = point2array(smooth_temp.originalPoints);
+    smooth_temp.interpolatedPoints = getSmoothPiecewises(arr);
     refreshCanvas();
+  //  drawSmooth(smooth_temp.interpolatedPoints);
 }
 
-function editSmooth(id) {
-    /** @description Edit SmoothPicewise
-      * @param {int} id Id in smoothpicewises array.
-     */
-    canvas.removeEventListener("mousedown", storeSmoothPoints, false);
-
-    canvas.addEventListener("dblclick", addNewSmoothPoint, false);
-
-    smooth_temp = smoothpiecewises[id];
-    smoothpiecewises[id] = [];
-
-    createHandleSmooth();
-}
 
 function createHandleSmooth() {
     /** @description Allow smooth edition
      */
+   
     var pts = smooth_temp.originalPoints;
     for (var i = 0; i < pts.length; i++) {
 
-        var x = pts[i].X;
-        var y = pts[i].Y;
-
-        var offset = 6;
-        makeHandle(x, y, i, offset);
+        var x = pts[i].X*canvasScale;
+        var y = pts[i].Y*canvasScale;
+        drawCircle(x, y,1);
+    
     }
 }
 
-function updatesmooth(el, idx, offset) {
+//não é usada?
+function updatesmooth(ev, idx, offset) {
     /** @description Edit SmoothPicewise
-      * @param {obj} el Element
+      * @param {obj} ev event
       * @param {int} idx Smoothpicewises id
       * @param {int} offset Points offset in screen
      */
     if (!offset) offset = 0;
 
-    var y = el.position().top + offset;
-    var x = el.position().left + offset;
+    var y = ev.clientY + offset;
+    var x = ev.clientY  + offset;
 
-    var len = smooth_temp.originalPoints.length;
     smooth_temp.originalPoints[idx] = new Point(x, y);
 
     var arr = point2array(smooth_temp.originalPoints);
@@ -259,82 +408,44 @@ function addNewSmoothPoint(ev) {
     /** @description Add new point to Smooth piecewise.
       * @param {event} ev Event
      */
+    refreshCanvas();
     if (!ev) { ev = window.event; }
-    var p = new Point(ev.layerX / canvasScale, ev.layerY / canvasScale);
+    var pnew = new Point(ev.layerX / canvasScale, ev.layerY / canvasScale);
 
-    var len = smooth_temp.originalPoints.length;
-    var new_pts = smooth_temp.originalPoints.slice(0);
-    var pts = smooth_temp.originalPoints.slice(0);
-    pts[-1] = smooth_temp.originalPoints[len - 1];
-    pts[len] = smooth_temp.originalPoints[0];
-    // Find closest points
-    var d_max = 10000;
-    var idx = -1;
-    for (var i = 0; i < len; i++) {
-
-        var p0 = pts[i];
-        var p1 = pts[i + 1];
-        var d = .5 * (Math.dist(p0.X, p0.Y, p.X, p.Y) + Math.dist(p1.X, p1.Y, p.X, p.Y));
-
-        if (d < d_max) {
-            d_max = d;
-            idx = i;
+    var oPoint=smooth_temp.originalPoints;
+    var interp_pts=smooth_temp.interpolatedPoints;
+    var d_min = 10000;
+    var imin = -1;
+    var jmin = -1;
+    for (var i = 0; i < oPoint.length; i++) {
+        for (var j=0;j<interp_pts[i].length; j++ ){
+            var d=distance(interp_pts[i][j] ,pnew);
+            if (d < d_min) {
+                d_min = d;
+                imin = i;
+                jmin=j;
+                //console.log(d_min +'->'+imin +','+jmin );
+            }
         }
     }
+    if (d_min<10){
     // Update array
-    new_pts.splice(idx + 1, 0, p);
-    var arr = point2array(new_pts);
+    oPoint.splice(imin + 1, 0, pnew); //adiciona o ponto no array na posição idx
+    var arr = point2array(oPoint);
     var new_interp_pts = getSmoothPiecewises(arr);
     // Update temp smooth
-    smooth_temp.originalPoints = new_pts;
+    smooth_temp.originalPoints = oPoint;
     smooth_temp.interpolatedPoints = new_interp_pts;
     // Update handle pointss
-    clearHandle();
-
+    //clearHandle();
     createHandleSmooth();
     refreshCanvas();
     drawSmooth(smooth_temp.interpolatedPoints);
+    }
+    else {
+        alert("click mais proximo da linha de segmentação");
+    }
 }
-
-function clearHandle() {
-    /** @description Clear Handle objects
-     */
-    $('.handle').remove();
-}
-
-function makeHandle(x, y, idx, offset) {
-    /** @descriptio Create handle objects
-      * @param {int} x X coord
-      * @param {int} y Y coord
-      * @param {int} idx Smooth index
-      * @param {?} offset offset
-     */
-    if (!offset) offset = 6;
-    var handle;
-    handle = $('<div/>').addClass('handle').appendTo('#div-canvas-in').css({
-        left: x - offset,
-        top: y - offset
-    });
-    /* if (typeof idx !== 'undefined') {
-         handle.attr('id', 'point-'+idx.toString());
-     }*/
-    handle.draggable({
-        drag: function (event, ui) {
-            updatesmooth(handle, idx, offset);
-        },
-        stop: updatesmooth(handle, idx, offset)
-    });
-    /*handle.dblclick(function (ev) {
-        return handleDoubleClick(handle);
-    });*/
-    handle.css({
-        position: 'absolute'
-    });
-    return handle;
-}
-
-
-/* Auxiliary */
 
 function getSmoothPoints(smooth, pts) {
     /** @description Function to get the interpolated points of the SmoothPiecewise object.
@@ -426,4 +537,26 @@ function point2array(pts) {
     else {
         return [pts[i].X, pts[i].Y];
     }
+}
+
+
+function drawCircle(x, y, width ,color) {
+   
+    if (!ev) { var ev = window.event; }
+    if (color === null || color === undefined) {
+        color = smooth_temp.profile.color;
+    }
+    if (width === null || width === undefined) {
+        width = 1;//draw_profile.thick;
+    }
+    this.ctx.strokeStyle = color;
+    this.ctx.lineWidth = width;
+    this.ctx.save();
+    this.ctx.beginPath();
+    this.ctx.arc(x, y, 3, 0, 2 * Math.PI, false);
+    //this.ctx.fillStyle =color;
+    //this.ctx.fill();
+    this.ctx.closePath();
+    this.ctx.restore();
+    this.ctx.stroke();
 }
