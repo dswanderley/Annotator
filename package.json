@@ -1,0 +1,30 @@
+{
+  "name": "annotator",
+  "version": "1.0.0",
+  "description": "Manual segmentation annotator website dependencies.",
+  "main": "app.js",
+  "scripts": {
+    "test": "annot_test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dswanderley/Annotator.git"
+  },
+  "author": "Diego Wanderley",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dswanderley/Annotator/issues"
+  },
+  "homepage": "https://github.com/dswanderley/Annotator#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "express-fileupload": "^1.1.3-alpha.2",
+    "fs": "0.0.1-security",
+    "image-size": "^0.7.2",
+    "morgan": "^1.9.1",
+    "nib": "^1.1.2",
+    "pug": "^2.0.3",
+    "request": "^2.88.0",
+    "stylus": "^0.54.5"
+  }
+}

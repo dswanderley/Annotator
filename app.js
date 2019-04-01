@@ -16,7 +16,7 @@ function compile(str, path) {
 }
 // Define Views path and engines
 app.set('views', __dirname + '/views')
-app.set('view engine', 'jade')
+app.set('view engine', 'pug')
 app.use(logger('dev'))
 
 // Define public directory
