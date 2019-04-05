@@ -23,6 +23,7 @@ The following packages are required by the Node.js application:
 - request 				(v2.88.0)
 - fs					(v0.0.1)
 - image-size			(v0.7.2)
+- mongoose				(v5.4.20)
 
 ### Installing
 

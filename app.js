@@ -4,7 +4,23 @@
 var express = require('express'),
     logger = require('morgan'),
     stylus = require('stylus'),
-    nib = require('nib');
+    nib = require('nib'),
+    mongodb = require('mongodb');
+
+// MongoDB - Atlas
+var db_client = mongodb.MongoClient;
+const ADM_PASS = 'fhx8aut3Q4DAuSx'
+const DB_URI = 'mongodb+srv://admin:'+ADM_PASS+'@cluster-med-img-4tn3x.mongodb.net/test'
+
+db_client.connect(DB_URI, { useNewUrlParser: true }, function(err, client) {
+    if(err) {
+         console.log('Error occurred while connecting to MongoDB Atlas...\n',err);
+    }
+    console.log('Connected...');
+    const collection = client.db("test").collection("devices");
+    // perform actions on the collection object
+    client.close();
+ });
 
 // Initialize express instance
 var app = express();
@@ -37,6 +53,11 @@ app.use(express.static(__dirname + '/images'))
 // Index
 var index = require('./routes/index');
 app.use(index);
+// Users
+var userpage = require('./routes/user');
+app.use(userpage);
+// Logins
+app.use('/login', userpage);
 // Annotations 
 var pilot = require('./routes/annot');
 app.use(pilot);
