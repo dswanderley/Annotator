@@ -8,12 +8,37 @@ var router = require('express').Router();
 
 
 // Index - GET
-router.get('/', function (req, res) {
+router.get('/login', function (req, res) {
     res.render('./login',
         { title: 'Login Page' }
     );
 });
 
+router.post('/login', function (req, res) {
+    // login the user and return the user object
+
+    if (req.body.username == 'diego') {
+
+        var user = {
+            username: req.body.username,
+            role: 'Admin',
+            name: 'Diego',
+            surname: 'Wanderley'
+        }
+        // if the login is successful
+        req.session.username = user.username;
+        req.session.role = user.role;
+        req.session.name = user.name;
+        req.session.surname = user.surname;
+
+        res.redirect('/')
+
+    } else {
+        res.render('./login',
+            { title: 'Login Page' }
+    );
+    }
+});
 
 // Return routers
 module.exports = router;

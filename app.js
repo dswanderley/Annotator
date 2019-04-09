@@ -5,6 +5,8 @@ var express = require('express'),
     logger = require('morgan'),
     stylus = require('stylus'),
     nib = require('nib'),
+    cookieParser = require('cookie-parser'),
+    session = require('express-session'),
     mongodb = require('mongodb');
 
 // MongoDB - Atlas
@@ -24,6 +26,11 @@ db_client.connect(DB_URI, { useNewUrlParser: true }, function(err, client) {
 
 // Initialize express instance
 var app = express();
+// Parse URL-encoded bodies (as sent by HTML forms)
+app.use(express.urlencoded());
+// Parse JSON bodies (as sent by API clients)
+app.use(express.json());
+
 // Init stylus
 function compile(str, path) {
 	return stylus(str)
@@ -34,6 +41,14 @@ function compile(str, path) {
 app.set('views', __dirname + '/views')
 app.set('view engine', 'pug')
 app.use(logger('dev'))
+
+// Define Session
+app.use(cookieParser());
+app.use(session({
+    secret: 'application_secret',
+    resave: false,
+    saveUninitialized: false
+}));
 
 // Define public directory
 app.use(stylus.middleware({ 
