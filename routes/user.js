@@ -19,17 +19,16 @@ router.post('/login', function (req, res) {
 
     if (req.body.username == 'diego') {
 
-        var user = {
+        let local_user = {
             username: req.body.username,
             role: 'Admin',
             name: 'Diego',
             surname: 'Wanderley'
         }
         // if the login is successful
-        req.session.username = user.username;
-        req.session.role = user.role;
-        req.session.name = user.name;
-        req.session.surname = user.surname;
+        req.session.user = local_user;
+        
+        sess_user = local_user;
 
         res.redirect('/')
 

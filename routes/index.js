@@ -6,11 +6,15 @@
 // Module dependencies
 var router = require('express').Router();
 
+//var user = undefined;
 
 // Index - GET
 router.get('/', function (req, res) {
+    if (sess_user != undefined ){
+        sess_user = req.session.user 
+    }
     res.render('./index',
-        { title: 'Home' }
+        { title: 'Home', sess_user: sess_user }
     );
 });
 

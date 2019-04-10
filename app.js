@@ -79,5 +79,8 @@ app.use(pilot);
 // Gallery
 app.use('/gallery', pilot);
 
+// Define a global variable for user session
+global.sess_user = undefined;
+
 // Deploy
 app.listen(3000)
