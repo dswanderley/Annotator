@@ -12,10 +12,15 @@ var galleryDir = './images/gallery/';
 
 // Annotations - GET
 router.get('/annot', function (req, res) {
-    // Render page Pilot
-    res.render('./annot', {
-        title: 'Annotations'
-    });
+
+    // if the login is successful
+    if (req.session.user == undefined)
+        res.redirect('/')
+    else
+        // Render page Pilot
+        res.render('./annot', {
+            title: 'Annotations'
+    });    
 });
 
 // Gallery - GET

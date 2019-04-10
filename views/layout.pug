@@ -39,8 +39,9 @@ html
 						ul.navbar-nav.mr-auto
 							li.nav-item
 								a.nav-link(href='/') Home
-							li.nav-item
-								a.nav-link(href='/annot') Annotations
+							if sess_user != undefine
+								li.nav-item
+									a.nav-link(href='/annot') Annotations
 						
 						ul.navbar-nav
 							if sess_user == undefine
@@ -52,6 +53,9 @@ html
 							else
 								li.nav-item
 									a.nav-link(href='/login') #{sess_user.name} #{sess_user.surname}
+								li.nav-item
+									form(method='post', action='/logout')
+										button.btn.btn-link.nav-link Logout
 		.text-center
 			block content
 

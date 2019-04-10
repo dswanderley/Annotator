@@ -7,13 +7,14 @@
 var router = require('express').Router();
 
 
-// Index - GET
+// Login - GET
 router.get('/login', function (req, res) {
     res.render('./login',
         { title: 'Login Page' }
     );
 });
 
+// Login - POST
 router.post('/login', function (req, res) {
     // login the user and return the user object
 
@@ -39,7 +40,26 @@ router.post('/login', function (req, res) {
     }
 });
 
+// Logout - POST
+router.post('/logout', function (req, res) {
+ 
+    if (req.session.user == undefined) 
+        return;
+    // if there is a user
+    if (req.session.user.username == sess_user.username) {
+        // Clear user
+        req.session.user = undefined;
+        sess_user = undefined;
 
+        // Clear cookie
+        //??
+        req.session.destroy(err => {
+            res.clearCookie('connect.sid');
+            // Redirect to home
+            res.redirect('/')
+        });        
+    }
+});
 
 // Return routers
 module.exports = router;
