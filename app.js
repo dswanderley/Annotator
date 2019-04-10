@@ -27,7 +27,7 @@ db_client.connect(DB_URI, { useNewUrlParser: true }, function(err, client) {
 // Initialize express instance
 var app = express();
 // Parse URL-encoded bodies (as sent by HTML forms)
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 // Parse JSON bodies (as sent by API clients)
 app.use(express.json());
 
@@ -71,8 +71,6 @@ app.use(index);
 // Users
 var userpage = require('./routes/user');
 app.use(userpage);
-// Logins
-app.use('/login', userpage);
 // Annotations 
 var pilot = require('./routes/annot');
 app.use(pilot);
