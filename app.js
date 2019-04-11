@@ -10,19 +10,9 @@ var express = require('express'),
     mongodb = require('mongodb');
 
 // MongoDB - Atlas
-var db_client = mongodb.MongoClient;
-const ADM_PASS = 'fhx8aut3Q4DAuSx'
-const DB_URI = 'mongodb+srv://admin:'+ADM_PASS+'@cluster-med-img-4tn3x.mongodb.net/test'
-
-db_client.connect(DB_URI, { useNewUrlParser: true }, function(err, client) {
-    if(err) {
-         console.log('Error occurred while connecting to MongoDB Atlas...\n',err);
-    }
-    console.log('Connected...');
-    const collection = client.db("test").collection("devices");
-    // perform actions on the collection object
-    client.close();
- });
+db_client = mongodb.MongoClient;
+ADM_PASS = 'fhx8aut3Q4DAuSx'
+DB_URI = 'mongodb+srv://admin:'+ADM_PASS+'@cluster-med-img-4tn3x.mongodb.net/test'
 
 // Initialize express instance
 var app = express();
