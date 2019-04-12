@@ -92,9 +92,7 @@ function initCanvas(src) {
     img = new Image();
     var img_width = 864;
     var img_height = 768;
-    if (src===""){
-        src='wellcome.png';
-    }
+    
     //var img_width = galleryList[current_idx].width;
     //var img_height = galleryList[current_idx].height;
     // load canvas

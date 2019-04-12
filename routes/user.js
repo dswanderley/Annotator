@@ -32,7 +32,7 @@ router.post('/login', function (req, res) {
             console.log('Error occurred while connecting to MongoDB Atlas...\n', err);
         }
         console.log('MongoDB connected...');
-        const collection = client.db("annotdb").collection("users").find(query).toArray(function (err, result) {
+        client.db("annotdb").collection("users").find(query).toArray(function (err, result) {
             // Get error
             if (err) throw err;
             // Enable user variable
@@ -50,6 +50,7 @@ router.post('/login', function (req, res) {
                 } else {
                     // Define user object with relevant informations
                     let local_user = {
+                        uid: user._id.toString(),
                         username: user.username,
                         role: user.role,
                         name: user.name,

@@ -6,8 +6,9 @@
 // Global variables
 var galleryURL = 'gallery/';
 // dataset
-var ImageList = [];
-
+var imageList = [];
+// current image
+var im_obj = null;
 
 /*
  * GET AJAX
@@ -37,7 +38,7 @@ function loadGallery() {
             async: true,
             success: function (data) {
                 // reset List of images in gallery
-                ImageList = [];
+                imageList = [];
                 i = 0;
                 // Read images in gallery folder
                 data.gallery_list.forEach(file => {
@@ -46,7 +47,7 @@ function loadGallery() {
                     // Create each image element - list item
                     el_ul.append(getGalleryEl(img_id, file.filename));
                     // Add filename to gallery list
-                    ImageList.push(file);
+                    imageList.push(file);
                     i += 1;
                 });
                 // Add list to gallery
@@ -95,7 +96,8 @@ function selectGalleryImage(imgid) {
     /** @description Change large image after click on image gallery
       * @param {string} image Image Element Id
      */
-    currentSrc =galleryURL + ImageList[imgid].filename;
+    im_obj = imageList[imgid];
+    currentSrc = galleryURL + im_obj.filename;
     resetAnotation();
     initCanvas(currentSrc);
 }

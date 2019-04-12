@@ -187,6 +187,7 @@ function drawElement(cId) {
  
     }       
 }
+
 function drawSave(){
     //var x = document.createElement("DIV"); 
     //x.style.backgroundPosition="left bottom";
@@ -196,27 +197,54 @@ function drawSave(){
         btn.setAttribute("id", "SaveButton");
         btn.setAttribute("type", "button");
         btn.setAttribute("class", "btn-save");
-        btn.style.backgroundPosition="left bottom";
-       document.getElementById("col-diag-right").append(btn);
+        btn.style.backgroundPosition = "left bottom";
+        document.getElementById("col-diag-right").append(btn);        
+        btn.onclick = function () { saveAnnot(); }; 
         var t=document.createTextNode("Save");
         btn.appendChild(t);
-        //x.appendChild(btn);
-        btn.onclick=function(){
-            var json_path= "/annot";
-            var list=JSON.stringify(class_list);
-            $.ajax({
-                type: 'POST',
-                url: json_path,//url of receiver file on server
-                data: 'li mesg', //your data
-                success: function (msg) {
-                    console.log("Guardei");
-            
-                }, //callback when ajax request finishes
-              });
-        };
-        
 }
 
+function saveAnnot() {
+    /* SAVE ANNOTATIONS - Requires description */
+    //  new element
+    let upload_list = new Array();
+    // Read all elements in order to remove interpolatedPoints
+    for (let i =0; i < class_list.length; i++) {
+        // This comparison is necessary because there is a fixed array size (yet)
+        if (class_list[i] != undefined) {
+            let sp = class_list[i]
+            let listofelements = new Array();
+            // Read elements on each list
+            for (let j=0; j < sp.length; j++){
+                data_obj = sp[j];
+                // Delete intperpolatedPoints and push to new temp list of elements
+                delete data_obj.interpolatedPoints;
+                listofelements.push(data_obj);
+            }
+            // Upload temp list of list
+            upload_list.push(listofelements);
+        }        
+    }
+    // Data ibject to be stored
+    let upload_data = { 
+        image_data: im_obj, 
+        annotations: upload_list
+    };
+    // Data to set ajax post
+    let url = "/annot";
+    let updata = JSON.stringify(upload_data);
+    $.ajax({
+        type: 'POST',
+        url: url, 
+        data: updata,
+        dataType : "json",
+        contentType: "application/json; charset=utf-8",
+        success: function (msg) {
+            console.log("Saved");
+            // Needs handle of the current data.
+        }
+      });
+}
 
 /* Calculate Parameters */
 

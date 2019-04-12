@@ -10,6 +10,7 @@ var router = require('express').Router(),
 
 var galleryDir = './images/gallery/';
 
+
 // Annotations - GET
 router.get('/annot', function (req, res) {
 
@@ -22,6 +23,7 @@ router.get('/annot', function (req, res) {
             title: 'Annotations'
     });    
 });
+
 
 // Gallery - GET
 router.get('/gallery', function (req, res) {
@@ -54,32 +56,63 @@ router.get('/gallery', function (req, res) {
     });
 });  
 
-// Return routers
-module.exports = router;
-var sampleObject = {
-    a: 1,
-    b: 2,
-    c: {
-        x: 11,
-        y: 22
-    }
-};
+
 // Upload - POST
 router.post('/annot', function (req, res) {
-    var data=req.body;
-    console.log(data);
-    
-    //var raw= JSON.parse(req.body);
-    //console.log(JSON.stringify(raw,null,4));
-    //fs.writeFile("./segmentation.json", JSON.stringify(class_list, null, 4), (err) => {
-      //  if (err) {
-      //      console.error(err);
-       //     return;
-        //};
-        //console.log("File has been created");
-    //});
-    
-   // return res.send({ file_list, files });
+    var data = req.body;
+
+    let annot_el = {
+        uid: sess_user.uid,
+        annotations: data.annotations,
+        date: new Date()
+    };
+    let query = { filename: data.image_data.filename };
+
+    db_client.connect(DB_URI, { useNewUrlParser: true }, function (err, client) {
+        if (err) {
+            console.log('Error occurred while connecting to MongoDB Atlas...\n', err);
+        }
+        console.log('MongoDB connected...');
+        let collection = client.db("annotdb").collection("images");
+        collection.find(query).toArray(function (err, data) {
+            // Get error
+            if (err) throw err;
+            // Check if user exist - returns if not.
+            if (data.length > 0) {
+                // Init temp list
+                let annotation_list;
+                // Check if exist
+                if (data.annotation_list === undefined){
+                    // Creat new list
+                    annotation_list = [annot_el];       
+                }
+                else {
+                    // Read current list
+                    let has = false;
+                    annotation_list = data.annotation_list;
+                    for(let i=0; i < annotation_list.length; i++){
+                        // Search element by user id
+                        if (annotation_list[i].uid === annot_el.uid) {
+                            has = true;
+                            // Update list
+                            annotation_list[i] = annot_el;
+                            break;
+                        }
+                    }
+                    if (!has) // Add new element (by user) to list
+                        annotation_list.push(annot_el);
+                }
+                // Update query
+                let update = { $set: {annotation_list: annotation_list}}             
+                // Set update to database
+                collection.updateOne(query, update, function(err, up) { 
+                    // Get error
+                    if (err) throw err;
+                    res.send(up);
+                });
+            }
+        });
+    });
 });
 
 /* Classes */
@@ -103,3 +136,6 @@ class PatientInfo {
 
 }
 
+
+// Return routers
+module.exports = router;
