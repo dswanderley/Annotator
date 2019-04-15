@@ -65,7 +65,11 @@ app.use(userpage);
 var pilot = require('./routes/annot');
 app.use(pilot);
 // Gallery
-app.use('/gallery', pilot);
+var gallery = require('./routes/gallery');
+app.use(gallery);
+// Manager
+var manager = require('./routes/manager');
+app.use(manager);
 
 // Define a global variable for user session
 global.sess_user = undefined;

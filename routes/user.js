@@ -1,6 +1,6 @@
 /*
 *   users.js
-*   Router responsible to manage index calls
+*   Router responsible to manage users pages calls
 */
 
 // Module dependencies
@@ -8,14 +8,15 @@ var router = require('express').Router();
 
 
 // Login - GET
-router.get('/login', function (req, res) {
+router.get('/user/login', function (req, res) {
     res.render('./login',
         { title: 'Login Page' }
     );
 });
 
+
 // Login - POST
-router.post('/login', function (req, res) {
+router.post('/user/login', function (req, res) {
     // login the user and return the user object
 
     let uname = req.body.username;
@@ -44,7 +45,7 @@ router.post('/login', function (req, res) {
                 user = result[0];
                 // Check if user password is ok - returns if not.
                 if (user.password != password) {
-                    res.render('./login',
+                    res.render('./user/login',
                         { title: 'Login Page ERROR Pass' }
                     );
                 } else {
@@ -65,7 +66,7 @@ router.post('/login', function (req, res) {
                 }
             }
             else {
-                res.render('./login',
+                res.render('./user/login',
                     { title: 'Login Page ERROR User' }
                 );
             }
@@ -73,8 +74,9 @@ router.post('/login', function (req, res) {
     });
 });
 
+
 // Logout - POST
-router.post('/logout', function (req, res) {
+router.post('/user/logout', function (req, res) {
 
     if (req.session.user == undefined)
         return;
@@ -85,7 +87,6 @@ router.post('/logout', function (req, res) {
         sess_user = undefined;
 
         // Clear cookie
-        //??
         req.session.destroy(err => {
             res.clearCookie('connect.sid');
             // Redirect to home
@@ -93,6 +94,15 @@ router.post('/logout', function (req, res) {
         });
     }
 });
+
+
+// Login - GET
+router.get('/user/profile', function (req, res) {
+    res.render('./profile',
+        { title: 'User\' Page' }
+    );
+});
+
 
 // Return routers
 module.exports = router;

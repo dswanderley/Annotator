@@ -25,7 +25,7 @@ function loadGallery() {
         class: 'galery-ul'
     });
     // Gallery URL
-    url_g = urlBase + '/gallery';
+    url_g = urlBase + '/annot/gallery';
 
     // Ajax call
     $.ajax(

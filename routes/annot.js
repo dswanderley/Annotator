@@ -1,6 +1,6 @@
 /*
-*   pilot.js
-*   Router responsible to manage pilot application calls
+*   annot.js
+*   Router responsible to manage annotations page calls
 */
 
 // Module dependencies
@@ -26,7 +26,7 @@ router.get('/annot', function (req, res) {
 
 
 // Gallery - GET
-router.get('/gallery', function (req, res) {
+router.get('/annot/gallery', function (req, res) {
     // Initialize list of files
     let galleryitem = [];
     let gallery_list  = [];
