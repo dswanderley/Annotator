@@ -51,11 +51,16 @@ html
 									a.nav-link(href='/login')
 										i.fa.fa-sign-in-alt.fa-w-16
 							else
-								li.nav-item
-									a.nav-link(href='/login') #{sess_user.name} #{sess_user.surname}
-								li.nav-item
-									form(method='post', action='/logout')
-										button.btn.btn-link.nav-link Logout
+								li.nav-item.dropdown
+									a.nav-link.dropdown-toggle#navbarUserMenuLink(style="margin-right: 5px;" href='#' data-toggle="dropdown" aria-haspopup="true" aria-expanded="true") #{sess_user.name} #{sess_user.surname}
+										i.fas.fa-user-md.fa-2x(style="margin-left: 10px;")
+									.dropdown-menu.dropdown-left(aria-labelledby="navbarUserMenuLink")
+										a.dropdown-item(href='/login') Profile
+										a.dropdown-item(href='/login') Gallery
+										.dropdown-divider
+										form(method='post', action='/logout')
+											button.btn.btn-link.dropdown-item Logout
+
 		.text-center
 			block content
 

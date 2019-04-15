@@ -69,11 +69,7 @@ router.post('/login', function (req, res) {
                     { title: 'Login Page ERROR User' }
                 );
             }
-
         });
-        // perform actions on the collection object
-        //client.close();
-        //console.log('MongoDB closed.');
     });
 });
 
