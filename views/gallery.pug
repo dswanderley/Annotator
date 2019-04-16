@@ -147,8 +147,8 @@ block content
                                         button.btn.btn-outline-dark.btn-show(onClick='setEg(this)') 
                                             i.far.fa-eye
 
-
+    script(src="/javascripts/gallery_script.js")
     script.
         $(window).on("load", function(){
-            $('[data-toggle="tooltip"]').tooltip()
+            loadGallery();
         });
