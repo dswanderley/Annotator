@@ -13,13 +13,13 @@ block content
                 .h4.text-white.menu-header Menu
 
                 .h6.text-light.menu-description Data type:
-                .btn-group.btn-group-sm.eg-btn-group(role='group' aria-label='DR examples')
+                .btn-group.btn-group-sm(role='group' aria-label='DR examples')
                     button.bg-light.btn.btn-outline-dark.btn-radio-type(onClick='setEg(this)') Ovary
                     button.bg-light.btn.btn-outline-dark.btn-radio-type(onClick='setEg(this)') Uterus
                     button.bg-light.btn.btn-outline-dark.btn-radio-type(onClick='setEg(this)') All
 
                 .h6.text-light.menu-description Annotation status:
-                .btn-group.btn-group-sm.eg-btn-group(role='group' aria-label='DR examples')
+                .btn-group.btn-group-sm(role='group' aria-label='DR examples')
                     button.bg-light.btn.btn-outline-dark.btn-radio-type(onClick='setEg(this)') Complete
                     button.bg-light.btn.btn-outline-dark.btn-radio-type(onClick='setEg(this)') Incomplete
                     button.bg-light.btn.btn-outline-dark.btn-radio-type(onClick='setEg(this)') All
@@ -35,64 +35,120 @@ block content
                     input.form-control#txt-annot(type="text" aria-describedby="annotator-id" placeholder="Annotator ID") 
 
                 .btn-search-field
-                    button.btn.btn-secondary(onClick='search(this)') Search
+                    button.btn.btn-dark(onClick='search(this)') Search
                     
+
             .col
                 .justify-content-left
                     .gallery
 
                         .responsive
                             .gallery-item
-                                a(target="_blank" href="https://www.w3schools.com/css/img_5terre.jpg")
-                                    img(src="https://www.w3schools.com/css/img_5terre.jpg" alt="Cinque Terre" width="600" height="400")
-                                .desc Add a description of the image here
+                                a(target="_blank" href="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png")
+                                    img(src="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png" alt="Cinque Terre" width="600" height="400")
+                                .desc
+                                    .btn-group.btn-group-sm.btn-group-show(role='group' aria-label='DR examples')
+                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)')
+                                            i.far.fa-edit
+                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)') 
+                                            i.far.fa-eye
 
                         .responsive
                             .gallery-item
-                                a(target="_blank" href="https://www.w3schools.com/css/img_5terre.jpg")
-                                    img(src="https://www.w3schools.com/css/img_5terre.jpg" alt="Cinque Terre" width="600" height="400")
-                                .desc Add a description of the image here
+                                a(target="_blank" href="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png")
+                                    img(src="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png" alt="Cinque Terre" width="600" height="400")
+                                .btn.check-icon(data-toggle="tooltip" data-placement="top" title="User 1")
+                                    i.fas.fa-check
+                                .desc
+                                    .btn-group.btn-group-sm.btn-group-show(role='group' aria-label='DR examples')
+                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)')
+                                            i.far.fa-edit
+                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)') 
+                                            i.far.fa-eye
+ 
+                        .responsive
+                            .gallery-item
+                                a(target="_blank" href="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png")
+                                    img(src="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png" alt="Cinque Terre" width="600" height="400")
+                                .btn.check-icon
+                                    i.fas.fa-check-double
+                                .desc
+                                    .btn-group.btn-group-sm.btn-group-show(role='group' aria-label='DR examples')
+                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)')
+                                            i.far.fa-edit
+                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)') 
+                                            i.far.fa-eye
                             
                         .responsive
                             .gallery-item
-                                a(target="_blank" href="https://www.w3schools.com/css/img_5terre.jpg")
-                                    img(src="https://www.w3schools.com/css/img_5terre.jpg" alt="Cinque Terre" width="600" height="400")
-                                .desc Add a description of the image here
-                            
-                        .responsive
-                            .gallery-item
-                                a(target="_blank" href="https://www.w3schools.com/css/img_5terre.jpg")
-                                    img(src="https://www.w3schools.com/css/img_5terre.jpg" alt="Cinque Terre" width="600" height="400")
-                                .desc Add a description of the image here
+                                a(target="_blank" href="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png")
+                                    img(src="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png" alt="Cinque Terre" width="600" height="400")
+                                .btn.healthy-icon(data-toggle="tooltip" data-placement="top" title="Mark as sick.")
+                                    i.fas.fa-notes-medical
+                                .desc
+                                    .btn-group.btn-group-sm.btn-group-show(role='group' aria-label='DR examples')
+                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)')
+                                            i.far.fa-edit
+                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)') 
+                                            i.far.fa-eye
                         
                         .responsive
                             .gallery-item
-                                a(target="_blank" href="https://www.w3schools.com/css/img_5terre.jpg")
-                                    img(src="https://www.w3schools.com/css/img_5terre.jpg" alt="Cinque Terre" width="600" height="400")
-                                .desc Add a description of the image here
+                                a(target="_blank" href="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png")
+                                    img(src="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png" alt="Cinque Terre" width="600" height="400")
+                                .desc 
+                                    .btn-group.btn-group-sm.btn-group-show(role='group' aria-label='DR examples')
+                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)')
+                                            i.far.fa-edit
+                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)') 
+                                            i.far.fa-eye
                             
                         .responsive
                             .gallery-item
-                                a(target="_blank" href="https://www.w3schools.com/css/img_5terre.jpg")
-                                    img(src="https://www.w3schools.com/css/img_5terre.jpg" alt="Cinque Terre" width="600" height="400")
-                                .desc Add a description of the image here
+                                a(target="_blank" href="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png")
+                                    img(src="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png" alt="Cinque Terre" width="600" height="400")
+                                .desc
+                                    .btn-group.btn-group-sm.btn-group-show(role='group' aria-label='DR examples')
+                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)')
+                                            i.far.fa-edit
+                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)') 
+                                            i.far.fa-eye
 
                         .responsive
                             .gallery-item
-                                a(target="_blank" href="https://www.w3schools.com/css/img_5terre.jpg")
-                                    img(src="https://www.w3schools.com/css/img_5terre.jpg" alt="Cinque Terre" width="600" height="400")
-                                .desc Add a description of the image here
+                                a(target="_blank" href="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png")
+                                    img(src="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png" alt="Cinque Terre" width="600" height="400")
+                                .desc
+                                    .btn-group.btn-group-sm.btn-group-show(role='group' aria-label='DR examples')
+                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)')
+                                            i.far.fa-edit
+                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)') 
+                                            i.far.fa-eye
                         
                         .responsive
                             .gallery-item
-                                a(target="_blank" href="https://www.w3schools.com/css/img_5terre.jpg")
-                                    img(src="https://www.w3schools.com/css/img_5terre.jpg" alt="Cinque Terre" width="600" height="400")
-                                .desc Add a description of the image here
+                                a(target="_blank" href="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png")
+                                    img(src="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png" alt="Cinque Terre" width="600" height="400")
+                                .desc
+                                    .btn-group.btn-group-sm.btn-group-show(role='group' aria-label='DR examples')
+                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)')
+                                            i.far.fa-edit
+                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)') 
+                                            i.far.fa-eye
                         
                         .responsive
                             .gallery-item
-                                a(target="_blank" href="https://www.w3schools.com/css/img_5terre.jpg")
-                                    img(src="https://www.w3schools.com/css/img_5terre.jpg" alt="Cinque Terre" width="600" height="400")
-                                .desc Add a description of the image here
+                                a(target="_blank" href="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png")
+                                    img(src="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png" alt="Cinque Terre" width="600" height="400")
+                                .desc
+                                    .btn-group.btn-group-sm.btn-group-show(role='group' aria-label='DR examples')
+                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)')
+                                            i.far.fa-edit
+                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)') 
+                                            i.far.fa-eye
 
-                            
+
+    script.
+        $(window).on("load", function(){
+            $('[data-toggle="tooltip"]').tooltip()
+        });

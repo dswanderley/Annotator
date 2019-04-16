@@ -7,21 +7,49 @@
     border: 1px solid #ccc;
     float: left;
     width: 180px;
-  }
-  
-  div.gallery-item:hover {
-    border: 1px solid #777;
-  }
 
-  div.gallery-item img {
+    position: relative;
+    text-align: right;
+}
+
+div.gallery-item:hover {
+    border: 1px solid #777;
+}
+
+div.gallery-item img {
     width: 100%;
     height: auto;
-  }
+}
   
-  div.desc {
-    padding: 15px;
+div.desc {
+    padding: 0;
     text-align: center;
-  }
+}
+
+.healthy-icon {
+    color: darkorange;
+    padding: 0;
+    position: absolute;
+    top: 5px;
+    left: 7px;
+}
+
+.check-icon {
+    color: greenyellow;
+    padding: 0;
+    position: absolute;
+    bottom: 40px;
+    right: 7px;
+}
+
+.btn-group-show {
+    width: 100%;
+}
+
+.btn-show {
+    margin: 0;
+    width: 50%;
+}
 
 
 /*
