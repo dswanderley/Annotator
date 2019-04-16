@@ -1,11 +1,98 @@
 extend layout
 
-    
+append stylesheets
+    link(rel='stylesheet', href='/stylesheets/gallery.css')
+
 block content
 
-    .wrapper
-    
-        nav#sidebar
+    .container-fluid
+        .row.justify-content-between
 
+            .col.col-md-auto.bg-info.bg-full-fill
 
-        #content
+                .h4.text-white.menu-header Menu
+
+                .h6.text-light.menu-description Data type:
+                .btn-group.btn-group-sm.eg-btn-group(role='group' aria-label='DR examples')
+                    button.bg-light.btn.btn-outline-dark.btn-radio-type(onClick='setEg(this)') Ovary
+                    button.bg-light.btn.btn-outline-dark.btn-radio-type(onClick='setEg(this)') Uterus
+                    button.bg-light.btn.btn-outline-dark.btn-radio-type(onClick='setEg(this)') All
+
+                .h6.text-light.menu-description Annotation status:
+                .btn-group.btn-group-sm.eg-btn-group(role='group' aria-label='DR examples')
+                    button.bg-light.btn.btn-outline-dark.btn-radio-type(onClick='setEg(this)') Complete
+                    button.bg-light.btn.btn-outline-dark.btn-radio-type(onClick='setEg(this)') Incomplete
+                    button.bg-light.btn.btn-outline-dark.btn-radio-type(onClick='setEg(this)') All
+
+                .h6.text-light.menu-description Patient ID:
+                input.form-control#txt-patient(type="text" aria-describedby="patient-id" placeholder="Patient ID") 
+
+                .h6.text-light.menu-description Image ID:
+                input.form-control#txt-image(type="text" aria-describedby="image-id" placeholder="Image ID") 
+
+                if sess_user.role == "admin"
+                    .h6.text-light.menu-description Annotator ID:
+                    input.form-control#txt-annot(type="text" aria-describedby="annotator-id" placeholder="Annotator ID") 
+
+                .btn-search-field
+                    button.btn.btn-secondary(onClick='search(this)') Search
+                    
+            .col
+                .justify-content-left
+                    .gallery
+
+                        .responsive
+                            .gallery-item
+                                a(target="_blank" href="https://www.w3schools.com/css/img_5terre.jpg")
+                                    img(src="https://www.w3schools.com/css/img_5terre.jpg" alt="Cinque Terre" width="600" height="400")
+                                .desc Add a description of the image here
+
+                        .responsive
+                            .gallery-item
+                                a(target="_blank" href="https://www.w3schools.com/css/img_5terre.jpg")
+                                    img(src="https://www.w3schools.com/css/img_5terre.jpg" alt="Cinque Terre" width="600" height="400")
+                                .desc Add a description of the image here
+                            
+                        .responsive
+                            .gallery-item
+                                a(target="_blank" href="https://www.w3schools.com/css/img_5terre.jpg")
+                                    img(src="https://www.w3schools.com/css/img_5terre.jpg" alt="Cinque Terre" width="600" height="400")
+                                .desc Add a description of the image here
+                            
+                        .responsive
+                            .gallery-item
+                                a(target="_blank" href="https://www.w3schools.com/css/img_5terre.jpg")
+                                    img(src="https://www.w3schools.com/css/img_5terre.jpg" alt="Cinque Terre" width="600" height="400")
+                                .desc Add a description of the image here
+                        
+                        .responsive
+                            .gallery-item
+                                a(target="_blank" href="https://www.w3schools.com/css/img_5terre.jpg")
+                                    img(src="https://www.w3schools.com/css/img_5terre.jpg" alt="Cinque Terre" width="600" height="400")
+                                .desc Add a description of the image here
+                            
+                        .responsive
+                            .gallery-item
+                                a(target="_blank" href="https://www.w3schools.com/css/img_5terre.jpg")
+                                    img(src="https://www.w3schools.com/css/img_5terre.jpg" alt="Cinque Terre" width="600" height="400")
+                                .desc Add a description of the image here
+
+                        .responsive
+                            .gallery-item
+                                a(target="_blank" href="https://www.w3schools.com/css/img_5terre.jpg")
+                                    img(src="https://www.w3schools.com/css/img_5terre.jpg" alt="Cinque Terre" width="600" height="400")
+                                .desc Add a description of the image here
+                        
+                        .responsive
+                            .gallery-item
+                                a(target="_blank" href="https://www.w3schools.com/css/img_5terre.jpg")
+                                    img(src="https://www.w3schools.com/css/img_5terre.jpg" alt="Cinque Terre" width="600" height="400")
+                                .desc Add a description of the image here
+                        
+                        .responsive
+                            .gallery-item
+                                a(target="_blank" href="https://www.w3schools.com/css/img_5terre.jpg")
+                                    img(src="https://www.w3schools.com/css/img_5terre.jpg" alt="Cinque Terre" width="600" height="400")
+                                .desc Add a description of the image here
+
+                            

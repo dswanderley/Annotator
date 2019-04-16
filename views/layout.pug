@@ -57,7 +57,7 @@ html
 									.dropdown-menu.dropdown-left(aria-labelledby="navbarUserMenuLink")
 										a.dropdown-item(href='/user/profile') Profile
 										a.dropdown-item(href='/gallery') Gallery
-										if  sess_user.role == "admin"
+										if sess_user.role == "admin"
 											.dropdown-divider
 											a.dropdown-item(href='/manage') Manage
 										.dropdown-divider
