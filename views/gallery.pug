@@ -1,12 +1,14 @@
 extend layout
 
 append stylesheets
+    link(rel='stylesheet', href='/stylesheets/daterangepicker.css')
     link(rel='stylesheet', href='/stylesheets/gallery.css')
 
 block content
 
     .container-fluid
         .row.justify-content-between
+
 
             .col.col-md-auto.bg-info.bg-full-fill
 
@@ -24,19 +26,25 @@ block content
                     button.bg-light.btn.btn-outline-dark.btn-radio-type(onClick='setEg(this)') Incomplete
                     button.bg-light.btn.btn-outline-dark.btn-radio-type(onClick='setEg(this)') All
 
-                .h6.text-light.menu-description Patient ID:
-                input.form-control#txt-patient(type="text" aria-describedby="patient-id" placeholder="Patient ID") 
+                .h6.text-light.menu-description Patient:
+                input.form-control.menu-in#txt-patient(type="text" aria-describedby="patient-id" placeholder="XXXX") 
 
-                .h6.text-light.menu-description Image ID:
-                input.form-control#txt-image(type="text" aria-describedby="image-id" placeholder="Image ID") 
+                .h6.text-light.menu-description Image:
+                input.form-control.menu-in#txt-image(type="text" aria-describedby="image-id" placeholder="Image #ID") 
 
                 if sess_user.role == "admin"
                     .h6.text-light.menu-description Annotator ID:
-                    input.form-control#txt-annot(type="text" aria-describedby="annotator-id" placeholder="Annotator ID") 
+                    input.form-control.menu-in#txt-annot(type="text" aria-describedby="annotator" placeholder="User 01") 
 
+                .h6.text-light.menu-description Acquisition Date:
+                input.form-control.menu-in#txt-date-acqui(type="text" name="daterange" placeholder="01/01/2017 - 04/16/2019") 
+
+                .h6.text-light.menu-description Acquisition Date:
+                input.form-control.menu-in#txt-date-annot(type="text" name="daterange" placeholder="01/01/2019 - 04/16/2019") 
+                
                 .btn-search-field
                     button.btn.btn-dark(onClick='search(this)') Search
-                    
+                
 
             .col
                 .justify-content-left
@@ -147,6 +155,8 @@ block content
                                         button.btn.btn-outline-dark.btn-show(onClick='setEg(this)') 
                                             i.far.fa-eye
 
+    script(src="/javascripts/moment.js")
+    script(src="/javascripts/daterangerpicker.js")
     script(src="/javascripts/gallery_script.js")
     script.
         $(window).on("load", function(){

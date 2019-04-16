@@ -64,9 +64,10 @@ div.bg-full-fill {
   }
 
   div.menu-description {
-    text-align: left;
+    margin-bottom: 3px;
     padding-left: 5px;
-    padding-top: 20px;
+    padding-top: 15px;
+    text-align: left;
   }
 
   div.btn-search-field {
@@ -78,3 +79,9 @@ div.bg-full-fill {
       width: 90px;
   }
   
+  input.menu-in {
+    font-size: 14px;
+    height: 29px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
