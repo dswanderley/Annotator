@@ -45,7 +45,7 @@ router.post('/user/login', function (req, res) {
                 user = result[0];
                 // Check if user password is ok - returns if not.
                 if (user.password != password) {
-                    res.render('./user/login',
+                    res.render('./login',
                         { title: 'Login Page ERROR Pass' }
                     );
                 } else {
@@ -66,7 +66,7 @@ router.post('/user/login', function (req, res) {
                 }
             }
             else {
-                res.render('./user/login',
+                res.render('./login',
                     { title: 'Login Page ERROR User' }
                 );
             }

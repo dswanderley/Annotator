@@ -26,11 +26,12 @@ function compile(str, path) {
 	return stylus(str)
     .set('filename', path)
     .use(nib())
-}
+};
+
 // Define Views path and engines
-app.set('views', __dirname + '/views')
-app.set('view engine', 'pug')
-app.use(logger('dev'))
+app.set('views', __dirname + '/views');
+app.set('view engine', 'pug');
+app.use(logger('dev'));
 
 // Define Session
 app.use(cookieParser());
