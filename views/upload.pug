@@ -1,0 +1,71 @@
+extend layout
+
+append stylesheets
+    link(rel='stylesheet', href='/stylesheets/gallery.css')
+
+block content
+
+    .container-fluid
+        .row.justify-content-between
+
+
+            .col.col-md-auto.bg-info.bg-full-fill
+
+                .h4.text-white.menu-header Upload
+
+                .h6.text-light.menu-description Select files:
+                form.input-group.mb-3#fileupload(name="uploadTrg" method="POST" action="javascript:submitImgForm();" enctype="multipart/form-data" target="uploadTrg")
+							
+                    .custom-file
+                        input.custom-file-input#input-up-img(type="file", name="filetoupload", accept="image/*", multiple)
+                        .custom-file-label.form-control-file(for="input-up-img") No file chosen
+
+                    .input-group-append
+                        button.btn.btn-secondary#btn-upload-img(type="submit") Submit
+
+                table.list-group.list-files#selected-files
+
+            .col
+                .justify-content-left
+                    .gallery#selected-files
+
+                        table.fullwidth
+                            tr(style="border-collapse:collapse;")
+                                th.force-tab-width(rowspan="4")
+                                    .gallery-item
+                                        a(target="_blank" href="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png")
+                                            img(src="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png" alt="Cinque Terre" width="600" height="400")
+                                th.tab-header(colspan="3") Filename:
+                                th.tab-header(colspan="3")  Observations:
+                            
+                            tr(style="border-collapse:collapse;")
+                                td.tab-field(colspan="3")
+                                    input.form-control.menu-in#txt-patient(type="text" aria-describedby="patient-id" placeholder="XXXX") 
+                                td.tab-field(colspan="3")
+                                    input.form-control.menu-in#txt-patient(type="text" aria-describedby="patient-id" placeholder="XXXX")
+
+                            tr
+                                th.tab-header(colspan="2"  style="width:10%;") Data type:
+                                th.tab-header(colspan="2") Patient ID:
+                                th.tab-header(colspan="2") Acquisition Date:
+
+                            tr
+                                td.tab-field(colspan="2")
+                                    .btn-group.btn-group-sm(role='group' aria-label='Data type')
+                                        button.bg-light.btn.btn-outline-dark.btn-radio-type(onClick='setEg(this)') Ovary
+                                        button.bg-light.btn.btn-outline-dark.btn-radio-type(onClick='setEg(this)') Uterus
+                                        button.bg-light.btn.btn-outline-dark.btn-radio-type(onClick='setEg(this)') Other
+                                td.tab-field(colspan="2")
+                                    input.form-control.menu-in#txt-patient(type="text" aria-describedby="patient-id" placeholder="XXXX") 
+                                td.tab-field(colspan="2")
+                                    input.form-control.menu-in#txt-patient(type="text" aria-describedby="patient-id" placeholder="XXXX") 
+
+
+
+
+
+    script(src="/javascripts/upload.js")
+    script.
+        $(window).on("load", function(){
+            loadUploadPage();
+        });

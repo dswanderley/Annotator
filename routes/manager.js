@@ -7,12 +7,13 @@
 var router = require('express').Router();
 
 
-// Login - GET
+// Manage - GET
 router.get('/manage', function (req, res) {
     res.render('./manage',
         { title: 'Manage' }
     );
 });
+
 
 
 // Return routers

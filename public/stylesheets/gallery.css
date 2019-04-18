@@ -85,3 +85,32 @@ div.bg-full-fill {
     padding-top: 4px;
     padding-bottom: 4px;
   }
+
+
+/*
+ * Menu
+ */
+
+ tr {
+    height: 30px;
+ }
+ th,
+ td {
+     text-align: left;
+ }
+
+table.fullwidth {
+    width:100%;
+}
+
+ .tab-header {
+     padding: 20px 0 3px 0;
+ }
+
+ .tab-field {
+    padding: 0 10px 10px 0;
+}
+
+.force-tab-width {
+    width: 10%;
+}
