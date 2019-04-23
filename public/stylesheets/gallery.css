@@ -105,7 +105,7 @@ div.bg-full-fill {
 
 
 /*
- * Menu
+ * Upload
  */
 
  tr {
@@ -120,21 +120,21 @@ table.fullwidth {
     width:100%;
 }
 
- .tab-header {
+tr.collapse {
+    border-collapse:collapse;
+}
+
+.tab-header {
      padding: 20px 0 3px 0;
  }
 
- .tab-field {
+.tab-field {
     padding: 0 10px 10px 0;
 }
 
 .force-tab-width {
     width: 10%;
 }
-
-/*
- * Upload
- */
 
 .btn-upload {
     margin-top: 20px;
