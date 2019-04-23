@@ -26,6 +26,20 @@ div.desc {
     text-align: center;
 }
 
+.btn-group-show {
+    width: 100%;
+}
+
+.btn-show {
+    margin: 0;
+    width: 50%;
+}
+
+
+/*
+ * Icons
+ */
+
 .healthy-icon {
     color: darkorange;
     padding: 0;
@@ -42,14 +56,17 @@ div.desc {
     right: 7px;
 }
 
-.btn-group-show {
-    width: 100%;
+button.trash-icon {
+    background-color: transparent;
+}
+.trash-icon {
+    color: red;
+    padding: 0;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
 }
 
-.btn-show {
-    margin: 0;
-    width: 50%;
-}
 
 
 /*
@@ -113,4 +130,13 @@ table.fullwidth {
 
 .force-tab-width {
     width: 10%;
+}
+
+/*
+ * Upload
+ */
+
+.btn-upload {
+    margin-top: 20px;
+    left: 109px;
 }
