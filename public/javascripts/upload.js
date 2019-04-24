@@ -1,5 +1,6 @@
 // Upload content
 var filestoupload = [];
+var filesdeleted = [];
 var uploadCompleted = true; // Flag to to set whether the upload tab is active.
 
 
@@ -13,7 +14,7 @@ var uploadCompleted = true; // Flag to to set whether the upload tab is active.
 
 
 /*
- * Handle Events
+ * Handle Events and list of files
  */
 
 function addUploadEvents() {
@@ -22,7 +23,6 @@ function addUploadEvents() {
     // Handle on file change
     document.querySelector('#input-up-img').addEventListener('change', handleSelectedFiles, false);
 }
-
 
 function handleSelectedFiles(ev) {
     /** @description Handle files select to upload
@@ -38,10 +38,7 @@ function handleSelectedFiles(ev) {
     }
     // Update table with content list
     updateUploadList();
-    // Set input text content
-    setNumberOfUpFiles();
 }
-
 
 function setNumberOfUpFiles() {
     /** @description Set the text of the file input. Counts the number of files chosen.
@@ -61,22 +58,28 @@ function setNumberOfUpFiles() {
     $(".custom-file-label.form-control-file").text(txt);
 }
 
-
 function updateUploadList() {
     /** @description Repopulate the files to be upload list
      */
 
-     /*
-    // Start body
-    if ($("#selected-files").find('tbody').length === 0) {
-        var tbody = document.createElement("tbody");
-        tbody.setAttribute("id", "upload-tbody");
+    document.getElementById("selected-files").innerHTML = "";
+
+    if (filestoupload.length > 0) {
+        for(let i = 0; i<filestoupload.length; i++){
+            insertTable(i);
+        }
     }
-    else {
-        var tbody = document.getElementById("upload-tbody");
-        tbody.innerHTML = "";
-    }
-*/
+    // Set input text content
+    setNumberOfUpFiles();
+}
+
+function removeFile(uid) {
+    /** @description Remove file from upload list and add to deleted files.
+     *   @param {int} uid Image id
+     */
+    let removed = filestoupload.splice(uid,1);
+    filesdeleted.push(removed);
+    updateUploadList();
 }
 
 /*
@@ -126,10 +129,11 @@ function submitImgForm() {
  * Create elements
  */
 
-function insertTable() {
+function insertTable(uid) {
     /** @description Insert table of images
+     *   @param {int} uid Image id
      */
-    let uid = 0;
+
     let tbl = createTable(uid);
     let tblfield = document.getElementById("selected-files");
     tblfield.appendChild(tbl);
@@ -146,9 +150,13 @@ function createTable(uid) {
 
     // Table body
     let tbl_id = "tbl-img-" + uid;
+    let stripe_class = "stripe-dark";
+    if (uid % 2 === 0) {
+        stripe_class = "stripe-light";
+    }
     var tbl = document.createElement('table');
     tbl.setAttribute("id", tbl_id);
-    tbl.classList.add("fullwidth");
+    tbl.classList.add("fullwidth", stripe_class);
 
     // Row 1
     var tr1 = document.createElement('tr');
@@ -275,7 +283,7 @@ function createTable(uid) {
     tbl.appendChild(tr4);
 
     return tbl;
- }
+}
 
 function createImgDiv(uid) {
     /** @description Create a div component with image thumb and button.

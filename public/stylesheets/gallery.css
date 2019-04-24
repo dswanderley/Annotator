@@ -120,6 +120,14 @@ table.fullwidth {
     width:100%;
 }
 
+table.stripe-light {
+    background-color: #e6e6e6;
+}
+
+table.stripe-dark {
+    background-color: #17a2b83d;
+}
+
 tr.collapse {
     border-collapse:collapse;
 }
