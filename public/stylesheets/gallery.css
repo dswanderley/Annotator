@@ -152,3 +152,16 @@ tr.collapse {
     margin-top: 20px;
     left: 109px;
 }
+
+.btn-radio-type {
+    color: black;
+    background-color: mintcream;
+    border-color: black;
+}
+
+.btn-radio-type.selected {
+    opacity: 1.1;
+    background-color: black !important;
+    color: mintcream;
+    font-weight: bold;
+}

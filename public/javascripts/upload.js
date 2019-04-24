@@ -159,6 +159,8 @@ function createTable(uid) {
     var f = filestoupload[uid];
     if (f.date === undefined)
         f.date = convertDate(f.lastModifiedDate); 
+    if (f.us_type === undefined)
+        f.us_type = null; 
     var im_div = createImgDiv(uid);
 
     // Table body
@@ -241,16 +243,22 @@ function createTable(uid) {
     var tr4 = document.createElement('tr');
     // Buttons
     radio_btn_1 = document.createElement('button');
-    radio_btn_1.classList.add("bg-light", "btn", "btn-outline-dark", "btn-radio-type");
+    radio_btn_1.classList.add("btn", "btn-radio-type");
     radio_btn_1.innerHTML = "Ovary";
+    if (f.us_type === "ovary")
+        radio_btn_1.classList.add("selected");
     radio_btn_1.setAttribute("onClick", "setType('" + tbl_id + "', this)");
     radio_btn_2 = document.createElement('button');
-    radio_btn_2.classList.add("bg-light", "btn", "btn-outline-dark", "btn-radio-type");
+    radio_btn_2.classList.add("btn", "btn-radio-type");
     radio_btn_2.innerHTML = "Uterus";
+    if (f.us_type === "uterus")
+        radio_btn_2.classList.add("selected");
     radio_btn_2.setAttribute("onClick", "setType('" + tbl_id + "', this)");
     radio_btn_3 = document.createElement('button');
-    radio_btn_3.classList.add("bg-light", "btn", "btn-outline-dark", "btn-radio-type");
+    radio_btn_3.classList.add("btn", "btn-radio-type");
     radio_btn_3.innerHTML = "Other";
+    if (f.us_type === "other")
+        radio_btn_3.classList.add("selected");
     radio_btn_3.setAttribute("onClick", "setType('" + tbl_id + "', this)");
     // Inptus
     var div_btn = document.createElement('div');
@@ -345,9 +353,16 @@ function setType(tid, type_btn) {
      *  @param {string} tid table id
      *  @param {obj} type_btn button
      */
+    let uid = tid.slice("tbl-img-".length);
+    var f = filestoupload[uid];
+
     let tbl = document.getElementById(tid);
     let typefield = tbl.getElementsByClassName("txt-type")[0];
     typefield.value = type_btn.innerText.toLowerCase();
+    f.us_type = type_btn.innerText.toLowerCase();
+
+    $("#" + tid).find( ".btn-radio-type").removeClass("selected");
+    type_btn.classList.add("selected");
 }
 
 function convertDate(fd) {
