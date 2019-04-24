@@ -147,7 +147,7 @@ function insertTable(uid) {
 
     let tbl = createTable(uid);
     let tblfield = document.getElementById("selected-files");
-    tblfield.appendChild(tbl);
+    tblfield.appendChild(tbl);    
 }
 
 function createTable(uid) {
@@ -157,6 +157,8 @@ function createTable(uid) {
 
     // handle image
     var f = filestoupload[uid];
+    if (f.date === undefined)
+        f.date = convertDate(f.lastModifiedDate); 
     var im_div = createImgDiv(uid);
 
     // Table body
@@ -266,6 +268,9 @@ function createTable(uid) {
     in_pat.classList.add("form-control","menu-in","txt-patient")
     var in_date = document.createElement('input');
     in_date.type = "text";
+    in_date.name ="daterange";// aria-describedby="date-annot" 
+    in_date.placeholder = "MM/DD/AAAA";
+    in_date.value = f.date;
     in_date.classList.add("form-control","menu-in","txt-date")
     //  col 1
     var td31 = document.createElement('td');
@@ -287,7 +292,7 @@ function createTable(uid) {
     td33.appendChild(in_date)
     tr4.appendChild(td33);
 
-    // Update tabel
+    // Update table
     tbl.appendChild(tr1);
     tbl.appendChild(tr2);
     tbl.appendChild(tr3);
@@ -343,4 +348,38 @@ function setType(tid, type_btn) {
     let tbl = document.getElementById(tid);
     let typefield = tbl.getElementsByClassName("txt-type")[0];
     typefield.value = type_btn.innerText.toLowerCase();
+}
+
+function convertDate(fd) {
+    /** @description Convert full date time to a simple string.
+     *  @param {Date} fd Full datetime
+     */
+    let mm = fd.getMonth();
+    if (mm < 10) {
+        mm = 0 + mm.toString();
+    }
+    let dd = fd.getDay();
+    if (dd < 10) {
+        dd = 0 + dd.toString();
+    }
+    let ss = fd.getSeconds();
+    if (ss < 10) {
+        ss = 0 + ss.toString();
+    }
+    let min = fd.getMinutes();
+    if (min < 10) {
+        min = 0 + min.toString();
+    }    
+    let hh = fd.getHours();
+    if (hh < 10) {
+        hh = 0 + hh.toString();
+    }
+    let fdate = fd.getFullYear().toString() + "/" +
+            mm.toString() + "/" +
+            dd.toString() + " " + 
+            hh.toString() + ":" +
+            min.toString() + ":" +
+            ss.toString();
+
+    return fdate;
 }
