@@ -3,6 +3,7 @@
  */
 var express = require('express'),
     logger = require('morgan'),
+    fileUpload = require('express-fileupload'),
     stylus = require('stylus'),
     nib = require('nib'),
     cookieParser = require('cookie-parser'),
@@ -53,6 +54,9 @@ app.use(stylus.middleware({
     compile: compile
 }))
 app.use(express.static(__dirname + '/images'))
+
+// Upload routine
+app.use(fileUpload());
 
 // Create External Routes
 

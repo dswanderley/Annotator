@@ -102,29 +102,26 @@ function submitImgForm() {
      */
 
     if (filestoupload.length > 0) {
+
+        let forms = getInputsData();
+
         // Create a temp for with filestoupload
         let formData = new FormData();
         filestoupload.forEach(file => {
             formData.append('filetoupload', file);
         });
-
-        // Init loader
-        $('.loader').show();
+        forms.forEach(form => {
+            formData.append('form', JSON.stringify(form));
+        });
 
         // POST form
         $.ajax({
-            url: uploadURL,
+            url: "/gallery/upload",
             type: 'POST',
             data: formData,
             success: function (data) {
                 var upload_list = data.file_list;
                 uploadCompleted = true;
-                loadUpGallery();
-                clearUploadList();
-                // Reload after 5 seconds if the number of saved files were different from the upload files
-                if (upload_list.length != data.files.length) {
-                    setTimeout(loadUpGallery(), 5000);
-                }
             },
             cache: false,
             contentType: false,
@@ -135,6 +132,35 @@ function submitImgForm() {
         return false;
 }
 
+/*
+ * Load Data from form
+ */
+
+function getInputsData() {
+    /** @description Get content of each input field and group in an object by image.
+     */
+    var forms = [];
+
+    for(let i = 0; i<filestoupload.length; i++) {
+        let tid = "tbl-img-" + i;
+        let in_fname = $("#" + tid).find(".txt-fname")[0];
+        let in_obs = $("#" + tid).find(".txt-obs")[0];
+        let in_pat = $("#" + tid).find(".txt-patient")[0];
+        let in_date = $("#" + tid).find(".txt-date")[0];
+        let in_type = filestoupload[i].us_type;
+        let obj = {
+            filename: in_fname.value,
+            observations: in_obs.value,
+            patient: in_pat.value,
+            date: in_date.value,
+            type: in_type
+        }
+
+        forms.push(obj);
+    }
+
+    return forms;
+}
 
 /*
  * Create elements
@@ -361,7 +387,7 @@ function setType(tid, type_btn) {
     typefield.value = type_btn.innerText.toLowerCase();
     f.us_type = type_btn.innerText.toLowerCase();
 
-    $("#" + tid).find( ".btn-radio-type").removeClass("selected");
+    $("#" + tid).find(".btn-radio-type").removeClass("selected");
     type_btn.classList.add("selected");
 }
 
@@ -373,7 +399,7 @@ function convertDate(fd) {
     if (mm < 10) {
         mm = 0 + mm.toString();
     }
-    let dd = fd.getDay();
+    let dd = fd.getDate();
     if (dd < 10) {
         dd = 0 + dd.toString();
     }

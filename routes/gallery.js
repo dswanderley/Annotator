@@ -4,8 +4,10 @@
 */
 
 // Module dependencies
-var router = require('express').Router();
+var router = require('express').Router(),
+    sizeOf = require('image-size');
 
+var uploadDir = "./images/upload/"
 
 // Gallery - GET
 router.get('/gallery', function (req, res) {
@@ -32,68 +34,71 @@ router.post('/gallery/upload', function (req, res) {
     }
     /* Handle upload */
     let files = req.files.filetoupload;
-    var file_list = [];
     // Prepare to foreach
     if (!Array.isArray(files)) {
         files = [files];
     }
-
-    // Define JSON file
-    var json_path = uploadDir + 'data.json';
-    // Check if data.json exist
-    if (fs.existsSync(json_path)) {
-        // Load JSON file with data
-        var data = JSON.parse(fs.readFileSync(json_path, 'utf8'));
-    }
-    else {
-        // Create new empty object
-        var data = {
-            images: new Array(),
-            createTime: new Date(),
-            updateTime: new Date()
-        }
+    let forms = req.body.form;
+    if (!Array.isArray(forms)) {
+        forms = [forms];
     }
 
-    var batch_name = 'B01';
-    if (data.images.length > 0) {
-        batch_name = getNewBatchIndex(getBatchList(data.images));
-    }
-
-    // Read and save files
-    for (let i = 0; i < files.length; i++)  {
+    for (let i = 0; i < files.length; i++) {
+        let form = JSON.parse(forms[i]);
         let file = files[i];
-        // Filename
-        let filename = file.name;
+        let filename = stringGen() + '.png';
         let path = uploadDir + filename;
-        // Json element
-        let el = new ImageData(filename, path);
-        // move to list
-        file_list.push(el);
-        // Move each file
         file.mv(path, function (err) {
-            if (err)
-                file_list.pop(); // if does not move pop from list
-            else {
+            if (err) {
+                // To handle
+            } else {
                 // Get Dimensions
                 let dim = sizeOf(path);
-                el.width = dim.width;
-                el.height = dim.height;
-                el.type = dim.type;
-                el.batch = batch_name;
-                // update to json data
-                data.images.push(el);
-                data.updateTime = new Date();
-                // Save json
-                fs.writeFileSync(json_path, JSON.stringify(data, null, "\t"), (err_j) => {
-                    if (err_j) throw err_j;
-                });
             }
+                
         });
     }
-    
-    return res.send({ file_list, files });
 });
-
 
 // Return routers
 module.exports = router;
+
+
+/*
+ * Internal functions
+ */
+
+function stringGen() {
+    
+    let date = new Date();
+    var charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    var text = "";
+
+    let ms = date.getMilliseconds() % charset.length;
+    let h = date.getHours();
+    let sec = date.getSeconds();
+    let min = date.getMinutes();
+    let day = date.getDate();
+    let year = date.getFullYear() % charset.length;
+    let mon = date.getMonth();
+
+    for( var i=0; i < 5; i++ ) {
+        text += charset.charAt(Math.floor(Math.random() * charset.length));
+    }
+    text = charset[ms] + charset[h] + charset[sec] + charset[min]
+    for( var i=0; i < 6; i++ ) {
+        text += charset.charAt(Math.floor(Math.random() * charset.length));
+    }
+    text += '_';
+    text += charset.charAt(Math.floor(Math.random() * charset.length));
+    text +=  charset[day] +  charset[year] +  charset[mon]
+    for( var i=0; i < 6; i++ ) {
+        text += charset.charAt(Math.floor(Math.random() * charset.length));
+    }
+    text += '_';
+    for( var i=0; i < 5; i++ ) {
+        text += charset.charAt(Math.floor(Math.random() * charset.length));
+    }
+
+    return text;
+}
