@@ -10,6 +10,7 @@ var uploadCompleted = true; // Flag to to set whether the upload tab is active.
 
  function loadUploadPage(){
     addUploadEvents();
+    updateUploadList();
 }
 
 
@@ -62,12 +63,22 @@ function updateUploadList() {
     /** @description Repopulate the files to be upload list
      */
 
-    document.getElementById("selected-files").innerHTML = "";
+    var header = document.getElementById("upload-list-header");
+    var body = document.getElementById("selected-files");
+    body.innerHTML = "";
+    header.innerHTML = "";
 
     if (filestoupload.length > 0) {
+        header.innerHTML = "Upload list";
         for(let i = 0; i<filestoupload.length; i++){
             insertTable(i);
         }
+    }
+    else {
+        let txt = document.createElement("h3");
+        txt.setAttribute("style", "margin-top:100px;");
+        txt.innerHTML = "No image selected";
+        body.appendChild(txt);
     }
     // Set input text content
     setNumberOfUpFiles();

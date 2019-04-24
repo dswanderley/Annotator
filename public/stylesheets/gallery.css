@@ -108,6 +108,10 @@ div.bg-full-fill {
  * Upload
  */
 
+ .padding0 {
+     padding: 0;
+ }
+
  tr {
     height: 30px;
  }
