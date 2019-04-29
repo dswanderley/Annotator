@@ -117,6 +117,7 @@ function removeFile(uid) {
     updateUploadList();
 }
 
+
 /*
  * Ajax calls
  */
@@ -156,6 +157,7 @@ function submitImgForm() {
         return false;
 }
 
+
 /*
  * Load Data from form
  */
@@ -177,7 +179,7 @@ function getInputsData() {
             observations: in_obs.value,
             patient: in_pat.value,
             date: in_date.value,
-            type: in_type
+            us_type: in_type
         }
 
         forms.push(obj);
@@ -185,6 +187,7 @@ function getInputsData() {
 
     return forms;
 }
+
 
 /*
  * Create elements
