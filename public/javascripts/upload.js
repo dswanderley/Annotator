@@ -9,8 +9,31 @@ var uploadCompleted = true; // Flag to to set whether the upload tab is active.
  */
 
  function loadUploadPage(){
+    /** @description Start upload application
+     */
+    $('footer').css('position', 'relative');
     addUploadEvents();
     updateUploadList();
+    refreshPageSize();
+}
+
+function refreshPageSize() {
+    /** @description Update useful field height
+     */
+        // Get element height
+        let height_header = parseFloat($("header").css("height"));
+        let height_footer = parseFloat($("footer").css("height"));
+        let height_window = $(window).height();        
+        let height_gallery = parseFloat($('#gallery-field').css("height"));
+        // Visual field available
+        let height_body = height_window - height_footer - height_header;
+        
+        if (height_gallery < height_body) {
+            $('.bg-full-fill').css('height', height_body + 'px');
+        }
+        else {
+            $('.bg-full-fill').css('height', height_gallery + 'px');
+        }
 }
 
 
@@ -82,6 +105,7 @@ function updateUploadList() {
     }
     // Set input text content
     setNumberOfUpFiles();
+    refreshPageSize();
 }
 
 function removeFile(uid) {

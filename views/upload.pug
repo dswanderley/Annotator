@@ -25,7 +25,7 @@ block content
 
 
             .col.padding0
-                .justify-content-left
+                .justify-content-left#gallery-field
 
                     .h3#upload-list-header
 
@@ -37,3 +37,6 @@ block content
         $(window).on("load", function(){
             loadUploadPage();
         });
+        window.onresize = function (event) {
+            refreshPageSize();
+        }
