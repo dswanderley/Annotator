@@ -8,9 +8,9 @@ var ClassEnum = {
     OVARIAN_FOLLICLE: 1,
     OVARIAN_CYST: 2,
     properties: {
-        0: { name: "ovarian stroma", value: 0, code: "OVARIAN_STROMA", color: "#FF6468" },
-        1: { name: "ovarian follicle", value: 1, code: "OVARIAN_FOLLICLE", color: "#DCFFD2" },        
-        2: { name: "ovarian cyst", value: 2, code: "OVARIAN_CYST", color: "#0032B4" }
+        0: { name: "ovary", value: 0, code: "OVARIAN_STROMA", color: "#FF6468" },
+        1: { name: "follicle", value: 1, code: "OVARIAN_FOLLICLE", color: "#DCFFD2" },        
+        2: { name: "cyst", value: 2, code: "OVARIAN_CYST", color: "#0032B4" }
         //color = "#0000FF";
     }
 };
@@ -189,19 +189,18 @@ function drawElement(cId) {
 }
 
 function drawSave(){
-    //var x = document.createElement("DIV"); 
-    //x.style.backgroundPosition="left bottom";
     
-    var btn = document.createElement("BUTTON");
+    var btn = document.createElement("button");
         
-        btn.setAttribute("id", "SaveButton");
-        btn.setAttribute("type", "button");
-        btn.setAttribute("class", "btn-save");
-        btn.style.backgroundPosition = "left bottom";
-        document.getElementById("col-diag-right").append(btn);        
-        btn.onclick = function () { saveAnnot(); }; 
-        var t=document.createTextNode("Save");
-        btn.appendChild(t);
+    btn.setAttribute("id", "btn-save");
+    btn.setAttribute("type", "button");
+    btn.setAttribute("class", "btn-save");
+    document.getElementById("col-diag-right").append(btn);        
+    btn.onclick = function () { saveAnnot(); }; 
+    var t=document.createTextNode("Save");
+    btn.appendChild(t);
+
+ //   $('#btn-save').css('top', $('#gallery').position().top + $('#gallery').outerHeight(true) + 'px');
 }
 
 function saveAnnot() {

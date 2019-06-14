@@ -2,21 +2,12 @@ extends layout
 
 block content
 	.container-fluid#container-diag
+
+		// Content
 		.row.justify-content-between#app-row
-			
-			.col#col-diag-left
 
-				.breadcrumb.navbar-success.bg-light
-					.h6.breadcrumb-item Gallery
-
-				.row.justify-content-center
-
-					table.list-group.list-files#gallery 
-
-						
-
+			// Main col (image)
 			.col#col-diag-center
-				
 				//.loader
 				
 				.row.justify-content-center
@@ -24,7 +15,7 @@ block content
 						#plot-box
 							canvas.img-disp#main-canvas(oncontextmenu="return false;")
 
-
+			// Lateral col (info)
 			.col#col-diag-right
 
 				.breadcrumb.navbar-success.bg-light
@@ -36,6 +27,26 @@ block content
 					button.btn.btn-info.btn-class-annot(type="button" onClick="drawElement(2);" value=false) Cyst
 
 				.table-dark#list-annot
+
+		// Gallery bar
+		.row.justify-content-between#gallery-row
+			
+			.col.col-left-ctrl
+				.btn-group.cmd-group(role="group")
+					button.btn.btn-ctrl
+						i.fas.fa-step-backward
+					button.btn.btn-ctrl
+						i.fas.fa-fast-backward
+			.col.col-center-ctrl
+				.progress
+					.progress-bar.progress-bar-striped.progress-bar-animated(role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:70%") 70/100
+			
+			.col.col-right-ctrl
+				.btn-group.cmd-group(role="group")
+					button.btn.btn-ctrl
+						i.fas.fa-step-forward
+					button.btn.btn-ctrl
+						i.fas.fa-fast-forward
 
 
 	script(src="/javascripts/interpolation.js")

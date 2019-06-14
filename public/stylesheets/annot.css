@@ -34,6 +34,7 @@
     color: ghostwhite;
 }
 
+
 /*
  *   GALLERY 
  */
@@ -85,9 +86,9 @@
 .gallery-thumb{
     float: left;
     height: 80px;
-    font-size:10px 
-  
+    font-size:10px  
 }
+
 
 /*
  * Large Images
@@ -131,9 +132,16 @@
 }
 
 
+
 /*
  *   Right Col.
  */
+
+
+#btn-save {
+    left: 50px;
+    position: absolute;
+}
 
 #col-diag-right {
     max-width: 380px;
@@ -189,13 +197,40 @@
 
 
 
+/*
+*   Bottom bar
+*/
 
+#gallery-row {
 
+}
 
+.progress {
+    height: 30px;
+}
+.cmd-group {
+    min-width: 50px;
+}
 
+.col-left-ctrl {
+    padding: 0 0 0 30px;
+    max-width: 120px;
+}
 
+.col-center-ctrl {
+    padding: 0;
+}
 
+.col-right-ctrl {
+    padding: 0 30px 0 0;
+    max-width: 120px;
+}
 
+.btn-ctrl {
+    height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
 
 
 

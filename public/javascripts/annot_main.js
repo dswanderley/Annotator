@@ -13,8 +13,9 @@ var canvasScale = 1.0;
 var img_width, img_height, img_dwidth, img_dheight, canvas_dx, canvas_dy, canvas_cx, canvas_cy;
 var flagMouseEvent = 0;
 var newPoint= new Point();
-
 var idnearpoint=-1; //faz sentido ser variavel global?
+
+
 /*
  * Load Page functions
  */
@@ -23,10 +24,7 @@ function loadScreenDrApp() {
     /** @description Initialize componentes of the application
      */
     $('#res-field-map').css('visibility', 'hidden');
-    setScreenSize();
-    
-    //currentSrc = '20170317_0001.png';
-    
+    setScreenSize();    
     loadGallery();
     initCanvas(currentSrc);
     addEvents();
@@ -37,19 +35,22 @@ function setScreenSize() {
      *  Size of all other elements are predefined.
      */
 
-    max_img_height = $(window).height() - $('#footer').height() - $('#header').height() - 15;
+    $('footer').css('padding', '0');
+    $('footer').css('border-width', '0');
+    $('footer').empty();
+
+    max_img_height = $(window).height() - $('#footer').height() - $('#header').height() - $('#gallery-row').height() - 30;
     max_img_width = $('#col-diag-center').width();
     // Set background of canvas 
     $('#app-row').height(max_img_height);
 
+    $('#gallery-row').width($(window).width())
 }
 
 function refreshScreenSize() {
     /** @description Refresh main Image Height
      */
     setScreenSize();
-    // Set canvas
-    setMainImage();
 }
 
 function addEvents() {
