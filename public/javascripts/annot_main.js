@@ -39,12 +39,12 @@ function setScreenSize() {
     $('footer').css('border-width', '0');
     $('footer').empty();
 
-    max_img_height = $(window).height() - $('#footer').height() - $('#header').height() - $('#gallery-row').height() - 30;
-    max_img_width = $('#col-diag-center').width();
+    max_img_height = $(window).height() - $('#footer').height() - $('#header').height() - $('#gallery-row').height() - 28;
+    max_img_width = $('#col-diag-img').width();
     // Set background of canvas 
     $('#app-row').height(max_img_height);
 
-    $('#gallery-row').width($(window).width())
+    //$('#gallery-row').width($(window).width())
 }
 
 function refreshScreenSize() {

@@ -6,17 +6,8 @@ block content
 		// Content
 		.row.justify-content-between#app-row
 
-			// Main col (image)
-			.col#col-diag-center
-				//.loader
-				
-				.row.justify-content-center
-					.image-container.col-auto
-						#plot-box
-							canvas.img-disp#main-canvas(oncontextmenu="return false;")
-
 			// Lateral col (info)
-			.col#col-diag-right
+			.col#col-diag-data
 
 				.breadcrumb.navbar-success.bg-light
 					.h6.breadcrumb-item Data Informations
@@ -27,6 +18,16 @@ block content
 					button.btn.btn-info.btn-class-annot(type="button" onClick="drawElement(2);" value=false) Cyst
 
 				.table-dark#list-annot
+
+			
+			// Main col (image)
+			.col#col-diag-img
+				//.loader
+				
+				.row.justify-content-center
+					.image-container.col-auto
+						#plot-box
+							canvas.img-disp#main-canvas(oncontextmenu="return false;")
 
 		// Gallery bar
 		.row.justify-content-between#gallery-row

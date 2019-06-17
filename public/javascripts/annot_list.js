@@ -195,7 +195,7 @@ function drawSave(){
     btn.setAttribute("id", "btn-save");
     btn.setAttribute("type", "button");
     btn.setAttribute("class", "btn-save");
-    document.getElementById("col-diag-right").append(btn);        
+    document.getElementById("col-diag-data").append(btn);        
     btn.onclick = function () { saveAnnot(); }; 
     var t=document.createTextNode("Save");
     btn.appendChild(t);

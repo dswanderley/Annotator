@@ -18,7 +18,7 @@
 
 #container-diag {
     background: blacK;
-    padding: 5px 0px 10px 0px;
+    padding: 5px 0px 0px 0px;
 }
 
 #app-row {
@@ -124,26 +124,15 @@
 
 
 /*
- *   Left Col.
- */
-
-#col-diag-left {
-    max-width: 400px;
-}
-
-
-
-/*
  *   Right Col.
  */
-
 
 #btn-save {
     left: 50px;
     position: absolute;
 }
 
-#col-diag-right {
+#col-diag-data {
     max-width: 380px;
 }
 
@@ -202,7 +191,11 @@
 */
 
 #gallery-row {
-
+    background: white;
+    margin: 0;
+    width: 100%;
+    padding: 8px 0 7px 0;
+    z-index: 1;
 }
 
 .progress {
