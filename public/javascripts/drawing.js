@@ -60,6 +60,7 @@ function drawLine(line, color, width) {
  */
 
 /* Class and activation */
+
 function SmoothPiecewise() {
     /** @description Picewise of smooth object (small lines)
      */
@@ -74,9 +75,7 @@ function activeSmooth() {
      */
     if (flagMouseEvent===1){
         canvas.addEventListener("mousedown", storeSmoothPoints, false);
-
-    }
-   
+    }   
 }
 
 
@@ -213,14 +212,10 @@ function saveSmooth(sp) {
 
 /* Edition */
 
-/************** ANA **************/
-
-function deleteSmooth(spType, idSeg, h) {
+function deleteSmooth(spType, idSeg) {
     /** @description Function to delete the SmoothPiecewise object.
       * @param {SmoothPiecewise} ds SmoothPiecewise object
      */
-    var st = [];
-    var st1 = [];
     var class_listAUX = new Array(N_CLASSES);
     smooth_temp = [];
     class_list[spType].splice(idSeg - 1, 1); //delete the segmentation 
@@ -261,11 +256,12 @@ function deleteSmooth(spType, idSeg, h) {
 }
 
 function removeSaveButton(){
+    /** @description Remove the large save button.
+     */
     var element = document.getElementById("btn-save");
     element.remove();
     flagsave=-1;
 }
-
 
 function deletePoint(idnearpoint) {
      /** @description delete an original point
@@ -338,26 +334,37 @@ function storeNewPoints(btn, idtype, idSeg, flag) {
 }
 
 function handlePointEditMoving(newPoint, idOldPt) {
+    /** @description Replaces moved points when selected.
+      * @param {Point} newPoint New Point.
+      * @param {int} idOldPt Type ID.
+     */
     if (!event) { event = window.event; }
+    
     // Convert point position using scale
     //var pts = ctx.transformedPoint(event.layerX, event.layerY);
     var pt = newPoint;
     pt.x = pt.x / canvasScale;
     pt.y = pt.y / canvasScale;
-    document.body.style.cursor = 'pointer';
+    //document.body.style.cursor = 'grabbing';
     updatePoint(pt, idOldPt);
- }
+}
 
-
-function getSegmentation(idtype, idSeg){
+function getSegmentation(idtype, idSeg) {
+    /** @description Get segmentation draw.
+      * @param {int} idtype Segmantation type ID.
+      * @param {int} idSeg Segmentation item ID.
+     */
     var segmbytype = [];
-    var segm =[];
-    segmbytype=class_list[idtype];
-    segm=segmbytype[idSeg-1];
+    var segm = [];
+    segmbytype = class_list[idtype];
+    segm = segmbytype[idSeg-1];
     return segm;
 }
 
 function handlePointEdit(event) {
+    /** @description Moves points selected.
+      * @param {event} event New Point.
+     */
     if (!event) { event = window.event; }
     // Convert point position using scale
     var ptsnew = ctx.transformedPoint(event.layerX, event.layerY); //newpoint
@@ -365,14 +372,16 @@ function handlePointEdit(event) {
     ptsnew.y = ptsnew.y / canvasScale;
     [mindistAB, idnearpoint] = getNearPoint(ptsnew); //mindistAB,idnearpoint
     if (mindistAB < 5) {
-        document.body.style.cursor = 'pointer';
+        //document.body.style.cursor = 'pointer';
         updatePoint(ptsnew, idnearpoint);
     }
     return [idnearpoint];
 }
 
-function getNearPoint(pt){
-    //pt é o ponto onde foi o click
+function getNearPoint(pt) {
+    /** @description Get the nearst draw point given another point
+      * @param {Point} pt click postion.
+     */
     var i;
     var mindistAB=10000;
     var distAB,idnearpoint;
@@ -389,6 +398,10 @@ function getNearPoint(pt){
 }
 
 function distance(pointA, pointB){
+    /** @description Calculate euclidian distance.
+      * @param {Point} pointA Point A
+      * @param {Point} pointB Point B
+     */
     var dx= pointA.X-pointB.X //delta x
     var dy= pointA.Y-pointB.Y //delta y
     var distAB=Math.sqrt(dx * dx + dy * dy); // distance
@@ -396,29 +409,29 @@ function distance(pointA, pointB){
 }
 
 function updatePoint(point, idx) {
+    /** @description Update a point on smooth temp.
+      * @param {Point} point Point.
+      * @param {int} idx Index of the point.
+     */
     var x = point.x;
     var y = point.y;
     smooth_temp.originalPoints[idx] = new Point(x, y);
     var arr = point2array(smooth_temp.originalPoints);
     smooth_temp.interpolatedPoints = getSmoothPiecewises(arr);
     refreshCanvas();
-  //  drawSmooth(smooth_temp.interpolatedPoints);
 }
 
 function createHandleSmooth() {
     /** @description Allow smooth edition
      */
-   
     var pts = smooth_temp.originalPoints;
     for (var i = 0; i < pts.length; i++) {
-
         var x = pts[i].X*canvasScale;
         var y = pts[i].Y*canvasScale;
         drawCircle(x, y,1);
     }
 }
 
-//não é usada?
 function updatesmooth(ev, idx, offset) {
     /** @description Edit SmoothPicewise
       * @param {obj} ev event
@@ -451,14 +464,14 @@ function addNewSmoothPoint(ev) {
     var interp_pts=smooth_temp.interpolatedPoints;
     var d_min = 10000;
     var imin = -1;
-    var jmin = -1;
+    //var jmin = -1;
     for (var i = 0; i < oPoint.length; i++) {
         for (var j=0;j<interp_pts[i].length; j++ ){
             var d=distance(interp_pts[i][j] ,pnew);
             if (d < d_min) {
                 d_min = d;
                 imin = i;
-                jmin=j;
+                //jmin=j;
                 //console.log(d_min +'->'+imin +','+jmin );
             }
         }
@@ -574,9 +587,13 @@ function point2array(pts) {
     }
 }
 
-
-function drawCircle(x, y, width ,color) {
-   
+function drawCircle(x, y, width, color) {
+    /** @descriptio Convert an array of Points to an array of coordinates
+      * @param {int} x Horizontal coordinate
+      * @param {int} y Vertical coordinate
+      * @param {int} width Width
+      * @param {string} color Color #RGB
+     */
     if (!ev) { var ev = window.event; }
     if (color === null || color === undefined) {
         color = smooth_temp.profile.color;

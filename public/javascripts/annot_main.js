@@ -15,7 +15,7 @@ var flagMouseEvent = 0;
 var newPoint= new Point();
 // Drawing variables
 var click_enable = true;
-var idnearpoint=-1; //faz sentido ser variavel global?
+var idnearpoint = -1; //faz sentido ser variavel global?
 
 
 /*
@@ -85,10 +85,9 @@ function pageMouseUp(evt) {
  * Canvas
  */
 
-
 function initCanvas(src) {
     /** @description Initialize canvas
-      * @param {sting} src 
+      * @param {sting} src image source.
      */
     flagMouseEvent = 1;
     // Load image on canvas
@@ -96,8 +95,6 @@ function initCanvas(src) {
     var img_width = 864;
     var img_height = 768;
     
-    //var img_width = galleryList[current_idx].width;
-    //var img_height = galleryList[current_idx].height;
     // load canvas
     canvas = document.getElementById("main-canvas");
     // set canvas dimensions
@@ -270,11 +267,14 @@ function canvasZoom(clicks, mouseX, mouseY) {
  */
 
 function resetAnotation(){
-    var draw_profile = new DrawProfile();
+    /** @description Reset annotations.
+     */    
+    //var draw_profile = new DrawProfile();
     var class_listAUX = new Array(N_CLASSES);
     class_list = class_listAUX;
     listAnnot();
 }
+
 
 /*
  * Event Handler
@@ -284,7 +284,6 @@ function resetAnotation(){
 var lastX, lastY;
 var dragStart = null;
 var dragging = false;
-
 
 function canvasMouseUp(evt) {
     /** @description Canvas Mouse Up event
@@ -312,7 +311,6 @@ function canvasMouseUp(evt) {
 
     }
     idnearpoint=-1;
-
 }
 
 function canvasScrollWheel(evt) {
@@ -346,7 +344,7 @@ function canvasMouseDown(evt) {
     else if (flagMouseEvent === 0){ 
         if(evt.button ===0 ){//se quiser mudar a posição do point original
             idnearpoint=handlePointEdit();
-            var oldPoint=smooth_temp.originalPoints[idnearpoint];
+            //var oldPoint = smooth_temp.originalPoints[idnearpoint];
             dragging = true;
         }
         if(evt.button===2){ //se quiser apagar um point original
@@ -404,7 +402,11 @@ function canvasMouseMove(evt) {
         }
     }
 }
+
 function canvasdblclick(evt){
+    /** @description To be developed.
+      * @param {event} evt Event
+     */
     if (flagMouseEvent === 0) {
        // addNewSmoothPoint();
     }

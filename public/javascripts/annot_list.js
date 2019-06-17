@@ -1,9 +1,12 @@
 // Profile with data to draw lines
 var draw_profile = new DrawProfile();
-var flagsave=-1;
+var flagsave = -1;
 
-/** @description Classes enumeration  */
+/* Classes */
+
 var ClassEnum = {
+    /** @description Classes enumeration  
+    */
     OVARIAN_STROMA: 0,
     OVARIAN_FOLLICLE: 1,
     OVARIAN_CYST: 2,
@@ -126,7 +129,7 @@ function fillTable(body, ldata, el_list) {
             icon2.classList.add("far", "fa-trash-alt", "i-tab");
             var btn2 = document.createElement("button");
             btn2.classList.add("btn", "btn-primary", "btn-annot");
-            btn2.setAttribute("onClick", "deleteSmooth(" + ldata[i].profile.id  + " , "+ ldata[i].idSegment + ", 1);");
+            btn2.setAttribute("onClick", "deleteSmooth(" + ldata[i].profile.id  + " , "+ ldata[i].idSegment + ");");
             btn2.appendChild(icon2);
             var td5 = document.createElement("td");
             td5.setAttribute("class", "td-btn-annot");
@@ -143,6 +146,8 @@ function fillTable(body, ldata, el_list) {
 }
 
 function listAnnot() {
+    /** @description List all annotations
+     * */
 
     // Body of list with annotations
     var body = document.getElementById("list-annot");
@@ -195,9 +200,10 @@ function drawElement(cId) {
 }
 
 function drawSave(){
-    
+    /** @description Save drawn element.
+     */
     var btn = document.createElement("button");
-        
+    
     btn.setAttribute("id", "btn-save");
     btn.setAttribute("type", "button");
     btn.setAttribute("class", "btn-save");
@@ -208,7 +214,8 @@ function drawSave(){
 }
 
 function saveAnnot() {
-    /* SAVE ANNOTATIONS - Requires description */
+    /** @description Save annotations.
+     */
     //  new element
     let upload_list = new Array();
     // Read all elements in order to remove interpolatedPoints
@@ -252,7 +259,8 @@ function saveAnnot() {
 /* Calculate Parameters */
 
 function calculateAxes() {
-
+    /** @description Function to be implemented.
+     */
     var majorAxis = 100;
     var minorAxis = 50;
 
