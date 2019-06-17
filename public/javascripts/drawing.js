@@ -214,6 +214,7 @@ function saveSmooth(sp) {
 /* Edition */
 
 /************** ANA **************/
+
 function deleteSmooth(spType, idSeg, h) {
     /** @description Function to delete the SmoothPiecewise object.
       * @param {SmoothPiecewise} ds SmoothPiecewise object
@@ -224,11 +225,9 @@ function deleteSmooth(spType, idSeg, h) {
     smooth_temp = [];
     class_list[spType].splice(idSeg - 1, 1); //delete the segmentation 
     if (class_list.length <= 0) { //if there is no segmentation
-        
         class_list = class_listAUX;
-        
-       
-    }if (class_list[0] !== undefined && class_list[0].length === 0) { //if ov vector is empty or not defined but fol and/or cys could exist
+    }
+    if (class_list[0] !== undefined && class_list[0].length === 0) { //if ov vector is empty or not defined but fol and/or cys could exist
         if (class_list[1] !== undefined) {
             class_listAUX[1] = class_list[1];
         }
@@ -260,11 +259,13 @@ function deleteSmooth(spType, idSeg, h) {
     listAnnot();
     refreshCanvas();  
 }
+
 function removeSaveButton(){
-    var element = document.getElementById("SaveButton");
+    var element = document.getElementById("btn-save");
     element.remove();
     flagsave=-1;
 }
+
 
 /************** ANA **************/
 function deletePoint(idnearpoint) {
@@ -284,15 +285,27 @@ function deletePoint(idnearpoint) {
     }
 }
 
+
 /************** ANA **************/
-function editSmooth(idtype, idSeg, flag) {
+
+function editSmooth(btn, idtype, idSeg, flag) {
     /** @description Edit Segmentation
       * @param {int} idtype Id in smoothpicewises array.
      */
-     
+    
+    // Clean button
+    btn.removeChild(btn.getElementsByTagName("svg")[0]);
+    btn.innerHTML = '';
+    // Re-set button
+    btn.setAttribute("onClick", "storeNewPoints(this," + idtype  + " , "+ idSeg + ", " + 1 + ");");
+    var icon = document.createElement("i");
+    icon.classList.add("fas", "fa-save", "i-tab");
+    btn.appendChild(icon);
+
+    // Process data
     smooth_temp=getSegmentation(idtype, idSeg);
      refreshCanvas();
-    flagMouseEvent=flag;
+    flagMouseEvent = flag;
        if (flagMouseEvent===0){
         canvas.removeEventListener("mousedown", storeSmoothPoints, false);
 
@@ -300,6 +313,23 @@ function editSmooth(idtype, idSeg, flag) {
         
         createHandleSmooth();
      } 
+}
+
+function storeNewPoints(btn, idtype, idSeg, flag) {
+
+    // Clean button
+    btn.removeChild(btn.getElementsByTagName("svg")[0]);
+    btn.innerHTML = '';
+    // Re-set button
+    var icon = document.createElement("i");
+    icon.classList.add("far", "fa-edit", "i-tab");
+    btn.setAttribute("onClick", "editSmooth(this," + idtype + " , "+ idSeg + ", 0);");
+    btn.appendChild(icon);
+
+    // Set main
+    flagMouseEvent = flag;
+    drawElement(idtype)
+    refreshCanvas();
 }
 
 function handlePointEditMoving(newPoint, idOldPt) {
@@ -312,6 +342,7 @@ function handlePointEditMoving(newPoint, idOldPt) {
     document.body.style.cursor = 'pointer';
     updatePoint(pt, idOldPt);
  }
+
 
 function getSegmentation(idtype, idSeg){
     var segmbytype = [];
@@ -358,6 +389,7 @@ function distance(pointA, pointB){
     var distAB=Math.sqrt(dx * dx + dy * dy); // distance
     return distAB;
 }
+
 function updatePoint(point, idx) {
     var x = point.x;
     var y = point.y;
@@ -367,7 +399,6 @@ function updatePoint(point, idx) {
     refreshCanvas();
   //  drawSmooth(smooth_temp.interpolatedPoints);
 }
-
 
 function createHandleSmooth() {
     /** @description Allow smooth edition
@@ -379,7 +410,6 @@ function createHandleSmooth() {
         var x = pts[i].X*canvasScale;
         var y = pts[i].Y*canvasScale;
         drawCircle(x, y,1);
-    
     }
 }
 

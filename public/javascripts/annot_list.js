@@ -112,19 +112,27 @@ function fillTable(body, ldata, el_list) {
             row.appendChild(td3);
             // Edit Button
             var td4 = document.createElement("td");
-            td4.setAttribute("class", "td-btn-annot");
-            td4.innerHTML = '<button type="button" class="btn btn-light btn-annot" onClick="editSmooth(' + ldata[i].profile.id  +' , '+ ldata[i].idSegment + ', 0);">' +
-                '<i class="far fa-edit i-tab" ></i >' + '</button>';
+            td4.setAttribute("class", "td-btn-annot");           
+            var icon1 = document.createElement("i");
+            icon1.classList.add("far", "fa-edit", "i-tab");
+            var btn1 = document.createElement("button");
+            btn1.classList.add("btn", "btn-light", "btn-annot");
+            btn1.setAttribute("onClick", "editSmooth(this," + ldata[i].profile.id  + " , "+ ldata[i].idSegment + ", 0);");
+            btn1.appendChild(icon1);
+            td4.appendChild(btn1);
             row.appendChild(td4);
-            // Delete Button 
+            // Delete Button
+            var icon2 = document.createElement("i");
+            icon2.classList.add("far", "fa-trash-alt", "i-tab");
+            var btn2 = document.createElement("button");
+            btn2.classList.add("btn", "btn-primary", "btn-annot");
+            btn2.setAttribute("onClick", "deleteSmooth(" + ldata[i].profile.id  + " , "+ ldata[i].idSegment + ", 1);");
+            btn2.appendChild(icon2);
             var td5 = document.createElement("td");
             td5.setAttribute("class", "td-btn-annot");
-            td5.innerHTML = '<button type="button" class="btn btn-primary btn-annot" onClick="deleteSmooth(' + ldata[i].profile.id  +' , '+ ldata[i].idSegment + ',1);">' +
-                '<i class="far fa-trash-alt i-tab" ></i >' + '</button>';
-            
+            td5.appendChild(btn2);            
             row.appendChild(td5);
             
-            //console.log(JSON.stringify(idx) ); //Ana
             // Append Row to table
             tbody.appendChild(row);
         }
@@ -161,9 +169,7 @@ function listAnnot() {
     if (class_list[0] !== undefined || class_list[1] !== undefined || class_list[2] !== undefined) {
         if (flagsave === -1) {
             flagsave = 1;
-
         }
-
     }
 }
 
@@ -173,10 +179,9 @@ function drawElement(cId) {
     /** @description Active follicle draw  
      */
 
-    flagMouseEvent=1;
+    flagMouseEvent = 1;
     refreshCanvas();
     if (cId >= 0 && cId < N_CLASSES) {  
-        
         // Set profile
         this.draw_profile = new DrawProfile(cId,
                                             ClassEnum.properties[cId].name,
@@ -184,7 +189,6 @@ function drawElement(cId) {
                                             1);
         // Active draw
         activeSmooth();
- 
     }       
 }
 
@@ -199,8 +203,6 @@ function drawSave(){
     btn.onclick = function () { saveAnnot(); }; 
     var t=document.createTextNode("Save");
     btn.appendChild(t);
-
- //   $('#btn-save').css('top', $('#gallery').position().top + $('#gallery').outerHeight(true) + 'px');
 }
 
 function saveAnnot() {

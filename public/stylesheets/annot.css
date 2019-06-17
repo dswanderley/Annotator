@@ -36,61 +36,6 @@
 
 
 /*
- *   GALLERY 
- */
-
-/* List of elements in gallery */
-#gallery-ul {
-    list-style-type: none;
-    padding: 1px;
-    height: 30px;
-    width: 350px;
- }
-
-#gallery-li {
-    display: inline;
-    cursor: pointer;
-}
-
-/* Define gallery container */
-.gallery-container {
-    margin: 10px auto 5px auto;
-    width: auto;
-    height: 86px;
-    max-width: 800px;
-    
-}
-
-/* Define gallery properties */
-#gallery {
-    white-space: nowrap;
-    overflow-y: scroll;
-    overflow-x: scroll;
-    width: 370px;
-    height: auto;
-    padding: 5px;
-    border: 5px;
-    background-color:#f8f9fa;
-    max-height: 730px;
-    
-}
-
-/* Define gallery images properties */
-.gallery-img {
-    font-size: 0.90rem;
-    display: block;
-    overflow: auto;
-    padding-bottom: 4px;
-}
-
-.gallery-thumb{
-    float: left;
-    height: 80px;
-    font-size:10px  
-}
-
-
-/*
  * Large Images
  */
 
@@ -104,7 +49,6 @@
     padding: 10px;
     display: inline;
 }
-
 
 /* Point handle */
 .handlePoint {
@@ -124,8 +68,13 @@
 
 
 /*
- *   Right Col.
+ *   Left Col.
  */
+
+#list-annot{
+    height: 80%;
+    margin: 5px 0 0 0;
+}
 
 #btn-save {
     left: 50px;
@@ -133,6 +82,7 @@
 }
 
 #col-diag-data {
+    padding: 0 0 0 30px;
     max-width: 380px;
 }
 
@@ -162,6 +112,7 @@
     vertical-align: middle !important;
     width: 80px;
 }
+
 .btn-save{
     padding: 3% 34%;
     text-align: center!important;
@@ -177,12 +128,6 @@
         background-color: rgb(0, 28, 186);
         color: white;
 }
-
-
-
-
-
-
 
 
 
