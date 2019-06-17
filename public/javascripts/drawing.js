@@ -267,7 +267,6 @@ function removeSaveButton(){
 }
 
 
-/************** ANA **************/
 function deletePoint(idnearpoint) {
      /** @description delete an original point
       * @param {int} idnearpoint Position of the orginal point in the array smooth.originalPoint.
@@ -285,12 +284,12 @@ function deletePoint(idnearpoint) {
     }
 }
 
-
-/************** ANA **************/
-
 function editSmooth(btn, idtype, idSeg, flag) {
     /** @description Edit Segmentation
-      * @param {int} idtype Id in smoothpicewises array.
+      * @param {element} btn Button element.
+      * @param {int} idtype Type ID.
+      * @param {int} idSeg Segment ID.
+      * @param {int} flag Flag for handle smooth points.
      */
     
     // Clean button
@@ -301,21 +300,26 @@ function editSmooth(btn, idtype, idSeg, flag) {
     var icon = document.createElement("i");
     icon.classList.add("fas", "fa-save", "i-tab");
     btn.appendChild(icon);
-
+    // Block buttom click
+    click_enable = false;
     // Process data
-    smooth_temp=getSegmentation(idtype, idSeg);
-     refreshCanvas();
+    smooth_temp = getSegmentation(idtype, idSeg);
+    refreshCanvas();
     flagMouseEvent = flag;
-       if (flagMouseEvent===0){
+    if (flagMouseEvent===0){
         canvas.removeEventListener("mousedown", storeSmoothPoints, false);
-
         canvas.addEventListener("dblclick", addNewSmoothPoint, false);
-        
         createHandleSmooth();
      } 
 }
 
 function storeNewPoints(btn, idtype, idSeg, flag) {
+    /** @description Store points edited.
+      * @param {element} btn Button element.
+      * @param {int} idtype Type ID.
+      * @param {int} idSeg Segment ID.
+      * @param {int} flag Flag for handle smooth points.
+     */
 
     // Clean button
     btn.removeChild(btn.getElementsByTagName("svg")[0]);
@@ -325,7 +329,8 @@ function storeNewPoints(btn, idtype, idSeg, flag) {
     icon.classList.add("far", "fa-edit", "i-tab");
     btn.setAttribute("onClick", "editSmooth(this," + idtype + " , "+ idSeg + ", 0);");
     btn.appendChild(icon);
-
+    // Free button
+    click_enable = true;
     // Set main
     flagMouseEvent = flag;
     drawElement(idtype)

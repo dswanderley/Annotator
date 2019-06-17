@@ -13,6 +13,8 @@ var canvasScale = 1.0;
 var img_width, img_height, img_dwidth, img_dheight, canvas_dx, canvas_dy, canvas_cx, canvas_cy;
 var flagMouseEvent = 0;
 var newPoint= new Point();
+// Drawing variables
+var click_enable = true;
 var idnearpoint=-1; //faz sentido ser variavel global?
 
 

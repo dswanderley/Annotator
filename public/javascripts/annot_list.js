@@ -179,17 +179,19 @@ function drawElement(cId) {
     /** @description Active follicle draw  
      */
 
-    flagMouseEvent = 1;
-    refreshCanvas();
-    if (cId >= 0 && cId < N_CLASSES) {  
-        // Set profile
-        this.draw_profile = new DrawProfile(cId,
-                                            ClassEnum.properties[cId].name,
-                                            ClassEnum.properties[cId].color,
-                                            1);
-        // Active draw
-        activeSmooth();
-    }       
+    if (click_enable) {
+        flagMouseEvent = 1;
+        refreshCanvas();
+        if (cId >= 0 && cId < N_CLASSES) {  
+            // Set profile
+            this.draw_profile = new DrawProfile(cId,
+                                                ClassEnum.properties[cId].name,
+                                                ClassEnum.properties[cId].color,
+                                                1);
+            // Active draw
+            activeSmooth();
+        }
+    }
 }
 
 function drawSave(){
