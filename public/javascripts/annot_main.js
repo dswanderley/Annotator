@@ -58,16 +58,16 @@ function refreshScreenSize() {
 function addEvents() {
     /** @description Add Events listener
      */
-
     canvas.addEventListener('mousedown', canvasMouseDown, false);
     canvas.addEventListener('mousemove', canvasMouseMove, false);
     canvas.addEventListener('mouseup', canvasMouseUp, false);
-    //canvas.addEventListener('dblclick',canvasdblclick,false);
     // IE9, Chrome, Safari, Opera
     canvas.addEventListener("mousewheel", canvasScrollWheel, false);
     // Firefox
     canvas.addEventListener("DOMMouseScroll", canvasScrollWheel, false);
     document.addEventListener('mouseup', pageMouseUp, false);
+    // Escape
+    document.addEventListener("keyup", checkEscape, false);
 }
 
 function pageMouseUp(evt) {
@@ -285,9 +285,8 @@ var lastX, lastY;
 var dragStart = null;
 var dragging = false;
 
-function canvasMouseUp(evt) {
+function canvasMouseUp() {
     /** @description Canvas Mouse Up event
-      * @param {event} evt event
      */
     if (flagMouseEvent === 1) {
         // Current transformations applied to context
@@ -308,9 +307,9 @@ function canvasMouseUp(evt) {
                 
             }
         }
-
     }
-    idnearpoint=-1;
+
+    idnearpoint = -1;
 }
 
 function canvasScrollWheel(evt) {
@@ -342,20 +341,18 @@ function canvasMouseDown(evt) {
         }
     }
     else if (flagMouseEvent === 0){ 
-        if(evt.button ===0 ){//se quiser mudar a posição do point original
-            idnearpoint=handlePointEdit();
-            //var oldPoint = smooth_temp.originalPoints[idnearpoint];
+        if(evt.button === 0 ){//se quiser mudar a posição do point original
+            idnearpoint = handlePointEdit();
             dragging = true;
         }
-        if(evt.button===2){ //se quiser apagar um point original
+        if(evt.button === 2){ //se quiser apagar um point original
             var ptnew = ctx.transformedPoint(evt.layerX, evt.layerY); //newpoint
             ptnew.x = ptnew.x / canvasScale;
-             ptnew.y = ptnew.y / canvasScale;
+            ptnew.y = ptnew.y / canvasScale;
             [mindistAB, idnearpoint] = getNearPoint(ptnew); 
             deletePoint(idnearpoint);
         }
     }
-
 }
 
 function canvasMouseMove(evt) {
@@ -403,15 +400,19 @@ function canvasMouseMove(evt) {
     }
 }
 
-function canvasdblclick(evt){
-    /** @description To be developed.
-      * @param {event} evt Event
+function checkEscape() {
+    /** @description To monitor escape key.      
      */
-    if (flagMouseEvent === 0) {
-       // addNewSmoothPoint();
-    }
+    // Check if has smooth_temp object
+    if (smooth_temp instanceof SmoothPiecewise) {
+        // If is drawing and not editing
+        if (flagMouseEvent === 1) {
+            // Remove last point or line
+            removeSmoothTemp();
+            refreshCanvas();
+        }
+    }     
 }
-
 
 /*
  * * SVG

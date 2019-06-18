@@ -1,5 +1,6 @@
 // Drawing points
 var points = [];
+var mouse_pos = [];
 // Smooth line data
 var smoothpiecewises = [];
 var smooth_temp = [];
@@ -87,18 +88,18 @@ function drawingSmooth(ev) {
      */
     if (!ev) { ev = window.event; }
     var pt = ctx.transformedPoint(ev.layerX, ev.layerY);
-    var p = new Point(pt.x / canvasScale, pt.y / canvasScale);
+    mouse_pos = new Point(pt.x / canvasScale, pt.y / canvasScale);
     smooth_temp.originalPoints = points;
-    smooth_temp.idSegment= 0;
+    smooth_temp.idSegment = 0;
     refreshCanvas();
     // Check the number of points 
     if (points.length >= 2) {
-        refreshSmoothTemp(p);
+        refreshSmoothTemp(mouse_pos);
         drawSmooth(smooth_temp.interpolatedPoints);
     }
     else {
-        drawLine(new Line(points[0], p));
-        smooth_temp.interpolatedPoints[0] = p;
+        drawLine(new Line(points[0], mouse_pos));
+        smooth_temp.interpolatedPoints[0] = mouse_pos;
     }
 }
 
@@ -143,6 +144,33 @@ function drawSmooth(ipts, color, width) {
     }
 }
 
+function removeSmoothTemp() {
+    /** @description Function to remove smooth temp points.
+     */
+    // Check if has points
+    if (points.length > 1) {
+        // Remove last point
+        points.pop();
+        smooth_temp.originalPoints = points;
+        smooth_temp.interpolatedPoints.pop();
+        // Draw smooth or line
+        if (points.length >= 2) {
+            refreshSmoothTemp(mouse_pos);
+            drawSmooth(smooth_temp.interpolatedPoints);
+        }
+        else {
+            drawLine(new Line(points[0], mouse_pos));
+            smooth_temp.interpolatedPoints[0] = mouse_pos;
+        }
+    }
+    else {
+        // Remove all data
+        points = []
+        smooth_temp = [];
+        canvas.removeEventListener("mousemove", drawingSmooth, false);
+    }    
+}
+
 
 /* Storage */
 
@@ -170,7 +198,7 @@ function storeSmoothPoints(ev) {
         if (ev.button === 2 && points.length > 2) {//responsabel por fechar a segmentação
             // Close draw tool
             saveSmooth(smooth_temp);
-            canvas.removeEventListener("mousemove", drawingSmooth, false); 
+            canvas.removeEventListener("mousemove", drawingSmooth, false);
             refreshCanvas();
         }
     }
@@ -181,21 +209,21 @@ function saveSmooth(sp) {
     /** @description Function to save the SmoothPiecewise object on smooth_temp.
       * @param {SmoothPiecewise} sp SmoothPiecewise object
      */
-    var tam=0;   
+
     var p = sp.originalPoints[0];
     refreshSmoothTemp(p);
     drawSmooth(sp.interpolatedPoints);
     // Store
     // Get list with same element
-    el_list = class_list[draw_profile.id];
+    var el_list = class_list[draw_profile.id];
     if (el_list === null || el_list === undefined) {
         el_list = [];
     }
     el_list.push(smooth_temp);
     class_list[draw_profile.id] = el_list;
-    tam=el_list.length;
-    if (tam!==0){
-        smooth_temp.idSegment=tam;
+    let tam = el_list.length;
+    if (tam !== 0){
+        smooth_temp.idSegment = tam;
     }
     var arr = point2array(smooth_temp.originalPoints);
     smooth_temp.interpolatedPoints = getSmoothPiecewises(arr);
