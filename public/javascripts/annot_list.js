@@ -181,21 +181,33 @@ function listAnnot() {
 /* Draw Managing */
 
 function drawElement(cId) {
-    /** @description Active follicle draw  
+    /** @description Active follicle draw
+     * @param {int} cId Class ID
      */
 
     if (click_enable) {
+        // Reset button
+        if ($(".btn-class-annot.btn-outline-info").length > 0) {
+            let btn = $(".btn-class-annot.btn-outline-info")[0]
+            btn.classList.remove("btn-outline-info");
+            btn.classList.add("btn-info");
+        }
+        // Global flag for events
         flagMouseEvent = 1;
         refreshCanvas();
-        if (cId >= 0 && cId < N_CLASSES) {  
-            // Set profile
-            this.draw_profile = new DrawProfile(cId,
-                                                ClassEnum.properties[cId].name,
-                                                ClassEnum.properties[cId].color,
-                                                1);
+        // Set profile
+        if (cId >= 0 && cId < N_CLASSES) {
+            draw_profile = new DrawProfile(cId,
+                            ClassEnum.properties[cId].name,
+                            ClassEnum.properties[cId].color,
+                            1);
             // Active draw
             activeSmooth();
         }
+        // Add new class to selected button
+        let btn = $(".btn-class-annot")[cId];
+        btn.classList.remove("btn-info");
+        btn.classList.add("btn-outline-info");
     }
 }
 
