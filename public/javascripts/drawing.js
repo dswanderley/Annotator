@@ -247,7 +247,6 @@ function deleteSmooth(spType, idSeg) {
       * @param {SmoothPiecewise} ds SmoothPiecewise object
      */
 
-    
      // Remove on classes list
     class_list[spType].splice(idSeg, 1);
     // remove on general list
@@ -261,9 +260,10 @@ function deleteSmooth(spType, idSeg) {
     if (smoothpiecewises.length < 1) {
         removeSaveButton();
     }
-
+    // Set flags
     flagMouseEvent = 1;
-    click_enable = false;
+    click_enable = true;
+    // Refresh content
     activeSmooth();
     listAnnot();
     refreshCanvas();  
