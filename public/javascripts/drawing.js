@@ -13,25 +13,27 @@ var smoothConfig = {
 /*
  * Line and Point
  */
-
-function Point(x, y) {
-    /** @description Class Point
-      * @param {int} x Coordinate x
-      * @param {int} y Coordinate y
-     */
-    this.X = x;
-    this.Y = y;
-    //makeHandle(x, y, 0, 6);
+class Point {
+    constructor(x, y) {
+        /** @description Class Point
+          * @param {int} x Coordinate x
+          * @param {int} y Coordinate y
+         */
+        this.X = x;
+        this.Y = y;
+        //makeHandle(x, y, 0, 6);
+    }
 }
 
-function Line(pi, pf) {
-    /** @description Class Line
-      * @param {Point} pi Initial point
-      * @param {Point} pf Final point
-     */
-    this.pi = new Point(pi.X, pi.Y); //ponto inicial da linha
-    this.pf = new Point(pf.X, pf.Y); //ponto final
-    
+class Line {
+    constructor(pi, pf) {
+        /** @description Class Line
+          * @param {Point} pi Initial point
+          * @param {Point} pf Final point
+         */
+        this.pi = new Point(pi.X, pi.Y); //ponto inicial da linha
+        this.pf = new Point(pf.X, pf.Y); //ponto final
+    }
 }
 
 function drawLine(line, color, width) {
@@ -61,14 +63,15 @@ function drawLine(line, color, width) {
  */
 
 /* Class and activation */
-
-function SmoothPiecewise() {
-    /** @description Picewise of smooth object (small lines)
-     */
-    this.originalPoints = new Array();
-    this.interpolatedPoints = new Array();
-    this.profile = new DrawProfile();
-    this.idSegment=0;
+class SmoothPiecewise {
+    constructor() {
+        /** @description Picewise of smooth object (small lines)
+         */
+        this.originalPoints = new Array();
+        this.interpolatedPoints = new Array();
+        this.profile = new DrawProfile();
+        this.idSegment = 0;
+    }
 }
 
 function activeSmooth() {
@@ -229,7 +232,6 @@ function saveSmooth(sp) {
     smooth_temp.interpolatedPoints = getSmoothPiecewises(arr);
     smoothpiecewises.push(smooth_temp);
     refreshCanvas();
-    //drawSmooth(smooth_temp.interpolatedPoints);
     // Clear temps
     points = [];
     smooth_temp = [];
@@ -244,41 +246,25 @@ function deleteSmooth(spType, idSeg) {
     /** @description Function to delete the SmoothPiecewise object.
       * @param {SmoothPiecewise} ds SmoothPiecewise object
      */
-    var class_listAUX = new Array(N_CLASSES);
-    smooth_temp = [];
-    class_list[spType].splice(idSeg - 1, 1); //delete the segmentation 
-    if (class_list.length <= 0) { //if there is no segmentation
-        class_list = class_listAUX;
+
+    
+     // Remove on classes list
+    class_list[spType].splice(idSeg, 1);
+    // remove on general list
+    for (let i = 0; i < smoothpiecewises.length; i++) {
+        let sp = smoothpiecewises[i];
+        if (sp.profile.id === spType && sp.idSegment == idSeg) {
+            smoothpiecewises.splice(i, 1);
+        }
     }
-    if (class_list[0] !== undefined && class_list[0].length === 0) { //if ov vector is empty or not defined but fol and/or cys could exist
-        if (class_list[1] !== undefined) {
-            class_listAUX[1] = class_list[1];
-        }
-        if (class_list[2] !== undefined) {
-            class_listAUX[2] = class_list[2];
-        }
-        class_list = class_listAUX;
+    // Remove save button if has no more annotations
+    if (smoothpiecewises.length < 1) {
         removeSaveButton();
     }
-    if (class_list[1] !== undefined && class_list[1].length === 0) { //if Fol vector is empty or not defined but ov and/or cys could exist
-        if (class_list[0] !== undefined) {
-            class_listAUX[0] = class_list[0];
-        }
-        if (class_list[2] !== undefined) {
-            class_listAUX[2] = class_list[2];
-        }
-        class_list = class_listAUX;
-    }
-    if (class_list[2] !== undefined && class_list[2].length === 0) { //if cyst vector is empty or not defined but ov and/or fol could exist
-        if (class_list[0] !== undefined) {
-            class_listAUX[0] = class_list[0];
-        }
-        if (class_list[1] !== undefined) {
-            class_listAUX[1] = class_list[1];
-        }
-        class_list = class_listAUX;
-    }
+
     flagMouseEvent = 1;
+    click_enable = false;
+    activeSmooth();
     listAnnot();
     refreshCanvas();  
 }
@@ -288,7 +274,7 @@ function removeSaveButton(){
      */
     var element = document.getElementById("btn-save");
     element.remove();
-    flagsave=-1;
+    flagsave = -1;
 }
 
 function deletePoint(idnearpoint) {
@@ -330,7 +316,7 @@ function editSmooth(btn, idtype, idSeg, flag) {
     smooth_temp = getSegmentation(idtype, idSeg);
     refreshCanvas();
     flagMouseEvent = flag;
-    if (flagMouseEvent===0){
+    if (flagMouseEvent === 0){
         canvas.removeEventListener("mousedown", storeSmoothPoints, false);
         canvas.addEventListener("dblclick", addNewSmoothPoint, false);
         createHandleSmooth();
@@ -385,7 +371,7 @@ function getSegmentation(idtype, idSeg) {
     var segmbytype = [];
     var segm = [];
     segmbytype = class_list[idtype];
-    segm = segmbytype[idSeg-1];
+    segm = segmbytype[idSeg];
     return segm;
 }
 
@@ -425,14 +411,14 @@ function getNearPoint(pt) {
     return [mindistAB,idnearpoint];
 }
 
-function distance(pointA, pointB){
+function distance(pointA, pointB) {
     /** @description Calculate euclidian distance.
       * @param {Point} pointA Point A
       * @param {Point} pointB Point B
      */
-    var dx= pointA.X-pointB.X //delta x
-    var dy= pointA.Y-pointB.Y //delta y
-    var distAB=Math.sqrt(dx * dx + dy * dy); // distance
+    var dx = pointA.X-pointB.X //delta x
+    var dy = pointA.Y-pointB.Y //delta y
+    var distAB = Math.sqrt(dx * dx + dy * dy); // distance
     return distAB;
 }
 
@@ -513,7 +499,6 @@ function addNewSmoothPoint(ev) {
     smooth_temp.originalPoints = oPoint;
     smooth_temp.interpolatedPoints = new_interp_pts;
     // Update handle pointss
-    //clearHandle();
     createHandleSmooth();
     refreshCanvas();
     drawSmooth(smooth_temp.interpolatedPoints);

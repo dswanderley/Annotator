@@ -173,58 +173,59 @@ function redraw() {
         }   
 }
 
-function CanvasSizes(x, y, w, h, cX, cY, cW, cH) {
-    /** @description Classe with canvas dimensions
-      * @param {int} x The x coordinate where to place the image on the canvas
-      * @param {int} y The y coordinate where to place the image on the canvas
-      * @param {int} w The width of the image to use (stretch or reduce the image)
-      * @param {int} h The height of the image to use (stretch or reduce the image)
-      * @param {int} cX The x coordinate where to start clipping
-      * @param {int} cY The y coordinate where to start clipping
-      * @param {int} cW The width of the clipped image
-      * @param {int} cH The height of the clipped image
-     */
-
-    // x initial position
-    if (x !== null && x !== undefined)
-        this.canvasX = x;
-    else
-        this.canvasX = 0;
-    // y initial position
-    if (y !== null && y !== undefined)
-        this.canvasY = y;
-    else
-        this.canvasY = 0;
-    // canvas height - h
-    if (h !== null && h !== undefined)
-        this.canvasH = h;
-    else
-        this.canvasH = 100;
-    // canvas width - w
-    if (w !== null && w !== undefined)
-        this.canvasW = w;
-    else
-        this.canvasW = 100;
-    // intial crop postion - x
-    if (cX !== null && cX !== undefined)
-        this.cropX = cX;
-    else
-        this.cropX = 0;
-    // initial crop postion - y
-    if (cY !== null && cY !== undefined)
-        this.cropY = cY;
-    else
-        this.cropY = 0;
-    // crop height
-    if (cH !== null && cH !== undefined)
-        this.cropH = cH;
-    else
-        this.cropH = 100;
-    // crop width
-    if (cW !== null && cW !== undefined)
-        this.cropW = cW;
-    else
-        this.cropW = 100;
+class CanvasSizes {
+    constructor(x, y, w, h, cX, cY, cW, cH) {
+        /** @description Classe with canvas dimensions
+          * @param {int} x The x coordinate where to place the image on the canvas
+          * @param {int} y The y coordinate where to place the image on the canvas
+          * @param {int} w The width of the image to use (stretch or reduce the image)
+          * @param {int} h The height of the image to use (stretch or reduce the image)
+          * @param {int} cX The x coordinate where to start clipping
+          * @param {int} cY The y coordinate where to start clipping
+          * @param {int} cW The width of the clipped image
+          * @param {int} cH The height of the clipped image
+         */
+        // x initial position
+        if (x !== null && x !== undefined)
+            this.canvasX = x;
+        else
+            this.canvasX = 0;
+        // y initial position
+        if (y !== null && y !== undefined)
+            this.canvasY = y;
+        else
+            this.canvasY = 0;
+        // canvas height - h
+        if (h !== null && h !== undefined)
+            this.canvasH = h;
+        else
+            this.canvasH = 100;
+        // canvas width - w
+        if (w !== null && w !== undefined)
+            this.canvasW = w;
+        else
+            this.canvasW = 100;
+        // intial crop postion - x
+        if (cX !== null && cX !== undefined)
+            this.cropX = cX;
+        else
+            this.cropX = 0;
+        // initial crop postion - y
+        if (cY !== null && cY !== undefined)
+            this.cropY = cY;
+        else
+            this.cropY = 0;
+        // crop height
+        if (cH !== null && cH !== undefined)
+            this.cropH = cH;
+        else
+            this.cropH = 100;
+        // crop width
+        if (cW !== null && cW !== undefined)
+            this.cropW = cW;
+        else
+            this.cropW = 100;
+    }
 }
 
 function canvasZoom(clicks, mouseX, mouseY) {
