@@ -1,5 +1,5 @@
 // Profile with data to draw lines
-var draw_profile = new DrawProfile();
+var draw_profile = null;//new DrawProfile();
 var flagsave = -1;
 
 /* Classes */
@@ -11,9 +11,9 @@ var ClassEnum = {
     OVARIAN_FOLLICLE: 1,
     OVARIAN_CYST: 2,
     properties: {
-        0: { name: "ovary", value: 0, code: "OVARIAN_STROMA", color: "#FF6468" },
-        1: { name: "follicle", value: 1, code: "OVARIAN_FOLLICLE", color: "#DCFFD2" },        
-        2: { name: "cyst", value: 2, code: "OVARIAN_CYST", color: "#0032B4" }
+        0: { name: "ovary", value: 0, type: "O", code: "OVARIAN_STROMA", color: "#FF6468" },
+        1: { name: "follicle", value: 1, type: "F", code: "OVARIAN_FOLLICLE", color: "#DCFFD2" },        
+        2: { name: "cyst", value: 2, type: "C", code: "OVARIAN_CYST", color: "#0032B4" }
         //color = "#0000FF";
     }
 };
@@ -23,62 +23,61 @@ var N_CLASSES = Object.keys(ClassEnum).length - 1;
 var class_list = new Array(N_CLASSES);
 
 /* CLASSES */
-
-function DrawProfile(id, class_name, color, thick) {
-    /** @description Classe with canvas dimensions
-      * @param {int} x Class id
-      * @param {string} class_name Name of the class
-      * @param {string} color Color of the class
-      * @param {int} thick Line thickness
-     */
-
-    // id
-    if (id !==null && id !==undefined)
-        this.id = id;
-    else
-        this.id = 0;
-    // class
-    if (class_name !==null && class_name !==undefined)
-        this.class_name = class_name;
-    else
-        this.class_name = '';
-    // color
-    if (color !== null && color !== undefined)
-        this.color = color;
-    else
-        this.color = '#FFFFFF';
-    // thickness
-    if (thick !==null && thick !==undefined)
-        this.thick = thick;
-    else
-        this.thick = 1;
+class DrawProfile {
+    constructor(id, class_name, color, thick) {
+        /** @description Classe with canvas dimensions
+          * @param {int} x Class id
+          * @param {string} class_name Name of the class
+          * @param {string} color Color of the class
+          * @param {int} thick Line thickness
+         */
+        // id
+        if (id !== null && id !== undefined)
+            this.id = id;
+        else
+            this.id = 0;
+        // class
+        if (class_name !== null && class_name !== undefined)
+            this.class_name = class_name;
+        else
+            this.class_name = '';
+        // color
+        if (color !== null && color !== undefined)
+            this.color = color;
+        else
+            this.color = '#FFFFFF';
+        // thickness
+        if (thick !== null && thick !== undefined)
+            this.thick = thick;
+        else
+            this.thick = 1;
+    }
 }
 
 /* TABLE Functions */
 
-function fillTable(body, ldata, el_list) {
+function fillTable(body, el_list) {
     /** @description Fill data table with anotations reference
       * @param {Window} body A HTML element table
       * @param {Array} el_list List with elements of the same class
-      * @param {Array} ldata list of all the SmoothPieceWise, aka, segementations
      */
-    el_str=ldata[0].profile.class_name;
+
     //Check if there is any element
     if (el_list.length > 0) {
         // Table of content
         var table = document.createElement("table");
-        table.setAttribute("id", "table-" + el_str.toLowerCase());
+        table.setAttribute("id", "table-annot");
         table.setAttribute("class", "table table-striped table-dark");
         // Header elements
         var header = document.createElement("tr");
         var th1 = document.createElement("th");
-        th1.appendChild(document.createTextNode(el_str));
+        th1.appendChild(document.createTextNode("ID"));
         header.appendChild(th1);
         var th2 = document.createElement("th");
-        th2.appendChild(document.createTextNode("Major"));
+        th2.appendChild(document.createTextNode("Class"));
         header.appendChild(th2);
         var th3 = document.createElement("th");
-        th3.appendChild(document.createTextNode("Minor"));
+        th3.appendChild(document.createTextNode("Axis"));
         header.appendChild(th3);
         var th4 = document.createElement("th");
         th4.appendChild(document.createTextNode("Edit"));
@@ -103,15 +102,15 @@ function fillTable(body, ldata, el_list) {
             // Text Elements
             var td1 = document.createElement("td");
             td1.setAttribute("class", "td-text-annot");
-            td1.appendChild(document.createTextNode("#" + idx));
+            td1.appendChild(document.createTextNode(el.id));
             row.appendChild(td1);
             var td2 = document.createElement("td");
             td2.setAttribute("class", "td-text-annot");
-            td2.appendChild(document.createTextNode(el[1] + "px"));
+            td2.appendChild(document.createTextNode(el.class));
             row.appendChild(td2);
             var td3 = document.createElement("td");
             td3.setAttribute("class", "td-text-annot");
-            td3.appendChild(document.createTextNode(el[2] + "px"));
+            td3.appendChild(document.createTextNode(el.major + "px"));
             row.appendChild(td3);
             // Edit Button
             var td4 = document.createElement("td");
@@ -120,7 +119,7 @@ function fillTable(body, ldata, el_list) {
             icon1.classList.add("far", "fa-edit", "i-tab");
             var btn1 = document.createElement("button");
             btn1.classList.add("btn", "btn-light", "btn-annot");
-            btn1.setAttribute("onClick", "editSmooth(this," + ldata[i].profile.id  + " , "+ ldata[i].idSegment + ", 0);");
+            btn1.setAttribute("onClick", "editSmooth(this," + el.id_class  + " , "+ el.id_seg + ", 0);");
             btn1.appendChild(icon1);
             td4.appendChild(btn1);
             row.appendChild(td4);
@@ -129,7 +128,7 @@ function fillTable(body, ldata, el_list) {
             icon2.classList.add("far", "fa-trash-alt", "i-tab");
             var btn2 = document.createElement("button");
             btn2.classList.add("btn", "btn-primary", "btn-annot");
-            btn2.setAttribute("onClick", "deleteSmooth(" + ldata[i].profile.id  + " , "+ ldata[i].idSegment + ");");
+            btn2.setAttribute("onClick", "deleteSmooth(" + el.id_class  + " , "+ el.id_seg + ");");
             btn2.appendChild(icon2);
             var td5 = document.createElement("td");
             td5.setAttribute("class", "td-btn-annot");
@@ -154,23 +153,33 @@ function listAnnot() {
     body.innerHTML = "";
 
     // List with annotations
+    var el_list = [];
     for (c = 0; c < class_list.length; c++) {
         // Get each class
         var ldata = class_list[c];
-        var el_list = [];
         // Check if has annotation for each class
         if (ldata !== null && ldata !== undefined) {
             // Draw all segments of each element
             for (i = 0; i < ldata.length; i++) {
-
-                el = ['O', 500, 100];
-                ldata[i].idSegment=i+1; //actualiza o id do segmento
+                let annot = ldata[i];
+                // Calculate major axis
+                let axes = calculateAxes(annot.originalPoints);
+                let class_profile = ClassEnum.properties[annot.profile.id]
+                // Create element to list
+                let el = {
+                        id: class_profile.type + (i + 1),
+                        class: class_profile.name,
+                        major: Math.round(axes.major),
+                        id_seg: i,
+                        id_class: class_profile.value
+                        };
                 el_list.push(el);
-                
             }
-            fillTable(body, ldata, el_list); //Alterei
         }
     }
+    // Update table
+    fillTable(body, el_list);
+
     if (class_list[0] !== undefined || class_list[1] !== undefined || class_list[2] !== undefined) {
         if (flagsave === -1) {
             flagsave = 1;
@@ -270,11 +279,20 @@ function saveAnnot() {
 
 /* Calculate Parameters */
 
-function calculateAxes() {
+function calculateAxes(p_list) {
     /** @description Function to be implemented.
      */
-    var majorAxis = 100;
-    var minorAxis = 50;
 
-    return { major: majorAxis, minor: minorAxis };
+    let majorAxis = 0;
+    for (let i = 0; i < p_list.length - 1; i++) {
+        for (let j = i + 1; i < p_list.length; i++) {
+            // Calculate distance
+            let d = distance(p_list[i], p_list[j]);
+            // Compare and set
+            if (d > majorAxis)
+                majorAxis = d;
+        }
+    }
+
+    return { major: majorAxis};
 }
