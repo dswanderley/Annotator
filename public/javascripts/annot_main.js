@@ -117,7 +117,6 @@ function initCanvas(src) {
     };
     // Load Image
     img.src = src;
-    
 }
 
 function refreshCanvas() {
@@ -228,11 +227,9 @@ class CanvasSizes {
     }
 }
 
-function canvasZoom(clicks, mouseX, mouseY) {
+function canvasZoom(clicks) {
     /** @description Set canvas zoom factor
       * @param {float} clicks increase of zoom (positive or negative)
-      * @param {int} mouseX mouse x coord over canvas
-      * @param {int} mouseY mouse y coord over canvas
      */
     // Factor for zoom
     var scaleFactor = 1.1;
@@ -320,7 +317,7 @@ function canvasScrollWheel(evt) {
     lastX = evt.offsetX;
     lastY = evt.offsetY;
     var delta = evt.wheelDelta ? evt.wheelDelta / 40 : evt.detail ? -evt.detail : 0;
-    if (delta) canvasZoom(delta, lastX, lastY);
+    if (delta) canvasZoom(delta);
     return evt.preventDefault() && false;
 }
 

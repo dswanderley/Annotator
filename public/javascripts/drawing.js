@@ -302,7 +302,7 @@ function editSmooth(btn, idtype, idSeg, flag) {
       * @param {int} flag Flag for handle smooth points.
      */
     
-     // Clear 
+     // Clear button already selected for edition
     let save_icons = $(".fa-save");
     if (save_icons.length > 0) {
         for (let i= 0; i < save_icons.length; i++) {

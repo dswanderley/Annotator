@@ -2,6 +2,7 @@
 var draw_profile = null;//new DrawProfile();
 var flagsave = -1;
 
+
 /* Classes */
 
 var ClassEnum = {
@@ -17,12 +18,13 @@ var ClassEnum = {
         //color = "#0000FF";
     }
 };
+
 // Number of Classes
 var N_CLASSES = Object.keys(ClassEnum).length - 1;
+
 // Array with classes draws
 var class_list = new Array(N_CLASSES);
 
-/* CLASSES */
 class DrawProfile {
     constructor(id, class_name, color, thick) {
         /** @description Classe with canvas dimensions
@@ -53,6 +55,7 @@ class DrawProfile {
             this.thick = 1;
     }
 }
+
 
 /* TABLE Functions */
 
@@ -188,6 +191,7 @@ function listAnnot() {
     }
 }
 
+
 /* Draw Managing */
 
 function drawElement(cId) {
@@ -277,6 +281,7 @@ function saveAnnot() {
         }
       });
 }
+
 
 /* Calculate Parameters */
 
