@@ -11,9 +11,9 @@ var ClassEnum = {
     OVARIAN_FOLLICLE: 1,
     OVARIAN_CYST: 2,
     properties: {
-        0: { name: "ovary", value: 0, type: "O", code: "OVARIAN_STROMA", color: "#FF6468" },
-        1: { name: "follicle", value: 1, type: "F", code: "OVARIAN_FOLLICLE", color: "#DCFFD2" },        
-        2: { name: "cyst", value: 2, type: "C", code: "OVARIAN_CYST", color: "#0032B4" }
+        0: { name: "ovary", value: 0, type: "O", code: "OVARIAN_STROMA", color: "#FF00FF" },
+        1: { name: "follicle", value: 1, type: "F", code: "OVARIAN_FOLLICLE", color: "#BFFF00" },        
+        2: { name: "cyst", value: 2, type: "C", code: "OVARIAN_CYST", color: "#00BFFF" }
         //color = "#0000FF";
     }
 };
