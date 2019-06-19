@@ -97,8 +97,8 @@
 
 .btn-annot {
     padding: 0px 10px 0px 10px;
-    max-height: 25px;
-    min-width: 30px;
+    height: 25px;
+    width: 40px;
 }
 
 .td-btn-annot {

@@ -302,6 +302,19 @@ function editSmooth(btn, idtype, idSeg, flag) {
       * @param {int} flag Flag for handle smooth points.
      */
     
+     // Clear 
+    let save_icons = $(".fa-save");
+    if (save_icons.length > 0) {
+        for (let i= 0; i < save_icons.length; i++) {
+            let tmp_btn = save_icons[i].parentElement;
+            tmp_btn.removeChild(tmp_btn.getElementsByTagName("svg")[0]);    
+            let id_items = tmp_btn.id.split("-");
+            tmp_btn.setAttribute("onClick", "editSmooth(this," + id_items[2] + " , "+ id_items[3] + ", 0);");
+            let tmp_icon = document.createElement("i");
+            tmp_icon.classList.add("far", "fa-edit", "i-tab");
+            tmp_btn.appendChild(tmp_icon);
+        }
+    }
     // Clean button
     btn.removeChild(btn.getElementsByTagName("svg")[0]);
     btn.innerHTML = '';

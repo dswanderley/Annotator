@@ -119,6 +119,7 @@ function fillTable(body, el_list) {
             icon1.classList.add("far", "fa-edit", "i-tab");
             var btn1 = document.createElement("button");
             btn1.classList.add("btn", "btn-light", "btn-annot");
+            btn1.setAttribute("id", "btn-edit-" +  el.id_class  + "-" + el.id_seg)
             btn1.setAttribute("onClick", "editSmooth(this," + el.id_class  + " , "+ el.id_seg + ", 0);");
             btn1.appendChild(icon1);
             td4.appendChild(btn1);
