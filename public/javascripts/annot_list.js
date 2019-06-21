@@ -183,10 +183,10 @@ function listAnnot() {
     fillTable(body, el_list);
 
     if (class_list[0] !== undefined || class_list[1] !== undefined || class_list[2] !== undefined) {
-        showSaveButton();
+        $("#btn-save").show();
     }
     else {
-        removeSaveButton();
+        $("#btn-save").hide();
     }
 }
 
@@ -222,20 +222,6 @@ function drawElement(cId) {
         btn.classList.remove("btn-info");
         btn.classList.add("btn-outline-info");
     }
-}
-
-function showSaveButton(){
-    /** @description Add button to save drawn elements.
-     */
-    var btn = document.createElement("button");
-    
-    btn.setAttribute("id", "btn-save");
-    btn.setAttribute("type", "button");
-    btn.classList.add("btn", "btn-save");
-    document.getElementById("col-diag-data").append(btn);        
-    btn.onclick = function () { saveAnnot(); }; 
-    var t=document.createTextNode("Save");
-    btn.appendChild(t);
 }
 
 function saveAnnot() {

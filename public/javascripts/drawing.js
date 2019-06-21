@@ -243,17 +243,6 @@ function saveSmooth(sp) {
     listAnnot();
 }
 
-function removeSaveButton(){
-    /** @description Remove the large save button.
-     */
-    let el = document.getElementById("btn-save");
-    if (el !== null || el !== undefined) {
-        $("#btn-save").remove();
-        $("#btn-save").remove();
-    }
-        
-}
-
 
 /* 
  * Edition
