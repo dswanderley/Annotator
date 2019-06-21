@@ -1,7 +1,5 @@
 // Profile with data to draw lines
-var draw_profile = null;//new DrawProfile();
-var flagsave = -1;
-
+var draw_profile = null;
 
 /* Classes */
 
@@ -155,7 +153,7 @@ function listAnnot() {
     // Body of list with annotations
     var body = document.getElementById("list-annot");
     body.innerHTML = "";
-
+    
     // List with annotations
     var el_list = [];
     for (c = 0; c < class_list.length; c++) {
@@ -185,9 +183,10 @@ function listAnnot() {
     fillTable(body, el_list);
 
     if (class_list[0] !== undefined || class_list[1] !== undefined || class_list[2] !== undefined) {
-        if (flagsave === -1) {
-            flagsave = 1;
-        }
+        showSaveButton();
+    }
+    else {
+        removeSaveButton();
     }
 }
 
@@ -225,8 +224,8 @@ function drawElement(cId) {
     }
 }
 
-function drawSave(){
-    /** @description Save drawn element.
+function showSaveButton(){
+    /** @description Add button to save drawn elements.
      */
     var btn = document.createElement("button");
     
@@ -245,7 +244,7 @@ function saveAnnot() {
     //  new element
     let annot_list = new Array();
     // Read all elements in order to remove interpolatedPoints
-    for (let i =0; i < class_list.length; i++) {
+    for (let i = 0; i < class_list.length; i++) {
         // This comparison is necessary because there is a fixed array size (yet)
         if (class_list[i] != undefined) {
             let sp = class_list[i]

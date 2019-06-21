@@ -13,6 +13,7 @@ var smoothConfig = {
 /*
  * Line and Point
  */
+
 class Point {
     constructor(x, y) {
         /** @description Class Point
@@ -62,7 +63,6 @@ function drawLine(line, color, width) {
  * Smooth Element
  */
 
-/* Class and activation */
 class SmoothPiecewise {
     constructor() {
         /** @description Picewise of smooth object (small lines)
@@ -83,7 +83,9 @@ function activeSmooth() {
 }
 
 
-/* Draw Events */
+/* 
+ * Draw Events
+ */
 
 function drawingSmooth(ev) {
     /** @description Function to draw the smoothpiecewise during mouse move.
@@ -175,7 +177,9 @@ function removeSmoothTemp() {
 }
 
 
-/* Storage */
+/* 
+ * Storage
+ */
 
 function storeSmoothPoints(ev) {
     /** @description Store reference points to draw smooth piecewise.
@@ -239,8 +243,21 @@ function saveSmooth(sp) {
     listAnnot();
 }
 
+function removeSaveButton(){
+    /** @description Remove the large save button.
+     */
+    let el = document.getElementById("btn-save");
+    if (el !== null || el !== undefined) {
+        $("#btn-save").remove();
+        $("#btn-save").remove();
+    }
+        
+}
 
-/* Edition */
+
+/* 
+ * Edition
+ */
 
 function deleteSmooth(spType, idSeg) {
     /** @description Function to delete the SmoothPiecewise object.
@@ -249,12 +266,12 @@ function deleteSmooth(spType, idSeg) {
 
      // Remove on classes list
     class_list[spType].splice(idSeg, 1);
+    let merged = [].concat.apply([], class_list);
+    smoothpiecewises = [];
     // remove on general list
-    for (let i = 0; i < smoothpiecewises.length; i++) {
-        let sp = smoothpiecewises[i];
-        if (sp.profile.id === spType && sp.idSegment == idSeg) {
-            smoothpiecewises.splice(i, 1);
-        }
+    for (let i = 0; i < merged.length; i++) {
+        if (merged[i] !== undefined && merged[i] !== null)
+            smoothpiecewises.push(merged[i]);
     }
     // Remove save button if has no more annotations
     if (smoothpiecewises.length < 1) {
@@ -267,14 +284,6 @@ function deleteSmooth(spType, idSeg) {
     activeSmooth();
     listAnnot();
     refreshCanvas();  
-}
-
-function removeSaveButton(){
-    /** @description Remove the large save button.
-     */
-    var element = document.getElementById("btn-save");
-    element.remove();
-    flagsave = -1;
 }
 
 function deletePoint(idnearpoint) {
@@ -424,17 +433,6 @@ function getNearPoint(pt) {
     return [mindistAB,idnearpoint];
 }
 
-function distance(pointA, pointB) {
-    /** @description Calculate euclidian distance.
-      * @param {Point} pointA Point A
-      * @param {Point} pointB Point B
-     */
-    var dx = pointA.X-pointB.X //delta x
-    var dy = pointA.Y-pointB.Y //delta y
-    var distAB = Math.sqrt(dx * dx + dy * dy); // distance
-    return distAB;
-}
-
 function updatePoint(point, idx) {
     /** @description Update a point on smooth temp.
       * @param {Point} point Point.
@@ -579,6 +577,21 @@ function getSmoothPiecewises(arr) {
     }
 
     return interp_pts;
+}
+
+/*
+ * Aux Functions
+ */
+
+function distance(pointA, pointB) {
+    /** @description Calculate euclidian distance.
+      * @param {Point} pointA Point A
+      * @param {Point} pointB Point B
+     */
+    var dx = pointA.X-pointB.X //delta x
+    var dy = pointA.Y-pointB.Y //delta y
+    var distAB = Math.sqrt(dx * dx + dy * dy); // distance
+    return distAB;
 }
 
 function array2point(arr) {

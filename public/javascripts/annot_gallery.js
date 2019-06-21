@@ -67,9 +67,13 @@ function selectGalleryImage(id) {
     img_id = id;
     im_obj = imageList[id];
     currentSrc = galleryURL + im_obj.filename;
-    resetAnotation();
-    initCanvas(currentSrc);
+    initCanvas(currentSrc);    
 }
+
+
+/*
+ * Gallery controls
+ */
 
 function identImage(direction) {
     /** @description Change large image after click on image gallery
@@ -111,6 +115,7 @@ function updateImageIndex() {
     // Update image value
     let  bar = $(".progress-bar")[0];
     bar.innerText = txt = (img_id + 1) + "/" + imageList.length;
+
 }
 
 function updatePercentage() {
@@ -129,4 +134,48 @@ function updatePercentage() {
         percentage = 0.5;
     bar.setAttribute("aria-valuenow", percentage);
     bar.style.width = percentage + "%";
+}
+
+
+/*
+ * Draw objects
+ */
+
+function setAnotations() {
+    /** @description Plot annotations
+     */ 
+    // Clear Content
+    smoothpiecewises = [];
+    smooth_temp = [];
+    class_list = new Array(N_CLASSES);
+    // Read content by class
+    if (im_obj.annotations !== undefined) {
+        let annots = im_obj.annotations;
+        // Read elements inside class
+        for (let i = 0; i < annots.length; i++) {
+            // List of obj by class
+            let class_array = [];
+            // Load all class elements
+            let class_anot = annots[i];
+            for (let j = 0; j < class_anot.length; j++) { 
+                // Loaded object
+                let obj = class_anot[j];
+                var arr = point2array(obj.originalPoints);
+                // Set smooth obj
+                let smooth = new SmoothPiecewise();
+                smooth.originalPoints = obj.originalPoints;
+                smooth.interpolatedPoints = getSmoothPiecewises(arr);
+                smooth.profile = obj.profile;
+                smooth.idSegment = obj.idSegment;
+                // Push to list
+                class_array.push(smooth);
+                // Pushh all SmoothPiecewise objects
+                smoothpiecewises.push(smooth);
+            }
+            // Fill list by class            
+            class_list[i] = class_array;
+        }
+        redraw();
+    }
+    listAnnot();
 }

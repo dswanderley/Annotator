@@ -114,6 +114,7 @@ function initCanvas(src) {
     ctx.drawImage(img, csizes.cropX, csizes.cropY, csizes.cropW, csizes.cropH, csizes.canvasX, csizes.canvasY, csizes.canvasW, csizes.canvasH);
     img.onload = function () {
         ctx.drawImage(img, csizes.cropX, csizes.cropY, csizes.cropW, csizes.cropH, csizes.canvasX, csizes.canvasY, csizes.canvasW, csizes.canvasH);
+        setAnotations();
     };
     // Load Image
     img.src = src;
@@ -149,27 +150,17 @@ function resetCanvas() {
 function redraw() {
     /** @description Draw storaged annotations
     */
-
+    
     // List with annotations
-    for (c = 0; c < class_list.length; c++) {
+    for (let c = 0; c < smoothpiecewises.length; c++) {
         // Get each class
-        var smoth_data = class_list[c];
-        // Check if has annotation for each class
-        if (smoth_data !== null && smoth_data !== undefined) {
-            // Draw all segments of each element
-            for (i = 0; i < smoth_data.length; i++) {
-                drawSmooth(smoth_data[i].interpolatedPoints, smoth_data[i].profile.color, smoth_data[i].profile.thick);
-            }
-
-        }
+        var smoth_data = smoothpiecewises[c];
+        // Draw all segments of each element
+        drawSmooth(smoth_data.interpolatedPoints, smoth_data.profile.color, smoth_data.profile.thick);
     }
-    if (flagMouseEvent===0){
+    if (flagMouseEvent === 0){
         createHandleSmooth();
     }
-    if(flagsave===1){
-            drawSave();
-            flagsave=0;
-        }   
 }
 
 class CanvasSizes {
@@ -257,20 +248,6 @@ function canvasZoom(clicks) {
         // Redraw image
         refreshCanvas();
     }
-}
-
-
-/*
- * Reset anotation
- */
-
-function resetAnotation(){
-    /** @description Reset annotations.
-     */    
-    //var draw_profile = new DrawProfile();
-    var class_listAUX = new Array(N_CLASSES);
-    class_list = class_listAUX;
-    listAnnot();
 }
 
 
@@ -411,6 +388,7 @@ function checkEscape() {
         }
     }     
 }
+
 
 /*
  * * SVG
