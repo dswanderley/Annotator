@@ -232,7 +232,7 @@ function drawSave(){
     
     btn.setAttribute("id", "btn-save");
     btn.setAttribute("type", "button");
-    btn.setAttribute("class", "btn-save");
+    btn.classList.add("btn", "btn-save");
     document.getElementById("col-diag-data").append(btn);        
     btn.onclick = function () { saveAnnot(); }; 
     var t=document.createTextNode("Save");
@@ -243,7 +243,7 @@ function saveAnnot() {
     /** @description Save annotations.
      */
     //  new element
-    let upload_list = new Array();
+    let annot_list = new Array();
     // Read all elements in order to remove interpolatedPoints
     for (let i =0; i < class_list.length; i++) {
         // This comparison is necessary because there is a fixed array size (yet)
@@ -258,17 +258,17 @@ function saveAnnot() {
                 listofelements.push(data_obj);
             }
             // Upload temp list of list
-            upload_list.push(listofelements);
-        }        
+            annot_list.push(listofelements);
+        }
     }
-    // Data ibject to be stored
-    let upload_data = { 
-        image_data: im_obj, 
-        annotations: upload_list
-    };
+    // Update Global Variable
+    im_obj.annotations = annot_list;
+    imageList[img_id] = im_obj;
+
+    /*
     // Data to set ajax post
     let url = "/annot";
-    let updata = JSON.stringify(upload_data);
+    let updata = JSON.stringify(im_obj);
     $.ajax({
         type: 'POST',
         url: url, 
@@ -280,6 +280,12 @@ function saveAnnot() {
             // Needs handle of the current data.
         }
       });
+      */
+
+    // Change and update image
+    identImage(1);
+    updatePercentage();
+
 }
 
 

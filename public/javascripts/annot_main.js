@@ -301,7 +301,7 @@ function canvasMouseUp() {
             if (canvas.width / csizes.canvasW > 1 || canvas.height / csizes.height > 1 || c_status.a > 1) {
                 dragging = false;
                 //flagMouseEvent =1;
-                document.body.style.cursor = 'default';
+                //document.body.style.cursor = 'default';
                 
             }
         }
@@ -392,7 +392,7 @@ function canvasMouseMove(evt) {
             newPoint = ctx.transformedPoint(lastX, lastY);
             if (dragStart) {
                 handlePointEditMoving(newPoint, idnearpoint);
-                document.body.style.cursor = 'grabbing';
+                //document.body.style.cursor = 'grabbing';
             }
         }
     }

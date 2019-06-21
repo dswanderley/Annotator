@@ -39,7 +39,7 @@ function loadGallery() {
                 // Read images in gallery folder
                 data.gallery_list.forEach(file => {
                     // Get last annotation. Verify later with collection properties.
-                    if (file.annotation !== undefined) {
+                    if (file.annotations !== undefined) {
                         // Define image ID
                         idx = i;
                     }                    
@@ -119,7 +119,7 @@ function updatePercentage() {
     // Count annotations
     let total = 0;
     for (let i = 0; i < imageList.length; i++) {
-        if (imageList[0].annotation !== undefined)
+        if (imageList[i].annotations !== undefined)
             total++;
     }
     // Update progress bar
