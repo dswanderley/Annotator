@@ -1,6 +1,3 @@
-// Profile with data to draw lines
-var draw_profile = null;
-
 /* Classes */
 
 var ClassEnum = {
@@ -17,12 +14,7 @@ var ClassEnum = {
     }
 };
 
-// Number of Classes
-var N_CLASSES = Object.keys(ClassEnum).length - 1;
-
-// Array with classes draws
-var class_list = new Array(N_CLASSES);
-
+// Draw profile class
 class DrawProfile {
     constructor(id, class_name, color, thick) {
         /** @description Classe with canvas dimensions
@@ -35,7 +27,7 @@ class DrawProfile {
         if (id !== null && id !== undefined)
             this.id = id;
         else
-            this.id = 0;
+            this.id = -1;
         // class
         if (class_name !== null && class_name !== undefined)
             this.class_name = class_name;
@@ -53,6 +45,15 @@ class DrawProfile {
             this.thick = 1;
     }
 }
+
+// Profile with data to draw lines
+var draw_profile = new DrawProfile();
+
+// Number of Classes
+var N_CLASSES = Object.keys(ClassEnum).length - 1;
+
+// Array with classes draws
+var class_list = new Array(N_CLASSES);
 
 
 /* TABLE Functions */
@@ -121,7 +122,7 @@ function fillTable(body, el_list) {
             var btn1 = document.createElement("button");
             btn1.classList.add("btn", "btn-light", "btn-annot");
             btn1.setAttribute("id", "btn-edit-" +  el.id_class  + "-" + el.id_seg)
-            btn1.setAttribute("onClick", "editSmooth(this," + el.id_class  + " , "+ el.id_seg + ", 0);");
+            btn1.setAttribute("onClick", "editSmooth(this," + el.id_class  + " , "+ el.id_seg + ", 2);");
             btn1.appendChild(icon1);
             td4.appendChild(btn1);
             row.appendChild(td4);
@@ -194,7 +195,7 @@ function listAnnot() {
 /* Draw Managing */
 
 function drawElement(cId) {
-    /** @description Active follicle draw
+    /** @description Active class draw
      * @param {int} cId Class ID
      */
 
@@ -205,11 +206,36 @@ function drawElement(cId) {
             btn.classList.remove("btn-outline-info");
             btn.classList.add("btn-info");
         }
-        // Global flag for events
-        flagMouseEvent = 1;
+
         refreshCanvas();
-        // Set profile
+        // Check status to enable or disable draw
+        if (draw_profile.id === cId) {
+            // Disable draw
+            flagMouseEvent = 0;
+            draw_profile = new DrawProfile();
+            deactiveSmooth();
+        }
+        else {
+            // Enable draw
+            flagMouseEvent = 1;           
+            setDraw(cId);
+            // Add new class to selected button
+            let btn = $(".btn-class-annot")[cId];
+            btn.classList.remove("btn-info");
+            btn.classList.add("btn-outline-info");
+        }
+    }
+}
+
+function setDraw(cId) {
+    /** @description Set class draw
+     * @param {int} cId Class ID
+     */
+
+    if (flagMouseEvent === 1) {
+        // Enable draw
         if (cId >= 0 && cId < N_CLASSES) {
+            // Set profile
             draw_profile = new DrawProfile(cId,
                             ClassEnum.properties[cId].name,
                             ClassEnum.properties[cId].color,
@@ -217,12 +243,10 @@ function drawElement(cId) {
             // Active draw
             activeSmooth();
         }
-        // Add new class to selected button
-        let btn = $(".btn-class-annot")[cId];
-        btn.classList.remove("btn-info");
-        btn.classList.add("btn-outline-info");
     }
 }
+
+
 
 function saveAnnot() {
     /** @description Save annotations.

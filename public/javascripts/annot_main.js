@@ -89,7 +89,7 @@ function initCanvas(src) {
     /** @description Initialize canvas
       * @param {sting} src image source.
      */
-    flagMouseEvent = 1;
+    flagMouseEvent = 0;
     // Load image on canvas
     img = new Image();
     var img_width = 864;
@@ -158,7 +158,7 @@ function redraw() {
         // Draw all segments of each element
         drawSmooth(smoth_data.interpolatedPoints, smoth_data.profile.color, smoth_data.profile.thick);
     }
-    if (flagMouseEvent === 0){
+    if (flagMouseEvent === 2){
         createHandleSmooth();
     }
 }
@@ -271,15 +271,12 @@ function canvasMouseUp() {
                 dragging = false;
             }
         }
-    } else if (flagMouseEvent === 0) {
+    } else if (flagMouseEvent === 2) {
         // Current transformations applied to context
         if (dragging) {
             var c_status = ctx.getTransform();
             if (canvas.width / csizes.canvasW > 1 || canvas.height / csizes.height > 1 || c_status.a > 1) {
-                dragging = false;
-                //flagMouseEvent =1;
-                //document.body.style.cursor = 'default';
-                
+                dragging = false;                
             }
         }
     }
@@ -315,7 +312,7 @@ function canvasMouseDown(evt) {
             dragging = false; //não permite o rato mover a imagem 
         }
     }
-    else if (flagMouseEvent === 0){ 
+    else if (flagMouseEvent === 2){ 
         if(evt.button === 0 ){//se quiser mudar a posição do point original
             idnearpoint = handlePointEdit();
             dragging = true;
@@ -361,7 +358,7 @@ function canvasMouseMove(evt) {
             }
         }
     }
-    if (flagMouseEvent === 0) {
+    else if (flagMouseEvent === 2) {
         if (dragging) {
             // Store mouse position
             lastX = evt.offsetX || evt.pageX - canvas.offsetLeft;

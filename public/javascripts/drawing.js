@@ -77,9 +77,15 @@ class SmoothPiecewise {
 function activeSmooth() {
     /** @description Active functions to draw the smooth picewise object.
      */
-    if (flagMouseEvent===1){
-        canvas.addEventListener("mousedown", storeSmoothPoints, false);
-    }   
+    canvas.addEventListener("mousedown", storeSmoothPoints, false);
+    $("#main-canvas").css("cursor", "crosshair");
+}
+
+function deactiveSmooth() {
+    /** @description Deactive functions to draw the smooth picewise object.
+     */
+    canvas.removeEventListener("mousedown", storeSmoothPoints, false);
+    $("#main-canvas").css("cursor", "default");
 }
 
 
@@ -264,7 +270,7 @@ function deleteSmooth(spType, idSeg) {
     }
     // Remove save button if has no more annotations
     if (smoothpiecewises.length < 1) {
-        removeSaveButton();
+        $("#btn-save").hide();
     }
     // Set flags
     flagMouseEvent = 1;
@@ -307,7 +313,7 @@ function editSmooth(btn, idtype, idSeg, flag) {
             let tmp_btn = save_icons[i].parentElement;
             tmp_btn.removeChild(tmp_btn.getElementsByTagName("svg")[0]);    
             let id_items = tmp_btn.id.split("-");
-            tmp_btn.setAttribute("onClick", "editSmooth(this," + id_items[2] + " , "+ id_items[3] + ", 0);");
+            tmp_btn.setAttribute("onClick", "editSmooth(this," + id_items[2] + " , "+ id_items[3] + ", 2);");
             let tmp_icon = document.createElement("i");
             tmp_icon.classList.add("far", "fa-edit", "i-tab");
             tmp_btn.appendChild(tmp_icon);
@@ -317,7 +323,7 @@ function editSmooth(btn, idtype, idSeg, flag) {
     btn.removeChild(btn.getElementsByTagName("svg")[0]);
     btn.innerHTML = '';
     // Re-set button
-    btn.setAttribute("onClick", "storeNewPoints(this," + idtype  + " , "+ idSeg + ", " + 1 + ");");
+    btn.setAttribute("onClick", "storeNewPoints(this," + idtype  + " , "+ idSeg + ", " + flagMouseEvent + ");");
     var icon = document.createElement("i");
     icon.classList.add("fas", "fa-save", "i-tab");
     btn.appendChild(icon);
@@ -327,8 +333,8 @@ function editSmooth(btn, idtype, idSeg, flag) {
     smooth_temp = getSegmentation(idtype, idSeg);
     refreshCanvas();
     flagMouseEvent = flag;
-    if (flagMouseEvent === 0){
-        canvas.removeEventListener("mousedown", storeSmoothPoints, false);
+    if (flagMouseEvent === 2) {
+        deactiveSmooth();
         canvas.addEventListener("dblclick", addNewSmoothPoint, false);
         createHandleSmooth();
      } 
@@ -348,13 +354,13 @@ function storeNewPoints(btn, idtype, idSeg, flag) {
     // Re-set button
     var icon = document.createElement("i");
     icon.classList.add("far", "fa-edit", "i-tab");
-    btn.setAttribute("onClick", "editSmooth(this," + idtype + " , "+ idSeg + ", 0);");
+    btn.setAttribute("onClick", "editSmooth(this," + idtype + " , "+ idSeg + ", 2);");
     btn.appendChild(icon);
     // Free button
     click_enable = true;
     // Set main
     flagMouseEvent = flag;
-    drawElement(idtype)
+    setDraw(idtype);
     refreshCanvas();
 }
 
