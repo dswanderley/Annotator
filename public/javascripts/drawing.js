@@ -84,7 +84,7 @@ function deactiveSmooth() {
     /** @description Deactive functions to draw the smooth picewise object.
      */
     canvas.removeEventListener("mousedown", storeSmoothPoints, false);
-    $("#main-canvas").css("cursor", "default");
+    $("#main-canvas").css("cursor", "default");    
 }
 
 
@@ -307,7 +307,6 @@ function editSmooth(btn, idtype, idSeg, flag) {
     if (smooth_temp instanceof SmoothPiecewise) {
         return;
     }
-
      // Clear button already selected for edition
     let save_icons = $(".fa-save");
     if (save_icons.length > 0) {
@@ -363,6 +362,7 @@ function storeNewPoints(btn, idtype, idSeg, flag) {
     // Set main
     flagMouseEvent = flag;
     setDraw(idtype);
+    smooth_temp = null;
     refreshCanvas();
 }
 
