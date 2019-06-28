@@ -359,10 +359,12 @@ function storeNewPoints(btn, idtype, idSeg, flag) {
     btn.appendChild(icon);
     // Free button
     click_enable = true;
+    // Set segmentation
+    setSegmentation(smooth_temp, idtype, idSeg);
+    smooth_temp = null;
     // Set main
     flagMouseEvent = flag;
-    setDraw(idtype);
-    smooth_temp = null;
+    setDraw(idtype);    
     refreshCanvas();
 }
 
@@ -538,6 +540,15 @@ function getSegmentation(idtype, idSeg) {
     segmbytype = class_list[idtype];
     segm = segmbytype[idSeg];
     return segm;
+}
+
+function setSegmentation(seg, idtype, idSeg) {
+    /** @description Get segmentation draw.
+      * @param {SmoothPiecewise} seg Segmantation.
+      * @param {int} idtype Segmantation type ID.
+      * @param {int} idSeg Segmentation item ID.
+     */
+    class_list[idtype][idSeg] = seg;
 }
 
 function getNearPoint(pt) {

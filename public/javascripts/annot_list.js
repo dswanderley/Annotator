@@ -246,8 +246,6 @@ function setDraw(cId) {
     }
 }
 
-
-
 function saveAnnot() {
     /** @description Save annotations.
      */
@@ -260,7 +258,7 @@ function saveAnnot() {
             let sp = class_list[i]
             let listofelements = new Array();
             // Read elements on each list
-            for (let j=0; j < sp.length; j++){
+            for (let j = 0; j < sp.length; j++){
                 data_obj = sp[j];
                 // Delete intperpolatedPoints and push to new temp list of elements
                 delete data_obj.interpolatedPoints;

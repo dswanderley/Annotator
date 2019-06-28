@@ -15,8 +15,7 @@ var flagMouseEvent = 0;
 var newPoint= new Point();
 // Drawing variables
 var click_enable = true;
-var idnearpoint = -1; //faz sentido ser variavel global?
-
+var triggeredpoint = -1;
 
 /*
  * Load Page functions
@@ -89,7 +88,7 @@ function initCanvas(src) {
     /** @description Initialize canvas
       * @param {sting} src image source.
      */
-    flagMouseEvent = 0;
+
     // Load image on canvas
     img = new Image();
     var img_width = 864;
@@ -159,7 +158,7 @@ function redraw() {
         drawSmooth(smoth_data.interpolatedPoints, smoth_data.profile.color, smoth_data.profile.thick);
     }
     if (flagMouseEvent === 2){
-        createHandleSmooth();
+        drawHandleSmooth();
     }
 }
 
@@ -280,8 +279,6 @@ function canvasMouseUp() {
             }
         }
     }
-
-    idnearpoint = -1;
 }
 
 function canvasScrollWheel(evt) {
@@ -313,16 +310,17 @@ function canvasMouseDown(evt) {
         }
     }
     else if (flagMouseEvent === 2){ 
-        if(evt.button === 0 ){//se quiser mudar a posição do point original
-            idnearpoint = handlePointEdit();
+        if(evt.button === 0 ){ //se quiser mudar a posição do point original
+            handlePointEdit(evt);
             dragging = true;
+            $("#main-canvas").css("cursor", "grabbing");
         }
         if(evt.button === 2){ //se quiser apagar um point original
             var ptnew = ctx.transformedPoint(evt.layerX, evt.layerY); //newpoint
             ptnew.x = ptnew.x / canvasScale;
             ptnew.y = ptnew.y / canvasScale;
-            [mindistAB, idnearpoint] = getNearPoint(ptnew); 
-            deletePoint(idnearpoint);
+            let nearPoint = getNearPoint(ptnew); 
+            deletePoint(nearPoint[1]);
         }
     }
 }
@@ -331,12 +329,15 @@ function canvasMouseMove(evt) {
     /** @description Canvas Mouse Move event
       * @param {event} evt event
      */
+
+    // Store mouse position
+    lastX = evt.offsetX || evt.pageX - canvas.offsetLeft;
+    lastY = evt.offsetY || evt.pageY - canvas.offsetTop;
+    var pt = ctx.transformedPoint(lastX, lastY);
+
     if (flagMouseEvent === 1) {
         if (dragging) {
-            // Store mouse position
-            lastX = evt.offsetX || evt.pageX - canvas.offsetLeft;
-            lastY = evt.offsetY || evt.pageY - canvas.offsetTop;
-            var pt = ctx.transformedPoint(lastX, lastY);
+            
             if (dragStart) {
                 // Load  context current transformations
                 var c_status = ctx.getTransform();
@@ -359,14 +360,23 @@ function canvasMouseMove(evt) {
         }
     }
     else if (flagMouseEvent === 2) {
-        if (dragging) {
+        if (dragging) {            
             // Store mouse position
-            lastX = evt.offsetX || evt.pageX - canvas.offsetLeft;
-            lastY = evt.offsetY || evt.pageY - canvas.offsetTop;
-            newPoint = ctx.transformedPoint(lastX, lastY);
+            newPoint = new Point(pt.x / canvasScale, pt.y / canvasScale);
             if (dragStart) {
-                handlePointEditMoving(newPoint, idnearpoint);
-                //document.body.style.cursor = 'grabbing';
+                updatePoint(newPoint, triggeredpoint);
+            }
+        }
+        else {
+            // Calculate distance from nearst point
+            let current_pt = new Point(pt.x / canvasScale, pt.y / canvasScale)
+            let nearPoint = getNearPoint(current_pt);
+            // Check if it is near enough
+            if (nearPoint[0] < 10) {
+                $("#main-canvas").css("cursor", "grab");
+            }
+            else {
+                $("#main-canvas").css("cursor", "default");
             }
         }
     }

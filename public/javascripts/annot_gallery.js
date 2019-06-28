@@ -64,10 +64,29 @@ function selectGalleryImage(id) {
       * @param {string} image Image Element Id
      */
 
+    // Prevent edition mode
+    if (flagMouseEvent === 2) {
+        // Check if any button is selected
+        if ($(".btn.btn-class-annot.btn-outline-info").length > 0 )
+            flagMouseEvent = 1;
+        else
+            flagMouseEvent = 0;
+        // Verify if a edition is is being performed
+        if (smooth_temp instanceof SmoothPiecewise) {
+            // Set segmentation
+            setSegmentation(smooth_temp, 
+                smooth_temp.profile.id, 
+                smooth_temp.idSegment-1);
+            // Set main
+            setDraw(smooth_temp.profile.id);
+            smooth_temp = null;          
+        }
+    }
+    // Set new image
     img_id = id;
     im_obj = imageList[id];
     currentSrc = galleryURL + im_obj.filename;
-    initCanvas(currentSrc);    
+    initCanvas(currentSrc);
 }
 
 
@@ -115,7 +134,6 @@ function updateImageIndex() {
     // Update image value
     let  bar = $(".progress-bar")[0];
     bar.innerText = txt = (img_id + 1) + "/" + imageList.length;
-
 }
 
 function updatePercentage() {
