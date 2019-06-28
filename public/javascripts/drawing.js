@@ -3,7 +3,7 @@ var points = [];
 var mouse_pos = [];
 // Smooth line data
 var smoothpiecewises = [];
-var smooth_temp = [];
+var smooth_temp = null;
 var smoothConfig = {
     method: Smooth.METHOD_CUBIC,
     clip: Smooth.CLIP_CLAMP, //CLIP_PERIODIC
@@ -20,9 +20,8 @@ class Point {
           * @param {int} x Coordinate x
           * @param {int} y Coordinate y
          */
-        this.X = x;
-        this.Y = y;
-        //makeHandle(x, y, 0, 6);
+        this.x = x;
+        this.y = y;
     }
 }
 
@@ -32,8 +31,8 @@ class Line {
           * @param {Point} pi Initial point
           * @param {Point} pf Final point
          */
-        this.pi = new Point(pi.X, pi.Y); //ponto inicial da linha
-        this.pf = new Point(pf.X, pf.Y); //ponto final
+        this.pi = new Point(pi.x, pi.y); //ponto inicial da linha
+        this.pf = new Point(pf.x, pf.y); //ponto final
     }
 }
 
@@ -53,8 +52,8 @@ function drawLine(line, color, width) {
     this.ctx.beginPath();
     this.ctx.strokeStyle = color;
     this.ctx.lineWidth = width;
-    this.ctx.moveTo(this.canvasScale * line.pi.X, this.canvasScale * line.pi.Y);
-    this.ctx.lineTo(this.canvasScale * line.pf.X, this.canvasScale * line.pf.Y);
+    this.ctx.moveTo(this.canvasScale * line.pi.x, this.canvasScale * line.pi.y);
+    this.ctx.lineTo(this.canvasScale * line.pf.x, this.canvasScale * line.pf.y);
     this.ctx.stroke();
 }
 
@@ -119,9 +118,9 @@ function refreshSmoothTemp(p) {
       * @param {Point}   P  Current point
      */
     var pts = [
-        [points[points.length - 2].X, points[points.length - 2].Y],
-        [points[points.length - 1].X, points[points.length - 1].Y],
-        [p.X, p.Y]
+        [points[points.length - 2].x, points[points.length - 2].y],
+        [points[points.length - 1].x, points[points.length - 1].y],
+        [p.x, p.y]
     ];
     // Calculate the smooth piecewises (interpolation)
     var v = Smooth(pts, smoothConfig);
@@ -215,7 +214,6 @@ function storeSmoothPoints(ev) {
             refreshCanvas();
         }
     }
-
 }
 
 function saveSmooth(sp) {
@@ -244,7 +242,7 @@ function saveSmooth(sp) {
     refreshCanvas();
     // Clear temps
     points = [];
-    smooth_temp = [];
+    smooth_temp = null;
     // List annotations on table
     listAnnot();
 }
@@ -259,7 +257,7 @@ function deleteSmooth(spType, idSeg) {
       * @param {SmoothPiecewise} ds SmoothPiecewise object
      */
 
-     // Remove on classes list
+    // Remove on classes list
     class_list[spType].splice(idSeg, 1);
     let merged = [].concat.apply([], class_list);
     smoothpiecewises = [];
@@ -293,7 +291,6 @@ function deletePoint(idnearpoint) {
         idnearpoint = -1;
         refreshCanvas();
     } else if (smooth_temp.originalPoints.length <= 3) {
-        alert('Ira Apagar a segmentação. Não permitido\n Caso queira apanhar toda a segmentação botao "delete" ');
         refreshCanvas();
     }
 }
@@ -306,6 +303,11 @@ function editSmooth(btn, idtype, idSeg, flag) {
       * @param {int} flag Flag for handle smooth points.
      */
     
+    // Avoid click during drawing
+    if (smooth_temp instanceof SmoothPiecewise) {
+        return;
+    }
+
      // Clear button already selected for edition
     let save_icons = $(".fa-save");
     if (save_icons.length > 0) {
@@ -336,7 +338,7 @@ function editSmooth(btn, idtype, idSeg, flag) {
     if (flagMouseEvent === 2) {
         deactiveSmooth();
         canvas.addEventListener("dblclick", addNewSmoothPoint, false);
-        createHandleSmooth();
+        drawHandleSmooth();
      } 
 }
 
@@ -364,34 +366,6 @@ function storeNewPoints(btn, idtype, idSeg, flag) {
     refreshCanvas();
 }
 
-function handlePointEditMoving(newPoint, idOldPt) {
-    /** @description Replaces moved points when selected.
-      * @param {Point} newPoint New Point.
-      * @param {int} idOldPt Type ID.
-     */
-    if (!event) { event = window.event; }
-    
-    // Convert point position using scale
-    //var pts = ctx.transformedPoint(event.layerX, event.layerY);
-    var pt = newPoint;
-    pt.x = pt.x / canvasScale;
-    pt.y = pt.y / canvasScale;
-    //document.body.style.cursor = 'grabbing';
-    updatePoint(pt, idOldPt);
-}
-
-function getSegmentation(idtype, idSeg) {
-    /** @description Get segmentation draw.
-      * @param {int} idtype Segmantation type ID.
-      * @param {int} idSeg Segmentation item ID.
-     */
-    var segmbytype = [];
-    var segm = [];
-    segmbytype = class_list[idtype];
-    segm = segmbytype[idSeg];
-    return segm;
-}
-
 function handlePointEdit(event) {
     /** @description Moves points selected.
       * @param {event} event New Point.
@@ -401,31 +375,12 @@ function handlePointEdit(event) {
     var ptsnew = ctx.transformedPoint(event.layerX, event.layerY); //newpoint
     ptsnew.x = ptsnew.x / canvasScale;
     ptsnew.y = ptsnew.y / canvasScale;
-    [mindistAB, idnearpoint] = getNearPoint(ptsnew); //mindistAB,idnearpoint
+    let [mindistAB, idnearpoint] = getNearPoint(ptsnew); //mindistAB,idnearpoint
     if (mindistAB < 5) {
         //document.body.style.cursor = 'pointer';
         updatePoint(ptsnew, idnearpoint);
     }
-    return [idnearpoint];
-}
-
-function getNearPoint(pt) {
-    /** @description Get the nearst draw point given another point
-      * @param {Point} pt click postion.
-     */
-    var i;
-    var mindistAB=10000;
-    var distAB,idnearpoint;
-    var ptNew=new Point(pt.x,pt.y)
-    
-    for ( i =0; i<smooth_temp.originalPoints.length;i++){
-        distAB=distance(ptNew, smooth_temp.originalPoints[i])
-        if(distAB<mindistAB){
-            mindistAB=distAB;
-            idnearpoint=i;
-        }
-    }
-    return [mindistAB,idnearpoint];
+    triggeredpoint = idnearpoint;
 }
 
 function updatePoint(point, idx) {
@@ -441,13 +396,13 @@ function updatePoint(point, idx) {
     refreshCanvas();
 }
 
-function createHandleSmooth() {
+function drawHandleSmooth() {
     /** @description Allow smooth edition
      */
     var pts = smooth_temp.originalPoints;
     for (var i = 0; i < pts.length; i++) {
-        var x = pts[i].X*canvasScale;
-        var y = pts[i].Y*canvasScale;
+        var x = pts[i].x*canvasScale;
+        var y = pts[i].y*canvasScale;
         drawCircle(x, y,1);
     }
 }
@@ -476,12 +431,12 @@ function addNewSmoothPoint(ev) {
     /** @description Add new point to Smooth piecewise.
       * @param {event} ev Event
      */
-    refreshCanvas();
+
     if (!ev) { ev = window.event; }
     var pnew = new Point(ev.layerX / canvasScale, ev.layerY / canvasScale);
 
-    var oPoint=smooth_temp.originalPoints;
-    var interp_pts=smooth_temp.interpolatedPoints;
+    var oPoint = smooth_temp.originalPoints;
+    var interp_pts = smooth_temp.interpolatedPoints;
     var d_min = 10000;
     var imin = -1;
     //var jmin = -1;
@@ -491,12 +446,10 @@ function addNewSmoothPoint(ev) {
             if (d < d_min) {
                 d_min = d;
                 imin = i;
-                //jmin=j;
-                //console.log(d_min +'->'+imin +','+jmin );
             }
         }
     }
-    if (d_min<10){
+
     // Update array
     oPoint.splice(imin + 1, 0, pnew); //adiciona o ponto no array na posição idx
     var arr = point2array(oPoint);
@@ -505,13 +458,9 @@ function addNewSmoothPoint(ev) {
     smooth_temp.originalPoints = oPoint;
     smooth_temp.interpolatedPoints = new_interp_pts;
     // Update handle pointss
-    createHandleSmooth();
+    drawHandleSmooth();
     refreshCanvas();
     drawSmooth(smooth_temp.interpolatedPoints);
-    }
-    else {
-        alert("click mais proximo da linha de segmentação");
-    }
 }
 
 function getSmoothPoints(smooth, pts) {
@@ -574,17 +523,48 @@ function getSmoothPiecewises(arr) {
     return interp_pts;
 }
 
+
 /*
  * Aux Functions
  */
+
+function getSegmentation(idtype, idSeg) {
+    /** @description Get segmentation draw.
+      * @param {int} idtype Segmantation type ID.
+      * @param {int} idSeg Segmentation item ID.
+     */
+    var segmbytype = [];
+    var segm = [];
+    segmbytype = class_list[idtype];
+    segm = segmbytype[idSeg];
+    return segm;
+}
+
+function getNearPoint(pt) {
+    /** @description Get the nearst draw point given another point
+      * @param {Point} pt click postion.
+     */
+    var i;
+    var mindistAB = 10000;
+    var distAB, idnearpoint;
+    
+    for ( i = 0; i < smooth_temp.originalPoints.length;  i++){
+        distAB = distance(pt, smooth_temp.originalPoints[i])
+        if(distAB < mindistAB){
+            mindistAB = distAB;
+            idnearpoint = i;
+        }
+    }
+    return [mindistAB, idnearpoint];
+}
 
 function distance(pointA, pointB) {
     /** @description Calculate euclidian distance.
       * @param {Point} pointA Point A
       * @param {Point} pointB Point B
      */
-    var dx = pointA.X-pointB.X //delta x
-    var dy = pointA.Y-pointB.Y //delta y
+    var dx = pointA.x - pointB.x //delta x
+    var dy = pointA.y - pointB.y //delta y
     var distAB = Math.sqrt(dx * dx + dy * dy); // distance
     return distAB;
 }
@@ -612,12 +592,12 @@ function point2array(pts) {
     if (pts.length > 1) {
         var arr = new Array();
         for (var i = 0; i < pts.length; i++) {
-            arr.push([pts[i].X, pts[i].Y]);
+            arr.push([pts[i].x, pts[i].y]);
         }
         return arr;
     }
     else {
-        return [pts[i].X, pts[i].Y];
+        return [pts[i].x, pts[i].y];
     }
 }
 
