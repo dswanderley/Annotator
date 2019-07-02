@@ -364,7 +364,7 @@ function storeNewPoints(btn, idtype, idSeg, flag) {
     smooth_temp = null;
     // Set main
     flagMouseEvent = flag;
-    setDraw(idtype);    
+    setDraw(idtype);
     refreshCanvas();
 }
 

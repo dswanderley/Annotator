@@ -272,7 +272,6 @@ function saveAnnot() {
     im_obj.annotations = annot_list;
     imageList[img_id] = im_obj;
 
-    /*
     // Data to set ajax post
     let url = "/annot";
     let updata = JSON.stringify(im_obj);
@@ -283,11 +282,9 @@ function saveAnnot() {
         dataType : "json",
         contentType: "application/json; charset=utf-8",
         success: function (msg) {
-            console.log("Saved");
-            // Needs handle of the current data.
+            console.log(msg);
         }
-      });
-      */
+    });
 
     // Change and update image
     identImage(1);

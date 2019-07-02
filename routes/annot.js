@@ -60,13 +60,28 @@ router.get('/annot/gallery', function (req, res) {
 // Upload - POST
 router.post('/annot', function (req, res) {
     var data = req.body;
-
+    
     let annot_el = {
         uid: sess_user.uid,
         annotations: data.annotations,
         date: new Date()
     };
-    let query = { filename: data.image_data.filename };
+    // Query to find data
+    let query1 = { "filename": 'hqJ4H1ZhzT_8DJdoFrP67_j98YM.png',
+                   "annotations.uid": annot_el.uid 
+    };
+    // Query if data does not exist
+    let query2 = { "filename": 'hqJ4H1ZhzT_8DJdoFrP67_j98YM.png',
+                   "annotations.uid": {$ne : annot_el.uid } 
+    };
+    // Update data
+    let newvalue1 = {
+        $set : { "annotations.$" : annot_el }
+    };
+    // Insert data
+    let newvalue2 = {
+        $addToSet : { "annotations": annot_el }
+    };
 
     db_client.connect(DB_URI, { useNewUrlParser: true }, function (err, client) {
         if (err) {
@@ -74,46 +89,23 @@ router.post('/annot', function (req, res) {
         }
         console.log('MongoDB connected...');
         let collection = client.db("annotdb").collection("images");
-        collection.find(query).toArray(function (err, data) {
+        collection.updateOne(query1, newvalue1, function (err1, res1) {
             // Get error
-            if (err) throw err;
-            // Check if user exist - returns if not.
-            if (data.length > 0) {
-                // Init temp list
-                let annotation_list;
-                // Check if exist
-                if (data.annotation_list === undefined){
-                    // Creat new list
-                    annotation_list = [annot_el];       
-                }
-                else {
-                    // Read current list
-                    let has = false;
-                    annotation_list = data.annotation_list;
-                    for(let i=0; i < annotation_list.length; i++){
-                        // Search element by user id
-                        if (annotation_list[i].uid === annot_el.uid) {
-                            has = true;
-                            // Update list
-                            annotation_list[i] = annot_el;
-                            break;
-                        }
-                    }
-                    if (!has) // Add new element (by user) to list
-                        annotation_list.push(annot_el);
-                }
-                // Update query
-                let update = { $set: {annotation_list: annotation_list}}             
-                // Set update to database
-                collection.updateOne(query, update, function(err, up) { 
-                    // Get error
-                    if (err) throw err;
-                    res.send(up);
+            if (err1) throw err1;
+            console.log("Object updated: " + res1.result.nModified)
+
+            if (res1.result.nModified < 1) {
+
+                collection.updateOne(query2, newvalue2, function (err2, res2) { 
+                    if (err2) throw err2;
+                    console.log("Object inserted: " + res2.result.nModified)
                 });
+
             }
         });
     });
 });
+
 
 /* Classes */
 
@@ -132,10 +124,10 @@ class ImageData {
         this.segmentation= new Segmentation();
     }
 }
+
 class PatientInfo {
 
 }
-
 
 // Return routers
 module.exports = router;
