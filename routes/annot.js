@@ -82,25 +82,30 @@ router.post('/annot', function (req, res) {
     let newvalue2 = {
         $addToSet : { "annotations": annot_el }
     };
-
+    // Connect to database
     db_client.connect(DB_URI, { useNewUrlParser: true }, function (err, client) {
         if (err) {
             console.log('Error occurred while connecting to MongoDB Atlas...\n', err);
         }
         console.log('MongoDB connected...');
+        // Get images colection
         let collection = client.db("annotdb").collection("images");
+        // Search and update item if it exist
         collection.updateOne(query1, newvalue1, function (err1, res1) {
             // Get error
             if (err1) throw err1;
-            console.log("Object updated: " + res1.result.nModified)
-
+            // Check if data was modified
             if (res1.result.nModified < 1) {
-
+                // If data does not exist insert
                 collection.updateOne(query2, newvalue2, function (err2, res2) { 
                     if (err2) throw err2;
                     console.log("Object inserted: " + res2.result.nModified)
+                    res.send("Annotations inserted!")
                 });
-
+            }
+            else {
+                console.log("Object updated: " + res1.result.nModified)
+                res.send("Annotations updated!")
             }
         });
     });
@@ -128,6 +133,7 @@ class ImageData {
 class PatientInfo {
 
 }
+
 
 // Return routers
 module.exports = router;
