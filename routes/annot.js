@@ -92,11 +92,11 @@ router.post('/annot', function (req, res) {
         date: new Date()
     };
     // Query to find data
-    let query1 = { "filename": 'hqJ4H1ZhzT_8DJdoFrP67_j98YM.png',
+    let query1 = { "image_id": data.image_id,
                    "annotations.uid": annot_el.uid 
     };
     // Query if data does not exist
-    let query2 = { "filename": 'hqJ4H1ZhzT_8DJdoFrP67_j98YM.png',
+    let query2 = { "image_id": data.image_id,
                    "annotations.uid": {$ne : annot_el.uid } 
     };
     // Update data
@@ -150,7 +150,7 @@ class ImageData {
         for(let i = 0; i < img_db.annotations.length; i++) {
             let ann = img_db.annotations[i];
             if(ann.uid === uid){
-                this.annotations = ann;
+                this.annotations = ann.annotations;
                 break;
             }
         }
