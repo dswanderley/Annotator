@@ -28,36 +28,61 @@ router.get('/annot', function (req, res) {
 // Gallery - GET
 router.get('/annot/gallery', function (req, res) {
     // Initialize list of files
-    let galleryitem = [];
     let gallery_list  = [];
-    // Read json file
-    let obj = JSON.parse(fs.readFileSync(galleryDir + 'data.json', 'utf8'));
-    if (obj.galleryitem)
-        galleryitem = obj.galleryitem.images;
-    else
-        galleryitem = obj.images;
+    let query = {"marks": ""}
 
-    // Read directory
-    fs.readdir(galleryDir, (err, files) => {
-        // Load files
-        files.forEach(file => {
-            galleryitem.forEach(function (el) {
+    // Connect to database
+    db_client.connect(DB_URI, { useNewUrlParser: true }, function (err, client) {
+        if (err)
+            console.log('Error occurred while connecting to MongoDB Atlas...\n', err);
+        else
+            console.log('MongoDB connected...');
 
-                if (el.filename === file) {
+        // Get images colection
+        let collection = client.db("annotdb").collection("images");
 
-                    gallery_list.push(el); // add to file list
+        collection.find(query).toArray(function (err, imgs) {
+            // Check if user exist - returns if not.
+            if (imgs.length > 0) { 
+
+                let gallery_annot = [];
+                let gallery_empty = [];
+                let start_idx = 0;
+
+                for (let i = 0; i < imgs.length; i++) {
+                    let el  = imgs[i];
+                    img_data = new ImageData(el, sess_user.uid);
+                    if (img_data.annotations === undefined)
+                        gallery_empty.push(img_data);
+                    else
+                        gallery_annot.push(img_data);
+                    // Number of images annoted / array index
+                    start_idx = gallery_annot.length;
+                    gallery_list = gallery_annot.concat(gallery_empty);
                 }
-            });
+
+                // Send obj with list of files and start index
+                res.send({  
+                    gallery_list: gallery_list,
+                    start_idx: start_idx
+                });
+            }
+            else { 
+                // Send list of files
+                res.send("empty");
+            }
 
         });
 
-        // Send list of files
-        res.send({ gallery_list });
     });
+
+
+    
+    
 });  
 
 
-// Upload - POST
+// Annotations - POST
 router.post('/annot', function (req, res) {
     var data = req.body;
     
@@ -115,18 +140,20 @@ router.post('/annot', function (req, res) {
 /* Classes */
 
 class ImageData {
-    constructor(filename, path) {
-        this.filename = filename;
-        this.path = path;
-        this.width = null;
-        this.height = null;
-        this.patient = new PatientInfo();
-        this.quality = null;
-        this.dr = null;
-        this.processed = false;
-        this.type = null;
-        this.batch = '';
-        this.segmentation= new Segmentation();
+    constructor(img_db, uid) {
+        this.image_id = img_db.image_id;
+        this.filename = img_db.filename;
+        this.height = img_db.height;
+        this.width = img_db.width;
+        this.us_type = img_db.us_type;
+        this.annotations = undefined;
+        for(let i = 0; i < img_db.annotations.length; i++) {
+            let ann = img_db.annotations[i];
+            if(ann.uid === uid){
+                this.annotations = ann;
+                break;
+            }
+        }
     }
 }
 

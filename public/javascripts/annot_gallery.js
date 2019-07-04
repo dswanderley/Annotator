@@ -32,23 +32,10 @@ function loadGallery() {
             cache: false,
             async: true,
             success: function (data) {
-                // reset List of images in gallery
-                imageList = [];
-                i = 0;
-                let idx = 0;            
-                // Read images in gallery folder
-                data.gallery_list.forEach(file => {
-                    // Get last annotation. Verify later with collection properties.
-                    if (file.annotations !== undefined) {
-                        // Define image ID
-                        idx = i;
-                    }                    
-                    // Add filename to gallery list
-                    imageList.push(file);
-                    i += 1;
-                });
+                // List of images in gallery
+                imageList = data.gallery_list;
                 // Add list to gallery
-                selectGalleryImage(idx);
+                selectGalleryImage(data.start_idx);
                 updatePercentage();
             }
         });
