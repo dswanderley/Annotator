@@ -27,7 +27,7 @@ function loadScreenDrApp() {
     $('#res-field-map').css('visibility', 'hidden');
     setScreenSize();    
     loadGallery();
-    initCanvas(currentSrc);
+    initCanvas();
     addEvents();
 }
 
@@ -84,83 +84,6 @@ function pageMouseUp(evt) {
  * Canvas
  */
 
-function initCanvas(src) {
-    /** @description Initialize canvas
-      * @param {sting} src image source.
-     */
-
-    // Load image on canvas
-    img = new Image();
-    var img_width = 864;
-    var img_height = 768;
-    
-    // load canvas
-    canvas = document.getElementById("main-canvas");
-    // set canvas dimensions
-    canvas.width = Math.floor(max_img_width);
-    canvas.height = Math.floor(max_img_height);
-    // Load context
-    ctx = canvas.getContext("2d");
-    trackTransforms(ctx);
-    // Calculate scale with canvas size
-    this.canvasScale = Math.min(canvas.height / img_height, canvas.width / img_width);
-    // Calculate start postions
-    cx = Math.round((canvas.width - img_width) / 2);
-    cy = Math.round((canvas.height - img_height) / 2);
-    // Image on canvas dimensions
-    //Image original dimension
-    csizes = new CanvasSizes(cx, cy, img_width, img_height, 0, 0, img_width, img_height);
-    ctx.drawImage(img, csizes.cropX, csizes.cropY, csizes.cropW, csizes.cropH, csizes.canvasX, csizes.canvasY, csizes.canvasW, csizes.canvasH);
-    img.onload = function () {
-        ctx.drawImage(img, csizes.cropX, csizes.cropY, csizes.cropW, csizes.cropH, csizes.canvasX, csizes.canvasY, csizes.canvasW, csizes.canvasH);
-        setAnotations();
-    };
-    // Load Image
-    img.src = src;
-}
-
-function refreshCanvas() {
-    /** @description Refresh canvas routine
-    */
-    // Get new coord
-    var p1 = ctx.transformedPoint(0, 0);
-    var p2 = ctx.transformedPoint(canvas.width, canvas.height);
-    // Crop canvas
-    this.ctx.clearRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
-    // Draw image
-    this.ctx.drawImage(img, csizes.cropX, csizes.cropY, csizes.cropW, csizes.cropH, csizes.canvasX, csizes.canvasY, csizes.canvasW, csizes.canvasH);
-    // Draw objects
-    redraw();
-}
-
-function resetCanvas() {
-    /** @description Reset canvas image to original size
-    */
-    // Clear transformations
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height); //limpa o que esta por cima da imagem, neste caso as segmentaçoes/linhas
-    // Draw image
-    this.ctx.drawImage(img, csizes.cropX, csizes.cropY, csizes.cropW, csizes.cropH, csizes.canvasX, csizes.canvasY, csizes.canvasW, csizes.canvasH);
-    // Draw objects
-    redraw();
-}
-
-function redraw() {
-    /** @description Draw storaged annotations
-    */
-    
-    // List with annotations
-    for (let c = 0; c < smoothpiecewises.length; c++) {
-        // Get each class
-        var smoth_data = smoothpiecewises[c];
-        // Draw all segments of each element
-        drawSmooth(smoth_data.interpolatedPoints, smoth_data.profile.color, smoth_data.profile.thick);
-    }
-    if (flagMouseEvent === 2){
-        drawHandleSmooth();
-    }
-}
 
 class CanvasSizes {
     constructor(x, y, w, h, cX, cY, cW, cH) {
@@ -214,6 +137,104 @@ class CanvasSizes {
             this.cropW = cW;
         else
             this.cropW = 100;
+    }
+}
+
+function initCanvas() {
+    /** @description Initialize canvas
+     */
+
+    // Predefined values
+    var img_width = 864;
+    var img_height = 768;
+    currentSrc = "";
+
+    // Set data given img_id
+    if (img_id >= 0) {
+        currentSrc = galleryURL + im_obj.filename;
+        img_height = im_obj.height
+        img_width = im_obj.width;
+    }
+
+    // Reset image
+    img = new Image();
+    // Set canvas size
+    setCanvasSize(img_width, img_height);
+    // Draw context
+    ctx.drawImage(img, csizes.cropX, csizes.cropY, csizes.cropW, csizes.cropH, csizes.canvasX, csizes.canvasY, csizes.canvasW, csizes.canvasH);
+    // Draw image and current annotations
+    img.onload = function () {
+        ctx.drawImage(img, csizes.cropX, csizes.cropY, csizes.cropW, csizes.cropH, csizes.canvasX, csizes.canvasY, csizes.canvasW, csizes.canvasH);
+        setAnotations();
+    };
+    // Load Image
+    img.src = currentSrc;
+}
+
+
+function setCanvasSize(img_width, img_height) {
+    /** @description Calculate canvas size (csize variable)
+      * @param {int} img_width image width
+      * @param {int} img_height image height
+     */
+    // load canvas
+    canvas = document.getElementById("main-canvas");
+    // set canvas dimensions
+    canvas.width = Math.floor(max_img_width);
+    canvas.height = Math.floor(max_img_height);
+    // Load context
+    ctx = canvas.getContext("2d");
+    trackTransforms(ctx);
+    // Calculate scale with canvas size
+    this.canvasScale = Math.min(canvas.height / img_height, canvas.width / img_width);
+    // Calculate start postions
+    var cx = Math.round((canvas.width - img_width) / 2);
+    var cy = Math.round((canvas.height - img_height) / 2);
+    //Image original dimension
+    csizes = new CanvasSizes(cx, cy, img_width, img_height, 0, 0, img_width, img_height);
+}
+
+
+function refreshCanvas() {
+    /** @description Refresh canvas routine
+    */
+    // Get new coord
+    var p1 = ctx.transformedPoint(0, 0);
+    var p2 = ctx.transformedPoint(canvas.width, canvas.height);
+    // Crop canvas
+    this.ctx.clearRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
+    // Draw image
+    this.ctx.drawImage(img, csizes.cropX, csizes.cropY, csizes.cropW, csizes.cropH, csizes.canvasX, csizes.canvasY, csizes.canvasW, csizes.canvasH);
+    // Draw objects
+    redraw();
+}
+
+function resetCanvas() {
+    /** @description Reset canvas image to original size
+    */
+    // Clear transformations
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height); //limpa o que esta por cima da imagem, neste caso as segmentaçoes/linhas
+    // Draw image
+    this.ctx.drawImage(img, csizes.cropX, csizes.cropY, csizes.cropW, csizes.cropH, csizes.canvasX, csizes.canvasY, csizes.canvasW, csizes.canvasH);
+    // Draw objects
+    redraw();
+}
+
+function redraw() {
+    /** @description Draw storaged annotations
+    */
+    
+    // List with annotations
+    for (let c = 0; c < smoothpiecewises.length; c++) {
+        // Get each class
+        var smoth_data = smoothpiecewises[c];
+        // Draw all segments of each element
+        drawSmooth(smoth_data.interpolatedPoints, smoth_data.profile.color, smoth_data.profile.thick);
+    }
+    if (flagMouseEvent === 2){
+        drawHandleSmooth();
     }
 }
 

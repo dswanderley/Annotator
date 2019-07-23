@@ -47,6 +47,34 @@ function loadGallery() {
  * Load Gallery
  */
 
+function getImageAnnotations(temp_el) {
+    /** @description Set imageList global variable adding canvas offset to originalPoints.
+      * @param {Array} imlist List of data of images
+     */
+
+    // Check if annotations exist
+    if (typeof(temp_el.annotations) === "object" || typeof(temp_el.annotations) === "Array") {
+        // Read annotations classes
+        for (let j = 0; j < temp_el.annotations.length; j++) {
+            let annot_class = temp_el.annotations[j];
+            // Read each annotation point
+            for (let k = 0; k < annot_class.length; k++) {
+                let annot_el = annot_class[k];
+                // Read original points
+                for (let p = 0; p < annot_el.originalPoints.length; p++) {
+                    // Sum offset
+                    annot_el.originalPoints[p].x = annot_el.originalPoints[p].x + csizes.canvasX;
+                    annot_el.originalPoints[p].y = annot_el.originalPoints[p].y + csizes.canvasY;
+                }
+                annot_class[k] = annot_el;
+            }
+            temp_el.annotations[j] = annot_class;
+        }
+    }
+    
+    return temp_el;
+}
+
 function selectGalleryImage(id) {
     /** @description Change large image after click on image gallery
       * @param {string} image Image Element Id
@@ -55,26 +83,31 @@ function selectGalleryImage(id) {
     // Prevent edition mode
     if (flagMouseEvent === 2) {
         // Check if any button is selected
-        if ($(".btn.btn-class-annot.btn-outline-info").length > 0 )
+        if ($(".btn.btn-class-annot.btn-outline-info").length > 0)
             flagMouseEvent = 1;
         else
             flagMouseEvent = 0;
-        // Verify if a edition is is being performed
+        // Verify if an edition is being performed
         if (smooth_temp instanceof SmoothPiecewise) {
             // Set segmentation
             setSegmentation(smooth_temp, 
                 smooth_temp.profile.id, 
-                smooth_temp.idSegment-1);
+                smooth_temp.idSegment - 1);
             // Set main
             setDraw(smooth_temp.profile.id);
             smooth_temp = null;          
         }
     }
+
     // Set new image
     img_id = id;
-    im_obj = imageList[id];
-    currentSrc = galleryURL + im_obj.filename;
-    initCanvas(currentSrc);
+    let temp_obj = copyObject(imageList[img_id]);
+    // Pre-set canvas
+    setCanvasSize(temp_obj.width, temp_obj.height);
+    // Set image data with canvas offset
+    im_obj = getImageAnnotations(temp_obj);
+    // Reload canvas
+    initCanvas();
 }
 
 
@@ -186,3 +219,15 @@ function setAnotations() {
     }
     listAnnot();
 }
+
+
+/*
+* Aux Functions
+*/
+
+function copyObject(obj) {
+    /** @description Make a copy of a JSON
+      * @param {object} obj JSON
+     */
+    return JSON.parse(JSON.stringify(obj));
+  }

@@ -259,9 +259,14 @@ function saveAnnot() {
             let listofelements = new Array();
             // Read elements on each list
             for (let j = 0; j < sp.length; j++){
-                data_obj = sp[j];
+                let data_obj = copyObject(sp[j]);
                 // Delete intperpolatedPoints and push to new temp list of elements
                 delete data_obj.interpolatedPoints;
+                // Remove offset from original points list
+                for (let k = 0; k < data_obj.originalPoints.length; k++) {
+                    data_obj.originalPoints[k].x = data_obj.originalPoints[k].x - csizes.canvasX;
+                    data_obj.originalPoints[k].y = data_obj.originalPoints[k].y - csizes.canvasY;
+                }
                 listofelements.push(data_obj);
             }
             // Upload temp list of list
