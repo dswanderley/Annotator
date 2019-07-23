@@ -146,6 +146,11 @@
 .progress {
     height: 30px;
 }
+
+.progress-val {
+    margin: auto;
+}
+
 .cmd-group {
     min-width: 50px;
 }

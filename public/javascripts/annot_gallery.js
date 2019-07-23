@@ -120,8 +120,8 @@ function updateImageIndex() {
     /** @description Update image index on progress bar
      */
     // Update image value
-    let  bar = $(".progress-bar")[0];
-    bar.innerText = txt = (img_id + 1) + "/" + imageList.length;
+    let  bar = $(".progress-val")[0];
+    bar.innerText = txt = (img_id + 1) + " / " + imageList.length;
 }
 
 function updatePercentage() {
@@ -140,6 +140,7 @@ function updatePercentage() {
         percentage = 0.5;
     bar.setAttribute("aria-valuenow", percentage);
     bar.style.width = percentage + "%";
+    updateImageIndex();
 }
 
 
