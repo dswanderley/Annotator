@@ -2,10 +2,13 @@ extends layout
 
 block content
 	.container-fluid#container-diag
+		//- Loading animation
+		.blind-screen
+			.loader.spin
 
 		// Content
 		.row.justify-content-between#app-row
-
+			
 			// Lateral col (info)
 			.col#col-diag-data
 
@@ -25,8 +28,8 @@ block content
 			
 			// Main col (image)
 			.col#col-diag-img
-				//.loader
-				
+								
+				//- Canvas
 				.row.justify-content-center
 					.image-container.col-auto
 						#plot-box

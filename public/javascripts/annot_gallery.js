@@ -37,6 +37,7 @@ function loadGallery() {
                 // Add list to gallery
                 selectGalleryImage(data.start_idx);
                 updatePercentage();
+                $(".blind-screen").hide();
             }
         });
 }
