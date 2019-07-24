@@ -63,8 +63,8 @@ function getImageAnnotations(temp_el) {
                 // Read original points
                 for (let p = 0; p < annot_el.originalPoints.length; p++) {
                     // Sum offset
-                    annot_el.originalPoints[p].x = annot_el.originalPoints[p].x + csizes.canvasX;
-                    annot_el.originalPoints[p].y = annot_el.originalPoints[p].y + csizes.canvasY;
+                    annot_el.originalPoints[p].x = (annot_el.originalPoints[p].x + csizes.canvasX) / canvasScale;
+                    annot_el.originalPoints[p].y = (annot_el.originalPoints[p].y + csizes.canvasY) / canvasScale;
                 }
                 annot_class[k] = annot_el;
             }

@@ -264,8 +264,8 @@ function saveAnnot() {
                 delete data_obj.interpolatedPoints;
                 // Remove offset from original points list
                 for (let k = 0; k < data_obj.originalPoints.length; k++) {
-                    data_obj.originalPoints[k].x = data_obj.originalPoints[k].x - csizes.canvasX;
-                    data_obj.originalPoints[k].y = data_obj.originalPoints[k].y - csizes.canvasY;
+                    data_obj.originalPoints[k].x = data_obj.originalPoints[k].x * canvasScale - csizes.canvasX;
+                    data_obj.originalPoints[k].y = data_obj.originalPoints[k].y * canvasScale - csizes.canvasY;
                 }
                 listofelements.push(data_obj);
             }
