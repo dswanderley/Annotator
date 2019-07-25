@@ -157,9 +157,6 @@ class ImageData {
     }
 }
 
-class PatientInfo {
-
-}
 
 
 // Return routers

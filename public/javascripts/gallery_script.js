@@ -4,7 +4,7 @@
  */
 
 // Global variables
-var galleryURL = 'gallery/';
+var urlBase = "";
 // dataset
 var imageList = [];
 // current search
@@ -14,15 +14,39 @@ var search_annotator = null;
 var search_type = 'all';
 var search_status = 'all';
 
+
+/*
+ * Init page
+ */
+
 function loadGallery() {
     /** @description starts the gallery of images.
      */
+
     // Turn on tooltips bootstrap
     $('[data-toggle="tooltip"]').tooltip();
     // Turn on date ranger
     dateRangePicker();
+    refreshPageSize();
+    $('.blind-screen').hide();
+    loadGallery();
 }
 
+function refreshPageSize() {
+    /** @description Update useful field height
+     */
+        // Get element height
+        let height_header = parseFloat($("header").css("height"));
+        let height_footer = parseFloat($("footer").css("height"));
+        let height_window = $(window).height();
+        // Visual field available
+        let height_body = height_window - height_footer - height_header;
+        // Set gallery background height and scroll
+        $('#gallery-col').css("overflow-y", "auto");
+        $('#gallery-col').css("max-height", height_body + "px");
+        // Set lateral menu background height
+        $('.bg-full-fill').css('height', height_body + 'px');     
+}
 
 function dateRangePicker() {
     /** @description set functions and default values of datarange fields.
@@ -52,3 +76,215 @@ function dateRangePicker() {
     });
 
 }
+
+
+
+function loadGallery() {
+    /** @description Load Gallery of images
+     */
+    $('.loader').show();
+    // Gallery URL
+    url_g = urlBase + '/gallery/search';
+
+    // Ajax call
+    $.ajax(
+        {
+            type: 'GET',
+            url: url_g,
+            data: { id: '0' },
+            dataType: 'json',
+            cache: false,
+            async: true,
+            success: function (images) {               
+                imageList = images.gallery;
+                setGallery();
+                $('.blind-screen').hide();
+            }
+        });
+}
+
+
+
+/*
+ * Button Management
+ */
+
+function setRadioBtn(btn) {
+    /** @description Manage the example buttons 
+    * @param {obj} Button
+    */
+    // Avoid double click
+    if ($('#' + btn.id).hasClass('focus'))
+        return;
+
+    // Check if button is dr or quality
+    if (btn.id.includes('norm')) {
+        clearBtnGroup('.btn-norm');
+        search_norm = $('#' + btn.id).html();
+    }
+    if (btn.id.includes('grad')) {
+        clearBtnGroup('.btn-grad');
+        search_grad = $('#' + btn.id).html();
+    }
+    if (btn.id.includes('qual')) {
+        clearBtnGroup('.btn-qual');
+        search_qual = $('#' + btn.id).html();
+    }
+    if (btn.id.includes('search')) {
+        clearBtnGroup('.btn-radio-search');
+        search_by = $('#' + btn.id).html();
+        setGallery();
+    } 
+    // Set button new class
+    $('#' + btn.id).removeClass('btn-outline-light');
+    $('#' + btn.id).addClass('btn-light');
+    $('#' + btn.id).addClass('focus');
+}
+
+
+function setTextInfo() {
+    /** @description Manage the example buttons 
+    * @param {obj} text field
+    */
+
+    // Check if text contains any info
+    if ($('#txt-image-id').val() != null) {
+        search_imgid = $('#txt-image-id').val();
+    }
+    if ($('#txt-patient-id').val() != null) {
+        search_patid = $('#txt-patient-id').val();
+    }
+    if ($('#txt-date-acqui').val() != null) {
+        search_dateacq = $('#txt-date-acqui').val();
+    }
+}
+
+
+function clearBtnGroup(gclass) {
+    /** @description Remove classes from Quality Examples Buttons
+     * @param {string} gclass Button group class
+     */
+    $(gclass).removeClass('focus');    
+    $(gclass).removeClass('btn-light');
+    $(gclass).removeClass('btn-outline-light');
+    $(gclass).addClass('btn-outline-light');
+}
+
+
+/*
+ * Gallery 
+ */
+
+function setGallery() {
+    /** @description Fills the gallery with the images and split by eye.
+     */
+
+    // Get gallery and reset
+    var gallery = document.getElementById("gallery");
+    gallery.innerHTML = "";
+    // Set new items
+    for (let i=0; i < imageList.length; i++){
+        let el = getGalleryItem(i);
+        gallery.appendChild(el);
+    }
+
+    // Fill left background
+    refreshPageSize();
+}
+
+
+function getGalleryItem(idx) {
+    /** @description Generate a button class with the appropriate classes.
+      * @param {int} idx Image index
+     */
+
+    let im_data = imageList[idx];
+    let txt_url = '/pilot?patient=' + im_data.patient_id + '&image=' + im_data.image_id;
+
+    // Calculate padding top
+    let ratio = im_data.height/im_data.width;
+    let pad_top = Math.round(180 * (1 - ratio) / 2);
+
+    // Gallery element
+    var item = document.createElement('div');
+    item.classList.add("gallery-item-img");
+
+    // Image
+    var a_link = document.createElement('a');
+    a_link.href = txt_url;
+    a_link.target = "_blank";
+    // Image tag
+    var img_html = document.createElement('img');
+    img_html.src = '/gallery/' + im_data.filename;
+    img_html.setAttribute("style", "padding-top:" + pad_top + "px;");
+    a_link.appendChild(img_html);
+    item.appendChild(a_link);
+
+    // Button Group
+    var btn_group = document.createElement('div');
+    btn_group.classList.add("btn-group","btn-group-sm","btn-group-show");
+    btn_group.setAttribute("role", "group");
+    // edit
+    var btn_edit = document.createElement('button');
+    btn_edit.classList.add("btn","btn-outline-dark","btn-show");
+    btn_edit.setAttribute("onClick", "console.log(" + idx + ");");
+    var icon_edit = document.createElement('i');
+    icon_edit.classList.add("far","fa-edit");
+    btn_edit.appendChild(icon_edit);
+    btn_group.appendChild(btn_edit);
+    // view
+    var btn_view = document.createElement('button');
+    btn_view.classList.add("btn","btn-outline-dark","btn-show");
+    btn_view.setAttribute("onClick", "console.log(" + idx + ");");
+    var icon_view = document.createElement('i');
+    icon_view.classList.add("far","fa-eye");
+    btn_view.appendChild(icon_view);
+    btn_group.appendChild(btn_view);
+    // Description
+    var desc = document.createElement('div');
+    desc.classList.add("desc");
+    desc.appendChild(btn_group);
+    //item.appendChild(desc);
+
+    return item;
+}
+
+
+/* 
+ * DB Search 
+ */
+
+function search() {
+    /** @description Call image Quality. Evaluate displayed image.
+     */
+
+    $('.blind-screen').show();
+    // Read searching criteria from text fields
+    setTextInfo()
+    //create object containing searching criteria        
+    var search_crit= Object()
+    search_crit.qual = search_qual;
+    search_crit.dr = search_norm.toLowerCase();
+    search_crit.grading = search_grad.toLowerCase();
+    search_crit.image_id = search_imgid.toLowerCase();
+    search_crit.patient_id = search_patid.toLowerCase();
+    search_crit.date_acquisition = search_dateacq;
+    
+    // Ajax call
+    $.ajax(
+        {
+            type: 'GET',
+            url: '/gallery/search/',
+            data: search_crit,
+            dataType: 'json',
+            cache: false,
+            async: true,           
+            success: function (images) {
+                sortAndStoreData(images);
+                setGallery();
+                $('.blind-screen').hide();
+            }
+        });
+}
+
+

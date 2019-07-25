@@ -7,8 +7,12 @@ append stylesheets
 block content
 
     .container-fluid
-        .row.justify-content-between
+    
+        //- Loading animation
+        .blind-screen
+            .loader-gallery.spin
 
+        .row.justify-content-between
 
             .col.col-md-auto.bg-info.bg-full-fill
 
@@ -32,7 +36,8 @@ block content
                 .h6.text-light.menu-description Image:
                 input.form-control.menu-in#txt-image(type="text" aria-describedby="image-id" placeholder="Image #ID") 
 
-                if sess_user.role == "admin"
+                //-
+                    if sess_user.role == "admin"
                     .h6.text-light.menu-description Annotator ID:
                     input.form-control.menu-in#txt-annot(type="text" aria-describedby="annotator" placeholder="User 01") 
 
@@ -44,116 +49,12 @@ block content
                 
                 .btn-search-field
                     button.btn.btn-dark(onClick='search(this)') Search
-                
 
-            .col
+
+            .col#gallery-col
                 .justify-content-left
-                    .gallery
+                    .gallery#gallery
 
-                        .responsive
-                            .gallery-item
-                                a(target="_blank" href="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png")
-                                    img(src="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png" alt="Cinque Terre" width="600" height="400")
-                                .desc
-                                    .btn-group.btn-group-sm.btn-group-show(role='group' aria-label='DR examples')
-                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)')
-                                            i.far.fa-edit
-                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)') 
-                                            i.far.fa-eye
-
-                        .responsive
-                            .gallery-item
-                                a(target="_blank" href="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png")
-                                    img(src="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png" alt="Cinque Terre" width="600" height="400")
-                                .btn.check-icon(data-toggle="tooltip" data-placement="top" title="User 1")
-                                    i.fas.fa-check
-                                .desc
-                                    .btn-group.btn-group-sm.btn-group-show(role='group' aria-label='DR examples')
-                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)')
-                                            i.far.fa-edit
-                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)') 
-                                            i.far.fa-eye
- 
-                        .responsive
-                            .gallery-item
-                                a(target="_blank" href="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png")
-                                    img(src="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png" alt="Cinque Terre" width="600" height="400")
-                                .btn.check-icon
-                                    i.fas.fa-check-double
-                                .desc
-                                    .btn-group.btn-group-sm.btn-group-show(role='group' aria-label='DR examples')
-                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)')
-                                            i.far.fa-edit
-                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)') 
-                                            i.far.fa-eye
-                            
-                        .responsive
-                            .gallery-item
-                                a(target="_blank" href="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png")
-                                    img(src="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png" alt="Cinque Terre" width="600" height="400")
-                                .btn.healthy-icon(data-toggle="tooltip" data-placement="top" title="Mark as sick.")
-                                    i.fas.fa-notes-medical
-                                .desc
-                                    .btn-group.btn-group-sm.btn-group-show(role='group' aria-label='DR examples')
-                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)')
-                                            i.far.fa-edit
-                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)') 
-                                            i.far.fa-eye
-                        
-                        .responsive
-                            .gallery-item
-                                a(target="_blank" href="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png")
-                                    img(src="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png" alt="Cinque Terre" width="600" height="400")
-                                .desc 
-                                    .btn-group.btn-group-sm.btn-group-show(role='group' aria-label='DR examples')
-                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)')
-                                            i.far.fa-edit
-                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)') 
-                                            i.far.fa-eye
-                            
-                        .responsive
-                            .gallery-item
-                                a(target="_blank" href="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png")
-                                    img(src="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png" alt="Cinque Terre" width="600" height="400")
-                                .desc
-                                    .btn-group.btn-group-sm.btn-group-show(role='group' aria-label='DR examples')
-                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)')
-                                            i.far.fa-edit
-                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)') 
-                                            i.far.fa-eye
-
-                        .responsive
-                            .gallery-item
-                                a(target="_blank" href="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png")
-                                    img(src="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png" alt="Cinque Terre" width="600" height="400")
-                                .desc
-                                    .btn-group.btn-group-sm.btn-group-show(role='group' aria-label='DR examples')
-                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)')
-                                            i.far.fa-edit
-                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)') 
-                                            i.far.fa-eye
-                        
-                        .responsive
-                            .gallery-item
-                                a(target="_blank" href="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png")
-                                    img(src="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png" alt="Cinque Terre" width="600" height="400")
-                                .desc
-                                    .btn-group.btn-group-sm.btn-group-show(role='group' aria-label='DR examples')
-                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)')
-                                            i.far.fa-edit
-                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)') 
-                                            i.far.fa-eye
-                        
-                        .responsive
-                            .gallery-item
-                                a(target="_blank" href="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png")
-                                    img(src="http://localhost:3000/gallery/31_OV_R_20180524111254_BM.png" alt="Cinque Terre" width="600" height="400")
-                                .desc
-                                    .btn-group.btn-group-sm.btn-group-show(role='group' aria-label='DR examples')
-                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)')
-                                            i.far.fa-edit
-                                        button.btn.btn-outline-dark.btn-show(onClick='setEg(this)') 
-                                            i.far.fa-eye
 
     script(src="/javascripts/moment.js")
     script(src="/javascripts/daterangerpicker.js")
