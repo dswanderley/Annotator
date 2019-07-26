@@ -203,11 +203,11 @@ function getGalleryItem(idx) {
 
     // Calculate padding top
     let ratio = im_data.height/im_data.width;
-    let pad_top = Math.round(180 * (1 - ratio) / 2);
+    let pad = Math.round(180 * (1 - ratio) / 2);
 
     // Gallery element
     var item = document.createElement('div');
-    item.classList.add("gallery-item-img");
+    item.classList.add("gallery-item");
 
     // Image
     var a_link = document.createElement('a');
@@ -216,7 +216,8 @@ function getGalleryItem(idx) {
     // Image tag
     var img_html = document.createElement('img');
     img_html.src = '/gallery/' + im_data.filename;
-    img_html.setAttribute("style", "padding-top:" + pad_top + "px;");
+    img_html.classList.add("img-gallery");
+    img_html.setAttribute("style", "padding:" + pad + "px 0;");
     a_link.appendChild(img_html);
     item.appendChild(a_link);
 
@@ -224,29 +225,76 @@ function getGalleryItem(idx) {
     var btn_group = document.createElement('div');
     btn_group.classList.add("btn-group","btn-group-sm","btn-group-show");
     btn_group.setAttribute("role", "group");
-    // edit
-    var btn_edit = document.createElement('button');
-    btn_edit.classList.add("btn","btn-outline-dark","btn-show");
-    btn_edit.setAttribute("onClick", "console.log(" + idx + ");");
-    var icon_edit = document.createElement('i');
-    icon_edit.classList.add("far","fa-edit");
-    btn_edit.appendChild(icon_edit);
-    btn_group.appendChild(btn_edit);
-    // view
-    var btn_view = document.createElement('button');
-    btn_view.classList.add("btn","btn-outline-dark","btn-show");
-    btn_view.setAttribute("onClick", "console.log(" + idx + ");");
-    var icon_view = document.createElement('i');
-    icon_view.classList.add("far","fa-eye");
-    btn_view.appendChild(icon_view);
-    btn_group.appendChild(btn_view);
+    // Ovary
+    var btn_ovary = document.createElement('button');
+    btn_ovary.setAttribute("id", "btn-ov-" + idx);
+    btn_ovary.setAttribute("onClick", "setViewType('ovary', " + idx + ");");
+    btn_ovary.innerHTML = "Ovary";
+    btn_group.appendChild(btn_ovary);
+    // Uterus
+    var btn_uterus = document.createElement('button');
+    btn_uterus.setAttribute("id", "btn-ut-" + idx);
+    btn_uterus.setAttribute("onClick", "setViewType('uterus', " + idx + ");");
+    btn_uterus.innerHTML = "Uterus";
+    btn_group.appendChild(btn_uterus);
+    // Set btn classes
+    switch(im_data.us_type) {
+        case "ovary":
+            btn_ovary.classList.add("btn","btn-info","btn-show");
+            btn_uterus.classList.add("btn","btn-outline-dark","btn-show");
+          break;
+        case "uterus":
+            btn_ovary.classList.add("btn","btn-outline-dark","btn-show");
+            btn_uterus.classList.add("btn","btn-info","btn-show");
+          break;
+        default:
+            btn_ovary.classList.add("btn","btn-outline-dark","btn-show");
+            btn_uterus.classList.add("btn","btn-outline-dark","btn-show");
+    }
     // Description
     var desc = document.createElement('div');
     desc.classList.add("desc");
     desc.appendChild(btn_group);
-    //item.appendChild(desc);
+    item.appendChild(desc);
 
     return item;
+}
+
+function setViewType(vtype, idx) {
+    /** @description Set image ultrasound view type
+      * @param {string} vtype View type
+      * @param {int} idx Image index
+     */
+    // Get data
+    let im_data = imageList[idx];
+    btn_ovary = document.getElementById("btn-ov-" + idx);
+    btn_uterus = document.getElementById("btn-ut-" + idx);
+    // Clear btn
+    btn_ovary.classList.remove("btn-info", "btn-outline-dark");
+    btn_uterus.classList.remove("btn-info", "btn-outline-dark");
+    // Set btn and im_data
+    switch(vtype) {
+        case "ovary":
+            btn_ovary.classList.add("btn-info");
+            btn_uterus.classList.add("btn-outline-dark");
+            im_data.us_type = "ovary";
+          break;
+        case "uterus":
+            btn_ovary.classList.add("btn-outline-dark");
+            btn_uterus.classList.add("btn-info");
+            im_data.us_type = "uterus";
+          break;
+        default:
+            btn_ovary.classList.add("btn-outline-dark");
+            btn_uterus.classList.add("btn-outline-dark");
+            im_data.us_type = "";
+    }
+    // Get data
+    imageList[idx] = im_data;
+    /*
+    * PUSH TO SERVER
+    * TO INCLUDE CODE
+    */
 }
 
 

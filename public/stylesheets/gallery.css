@@ -3,10 +3,12 @@
  */
 
  div.gallery-item {
+    background: black;
     margin: 5px;
     border: 1px solid #ccc;
     float: left;
-    width: 180px;
+    width: 302px;
+    height: 320px;
     position: relative;
     text-align: right;
 }
@@ -15,8 +17,8 @@ div.gallery-item:hover {
     border: 1px solid #777;
 }
 
-div.gallery-item img {
-    width: 100%;
+.img-gallery {
+    max-width: 300px;
     height: auto;
 }
   
@@ -26,6 +28,7 @@ div.desc {
 }
 
 .btn-group-show {
+    background: white;
     width: 100%;
 }
 
