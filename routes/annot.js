@@ -29,7 +29,10 @@ router.get('/annot', function (req, res) {
 router.get('/annot/gallery', function (req, res) {
     // Initialize list of files
     let gallery_list  = [];
-    let query = {"marks": ""}
+    let query = {
+        "marks": "",
+        "us_type": req.query.us_type
+             }
 
     // Connect to database
     db_client.connect(DB_URI, { useNewUrlParser: true }, function (err, client) {

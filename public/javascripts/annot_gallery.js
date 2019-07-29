@@ -21,13 +21,14 @@ function loadGallery() {
     $('.loader').show();
     // Gallery URL
     url_g = urlBase + '/annot/gallery';
+    let us_type = "ovary";
 
     // Ajax call
     $.ajax(
         {
             type: 'GET',
             url: url_g,
-            data: { id: '0' },
+            data: { us_type: us_type },
             dataType: 'json',
             cache: false,
             async: true,
