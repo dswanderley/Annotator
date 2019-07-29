@@ -199,7 +199,7 @@ function getGalleryItem(idx) {
      */
 
     let im_data = imageList[idx];
-    let txt_url = '/pilot?patient=' + im_data.patient_id + '&image=' + im_data.image_id;
+    let txt_url = '/gallery/' + im_data.filename;
 
     // Calculate padding top
     let ratio = im_data.height/im_data.width;
@@ -291,10 +291,21 @@ function setViewType(vtype, idx) {
     }
     // Get data
     imageList[idx] = im_data;
-    /*
-    * PUSH TO SERVER
-    * TO INCLUDE CODE
-    */
+
+    // Data to set ajax post
+    let url = "/gallery/viewtype";
+    let updata = JSON.stringify(im_data);
+    $.ajax({
+        type: 'POST',
+        url: url, 
+        data: updata,
+        dataType : "json",
+        contentType: "application/json; charset=utf-8",
+        success: function (msg) {
+            console.log(msg);
+        }
+    });
+
 }
 
 

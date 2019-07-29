@@ -69,6 +69,40 @@ router.get('/gallery/upload', function (req, res) {
 });
 
 
+// Update (viewtype) - POST
+router.post('/gallery/viewtype', function (req, res) {
+    var data = req.body;
+        
+    // Query to find data
+    let query = { "image_id": data.image_id };
+    // Update data
+    let newvalue = {
+        $set : { "us_type" : data.us_type,
+                 "date_update": new Date().toISOString() 
+                }
+    };
+    // Connect to database
+    db_client.connect(DB_URI, { useNewUrlParser: true }, function (err, client) {
+        if (err) {
+            console.log('Error occurred while connecting to MongoDB Atlas...\n', err);
+        }
+        console.log('MongoDB connected...');
+        // Get images colection
+        let collection = client.db("annotdb").collection("images");
+        // Search and update item if it exist
+        collection.updateOne(query, newvalue, function (err, res_in) {
+            // Get error
+            if (err) 
+                throw err;
+            else
+                // Send update
+                res.send("Data updated!")
+        });
+    });
+});
+
+
+
 
 // Return routers
 module.exports = router;
