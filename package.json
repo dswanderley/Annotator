@@ -22,7 +22,7 @@
     "express-fileupload": "^1.1.9",
     "express-session": "^1.16.2",
     "fs": "0.0.1-security",
-    "image-size": "^0.7.4",
+    "image-size": "^0.7.5",
     "lodash": "^4.17.19",
     "mongodb": "^3.2.7",
     "mongoose": "^5.7.5",
